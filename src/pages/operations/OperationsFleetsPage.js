@@ -14,8 +14,8 @@ import FormModalComponent from "../../components/modals/FormModalComponent";
 import {emitNextSuppliesFetch, emitSuppliesFetch} from "../../redux/supplies/actions";
 import OperationsFleetsCardsComponent from "../../components/operations/OperationsFleetsCardsComponent";
 import OperationsFleetsReturnContainer from "../../containers/operations/OperationsFleetsReturnContainer";
+import OperationsCashRecoveryContainer from "../../containers/operations/OperationsCashRecoveryContainer";
 import {storeNextSuppliesRequestReset, storeSuppliesRequestReset} from "../../redux/requests/supplies/actions";
-import OperationsFleetsAddSupplyContainer from "../../containers/operations/OperationsFleetsAddSupplyContainer";
 import {
     dateToString,
     needleSearch,
@@ -27,8 +27,8 @@ import {
 function OperationsFleetsPage({supplies, suppliesRequests, hasMoreData, page, dispatch, location}) {
     // Local states
     const [needle, setNeedle] = useState('');
-    const [supplyModal, setSupplyModal] = useState({show: false, header: 'EFFECTUER UN FLOTTAGE'});
     const [returnModal, setReturnModal] = useState({show: false, header: 'EFFECTUER UN RETOUR FLOTTE', item: {}});
+    const [recoveryModal, setRecoveryModal] = useState({show: false, header: "EFFECTUER UN RECOUVREMENT D'ESPECE", item: {}});
 
     // Local effects
     useEffect(() => {
@@ -57,16 +57,6 @@ function OperationsFleetsPage({supplies, suppliesRequests, hasMoreData, page, di
         dispatch(emitNextSuppliesFetch({page}));
     }
 
-    // Show supply modal form
-    const handleSupplyModalShow = (item) => {
-        setSupplyModal({...supplyModal, item, show: true})
-    }
-
-    // Hide supply modal form
-    const handleSupplyModalHide = () => {
-        setSupplyModal({...supplyModal, show: false})
-    }
-
     // Show return modal form
     const handleReturnModalShow = (item) => {
         setReturnModal({...returnModal, item, show: true})
@@ -75,6 +65,16 @@ function OperationsFleetsPage({supplies, suppliesRequests, hasMoreData, page, di
     // Hide return modal form
     const handleReturnModalHide = () => {
         setReturnModal({...returnModal, show: false})
+    }
+
+    // Show recovery modal form
+    const handleRecoveryModalShow = (item) => {
+        setRecoveryModal({...recoveryModal, item, show: true})
+    }
+
+    // Hide recovery modal form
+    const handleRecoveryModalHide = () => {
+        setRecoveryModal({...recoveryModal, show: false})
     }
 
     // Render
@@ -98,16 +98,11 @@ function OperationsFleetsPage({supplies, suppliesRequests, hasMoreData, page, di
                                             {/* Error message */}
                                             {requestFailed(suppliesRequests.list) && <ErrorAlertComponent message={suppliesRequests.list.message} />}
                                             {requestFailed(suppliesRequests.next) && <ErrorAlertComponent message={suppliesRequests.next.message} />}
-                                            <button type="button"
-                                                    className="btn btn-theme mb-2"
-                                                    onClick={handleSupplyModalShow}
-                                            >
-                                                <i className="fa fa-plus" /> Effectuer un flottage
-                                            </button>
                                             {/* Search result & Infinite scroll */}
                                             {(needle !== '' && needle !== undefined)
                                                 ? <OperationsFleetsCardsComponent supplies={searchEngine(supplies, needle)}
-                                                                                  handleRecoveryModalShow={handleReturnModalShow}
+                                                                                  handleCashRecoveryModalShow={handleRecoveryModalShow}
+                                                                                  handleFleetRecoveryModalShow={handleReturnModalShow}
                                                 />
                                                 : (requestLoading(suppliesRequests.list) ? <LoaderComponent /> :
                                                         <InfiniteScroll hasMore={hasMoreData}
@@ -117,7 +112,8 @@ function OperationsFleetsPage({supplies, suppliesRequests, hasMoreData, page, di
                                                                         style={{ overflow: 'hidden' }}
                                                         >
                                                             <OperationsFleetsCardsComponent supplies={supplies}
-                                                                                            handleRecoveryModalShow={handleReturnModalShow}
+                                                                                            handleCashRecoveryModalShow={handleRecoveryModalShow}
+                                                                                            handleFleetRecoveryModalShow={handleReturnModalShow}
                                                             />
                                                         </InfiniteScroll>
                                                 )
@@ -131,12 +127,14 @@ function OperationsFleetsPage({supplies, suppliesRequests, hasMoreData, page, di
                 </div>
             </AppLayoutContainer>
             {/* Modal */}
-            <FormModalComponent modal={supplyModal} handleClose={handleSupplyModalHide}>
-                <OperationsFleetsAddSupplyContainer handleClose={handleSupplyModalHide} />
-            </FormModalComponent>
             <FormModalComponent modal={returnModal} handleClose={handleReturnModalHide}>
                 <OperationsFleetsReturnContainer supply={returnModal.item}
                                                  handleClose={handleReturnModalHide}
+                />
+            </FormModalComponent>
+            <FormModalComponent modal={recoveryModal} handleClose={handleRecoveryModalHide}>
+                <OperationsCashRecoveryContainer supply={returnModal.item}
+                                                 handleClose={handleRecoveryModalHide}
                 />
             </FormModalComponent>
         </>

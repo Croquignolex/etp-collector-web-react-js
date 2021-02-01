@@ -1,8 +1,10 @@
 import { all, takeLatest, put, fork, call } from 'redux-saga/effects'
 
 import * as api from "../../constants/apiConstants";
-import {apiGetRequest, getFileFromServer} from "../../functions/axiosFunctions";
+import {storeUpdateSupplyData} from "../supplies/actions";
+import {apiGetRequest, apiPostRequest, getFileFromServer} from "../../functions/axiosFunctions";
 import {
+    EMIT_NEW_RECOVERY,
     EMIT_RECOVERIES_FETCH,
     storeSetRecoveriesData,
     EMIT_NEXT_RECOVERIES_FETCH,
@@ -10,6 +12,9 @@ import {
     storeStopInfiniteScrollRecoveryData
 } from "./actions";
 import {
+    storeRecoverRequestInit,
+    storeRecoverRequestFailed,
+    storeRecoverRequestSucceed,
     storeRecoveriesRequestInit,
     storeRecoveriesRequestFailed,
     storeRecoveriesRequestSucceed,
@@ -59,26 +64,28 @@ export function* emitNextRecoveriesFetch() {
     });
 }
 
-// Recovery add supply from API
-/*
-export function* emitRecoveryAddSupply() {
-    yield takeLatest(EMIT_RECOVERY_ADD_SUPPLY, function*({id, amount, sim}) {
+// New recovery from API
+export function* emitNewRecovery() {
+    yield takeLatest(EMIT_NEW_RECOVERY, function*({supply, amount, receipt}) {
         try {
             // Fire event for request
-            yield put(storeRecoverySupplyRequestInit());
-            const data = {id_puce: sim, montant: amount, id_demande_flotte: id};
-            const apiResponse = yield call(apiPostRequest, RECOVERY_ADD_SUPPLY_API_PATH, data);
+            yield put(storeRecoverRequestInit());
+            const data = new FormData();
+            data.append('recu', receipt);
+            data.append('montant', amount);
+            data.append('id_flottage', supply);
+            const apiResponse = yield call(apiPostRequest, api.NEW_CASH_RECOVERIES_API_PATH, data);
             // Fire event to redux
-            yield put(storeUpdateRecoveryData({id, amount}));
+            yield put(storeUpdateSupplyData({id: supply, amount}));
             // Fire event for request
-            yield put(storeRecoverySupplyRequestSucceed({message: apiResponse.message}));
+            yield put(storeRecoverRequestSucceed({message: apiResponse.message}));
         } catch (message) {
             // Fire event for request
-            yield put(storeRecoverySupplyRequestFailed({message}));
+            yield put(storeRecoverRequestFailed({message}));
         }
     });
 }
-*/
+
 
 // Extract recovery data
 function extractRecoveryData(apiRecovery, apiUser, apiAgent, apiCollector) {
@@ -129,6 +136,7 @@ function extractRecoveriesData(apiRecoveries) {
 // Combine to export all functions at once
 export default function* sagaRecoveries() {
     yield all([
+        fork(emitNewRecovery),
         fork(emitRecoveriesFetch),
         fork(emitNextRecoveriesFetch),
     ]);

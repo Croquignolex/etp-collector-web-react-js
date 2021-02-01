@@ -25,8 +25,8 @@ import {
 
 // Component
 function OperationsClearancesAddRefuelComponent({request, sims, agents, allAgentsRequests, allSimsRequests, dispatch, handleClose}) {
-    const [amount, setAmount] = useState(DEFAULT_FORM_DATA);
     // Local state
+    const [amount, setAmount] = useState(DEFAULT_FORM_DATA);
     const [doc, setDoc] = useState(constants.DEFAULT_FORM_DATA);
     const [incomingSim, setIncomingSim] = useState(DEFAULT_FORM_DATA);
     const [agent, setAgent] = useState({...DEFAULT_FORM_DATA, data: 0});

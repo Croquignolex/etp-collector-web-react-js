@@ -8,7 +8,7 @@ import {dateToString, formatNumber} from "../../functions/generalFunctions";
 import AgentDetailsContainer from "../../containers/agents/AgentDetailsContainer";
 
 // Component
-function OperationsFleetsCardsComponent({supplies, handleRecoveryModalShow}) {
+function OperationsFleetsCardsComponent({supplies, handleFleetRecoveryModalShow, handleCashRecoveryModalShow}) {
     // Local states
     const [agentDetailsModal, setAgentDetailsModal] = useState({show: false, header: "DETAIL DE L'AGENT/RESSOURCE", id: ''});
 
@@ -65,12 +65,20 @@ function OperationsFleetsCardsComponent({supplies, handleRecoveryModalShow}) {
                                     {item.status !== DONE && (
                                         <div className="mt-3 text-center">
                                             {item.actionLoader ? <LoaderComponent little={true} /> :
-                                                <button type="button"
-                                                        className="btn btn-theme"
-                                                        onClick={() => handleRecoveryModalShow(item)}
-                                                >
-                                                    <i className="fa fa-plus" /> Effectuer un retour flotte
-                                                </button>
+                                                <>
+                                                    <button type="button"
+                                                            className="btn btn-theme mr-2 mb-2"
+                                                            onClick={() => handleFleetRecoveryModalShow(item)}
+                                                    >
+                                                        <i className="fa fa-plus" /> Retour flotte
+                                                    </button>
+                                                    <button type="button"
+                                                            className="btn btn-theme mb-2"
+                                                            onClick={() => handleCashRecoveryModalShow(item)}
+                                                    >
+                                                        <i className="fa fa-plus" /> Recouvrement espèce
+                                                    </button>
+                                                </>
                                             }
                                         </div>
                                     )}
@@ -98,7 +106,8 @@ function OperationsFleetsCardsComponent({supplies, handleRecoveryModalShow}) {
 // Prop types to ensure destroyed props data type
 OperationsFleetsCardsComponent.propTypes = {
     supplies: PropTypes.array.isRequired,
-    handleRecoveryModalShow: PropTypes.func.isRequired,
+    handleFleetRecoveryModalShow: PropTypes.func.isRequired,
+    handleCashRecoveryModalShow: PropTypes.func.isRequired,
 };
 
 export default React.memo(OperationsFleetsCardsComponent);
