@@ -4,6 +4,7 @@ import OperationsTransfersAddTransferComponent from "../../components/operations
 
 // Map state function to component props
 const mapStateToProps = (state) => ({
+    user: state.user,
     sims: state.sims.list,
     request: state.transfersRequests.add,
     allSimsRequests: state.simsRequests.all,

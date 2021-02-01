@@ -9,7 +9,7 @@ import {emitAddTransfer} from "../../redux/transfers/actions";
 import {requiredChecker} from "../../functions/checkerFunctions";
 import {DEFAULT_FORM_DATA} from "../../constants/defaultConstants";
 import {playWarningSound} from "../../functions/playSoundFunctions";
-import {COLLECTOR_TYPE, FLEET_TYPE} from "../../constants/typeConstants";
+import {COLLECTOR_TYPE, FLEET_MASTER_TYPE, FLEET_TYPE} from "../../constants/typeConstants";
 import {storeAllSimsRequestReset} from "../../redux/requests/sims/actions";
 import {dataToArrayForSelect, mappedSims} from "../../functions/arrayFunctions";
 import {storeAddTransferRequestReset} from "../../redux/requests/transfers/actions";
@@ -21,7 +21,7 @@ import {
 } from "../../functions/generalFunctions";
 
 // Component
-function OperationsTransfersAddTransferComponent({request, sims, allSimsRequests, dispatch, handleClose}) {
+function OperationsTransfersAddTransferComponent({request, user, sims, allSimsRequests, dispatch, handleClose}) {
     // Local state
     const [amount, setAmount] = useState(DEFAULT_FORM_DATA);
     const [outgoingSim, setOutgoingSim] = useState(DEFAULT_FORM_DATA);
@@ -63,13 +63,13 @@ function OperationsTransfersAddTransferComponent({request, sims, allSimsRequests
 
     // Build select options
     const incomingSelectOptions = useMemo(() => {
-        return dataToArrayForSelect(mappedSims(sims.filter(item => COLLECTOR_TYPE === item.type.name)))
+        return dataToArrayForSelect(mappedSims(sims.filter(item => FLEET_MASTER_TYPE.includes(item.type.name))))
     }, [sims]);
 
     // Build select options
     const outgoingSelectOptions = useMemo(() => {
-        return dataToArrayForSelect(mappedSims(sims.filter(item => FLEET_TYPE === item.type.name)))
-    }, [sims]);
+        return dataToArrayForSelect(mappedSims(sims.filter(item => item.collector.id === user.id)))
+    }, [sims, user.id]);
 
     // Reset error alert
     const shouldResetErrorData = () => {
@@ -109,8 +109,8 @@ function OperationsTransfersAddTransferComponent({request, sims, allSimsRequests
                 <div className='row'>
                     <div className='col-sm-6'>
                         <SelectComponent input={outgoingSim}
-                                         id='inputSimManger'
                                          label='Puce émetrice'
+                                         id='inputSimCollector'
                                          title='Choisir une puce'
                                          options={outgoingSelectOptions}
                                          handleInput={handleOutgoingSelect}
@@ -119,7 +119,7 @@ function OperationsTransfersAddTransferComponent({request, sims, allSimsRequests
                     </div>
                     <div className='col-sm-6'>
                         <SelectComponent input={incomingSim}
-                                         id='inputSimCollector'
+                                         id='inputSimManager'
                                          label='Puce receptrice'
                                          title='Choisir une puce'
                                          options={incomingSelectOptions}
@@ -148,6 +148,7 @@ function OperationsTransfersAddTransferComponent({request, sims, allSimsRequests
 // Prop types to ensure destroyed props data type
 OperationsTransfersAddTransferComponent.propTypes = {
     sims: PropTypes.array.isRequired,
+    user: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
     request: PropTypes.object.isRequired,
     handleClose: PropTypes.func.isRequired,
