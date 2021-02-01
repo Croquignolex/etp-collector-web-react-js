@@ -27,8 +27,6 @@ export const CLEARANCES_API_PATH = `${API_URL}/list_demandes_destockage`;
 export const ALL_CLEARANCES_API_PATH = `${API_URL}/list_demandes_destockage_all`;
 
 // Sims
-export const SIM_API_PATH = `${API_URL}/show_puce`;
-export const SIMS_API_PATH = `${API_URL}/puce_list`;
 export const All_SIMS_API_PATH = `${API_URL}/puce_list_all`;
 
 // Agents
@@ -63,3 +61,31 @@ export const ALL_MANAGERS_API_PATH = `${API_URL}/gestionnaires_all`;
 
 // Operators
 export const All_OPERATORS_API_PATH = `${API_URL}/flote_list_all`;
+
+// Recoveries
+export const NEW_FLEET_RECOVERIES_API_PATH = `${API_URL}/retour_flotte`;
+export const FLEET_RECOVERIES_API_PATH = `${API_URL}/list_all_retour_flotte`;
+export const CONFIRM_FLEET_RECOVERIES_API_PATH = `${API_URL}/approuve_retour_flotte`;
+
+export const CASH_RECOVERIES_API_PATH = `${API_URL}/list_all_recouvrement`;
+
+// Transfers
+export const NEW_TRANSFERS_API_PATH = `${API_URL}/flottage_rz`;
+export const TRANSFERS_API_PATH = `${API_URL}/list_all_flottage_interne`;
+
+// Anonymous
+export const ANONYMOUS_FLEETS_API_PATH = `${API_URL}/list_flottage_anonyme`;
+export const CREATE_ANONYMOUS_FLEET_API_PATH = `${API_URL}/flottage_anonyme`;
+
+// Supplies
+export const SUPPLIES_API_PATH = `${API_URL}/list_all_flottage`;
+export const NEW_SUPPLY_API_PATH = `${API_URL}/flottage_express`;
+
+// Refuels
+export const REFUELS_API_PATH = `${API_URL}/list_destockage`;
+export const NEW_REFUEL_API_PATH = `${API_URL}/approvisionnement_etp`;
+export const CONFIRM_REFUEL_API_PATH = `${API_URL}/approuve_destockage`;
+
+// Affords
+export const AFFORDS_API_PATH = `${API_URL}/list_approvisionnement`;
+export const CONFIRM_AFFORD_API_PATH = `${API_URL}/approuve_approvisionnement`;

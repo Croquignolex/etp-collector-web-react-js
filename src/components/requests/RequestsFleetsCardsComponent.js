@@ -6,19 +6,12 @@ import FormModalComponent from "../modals/FormModalComponent";
 import {PENDING, PROCESSING} from "../../constants/typeConstants";
 import {fleetTypeBadgeColor} from "../../functions/typeFunctions";
 import {dateToString, formatNumber} from "../../functions/generalFunctions";
-import SimDetailsContainer from "../../containers/sims/SimDetailsContainer";
 import AgentDetailsContainer from "../../containers/agents/AgentDetailsContainer";
 
 // Component
 function RequestsFleetsCardsComponent({fleets, handleSupplyModalShow}) {
     // Local states
-    const [simDetailsModal, setSimDetailsModal] = useState({show: false, header: 'DETAIL DE LA PUCE', id: ''});
     const [agentDetailsModal, setAgentDetailsModal] = useState({show: false, header: "DETAIL DE L'AGENT/RESSOURCE", id: ''});
-
-    // Hide sim details modal form
-    const handleSimDetailModalHide = () => {
-        setSimDetailsModal({...simDetailsModal, show: false})
-    }
 
     // Hide agent details modal form
     const handleAgentDetailsModalHide = () => {
@@ -52,12 +45,7 @@ function RequestsFleetsCardsComponent({fleets, handleSupplyModalShow}) {
                                         </li>
                                         <li className="list-group-item">
                                             <b>Puce à flotter</b>
-                                            <span className="float-right">
-                                            {item.sim.number}
-                                            <i className="fa fa-question-circle small ml-1 hand-cursor text-theme"
-                                               onClick={() => setSimDetailsModal({...simDetailsModal, show: true, id: item.sim.id})}
-                                            />
-                                        </span>
+                                            <span className="float-right">{item.sim.number}</span>
                                         </li>
                                         <li className="list-group-item">
                                             <b>Agent/Ressource</b>
@@ -99,9 +87,6 @@ function RequestsFleetsCardsComponent({fleets, handleSupplyModalShow}) {
                 }
             </div>
             {/* Modal */}
-            <FormModalComponent small={true} modal={simDetailsModal} handleClose={handleSimDetailModalHide}>
-               <SimDetailsContainer id={simDetailsModal.id} />
-            </FormModalComponent>
             <FormModalComponent modal={agentDetailsModal} handleClose={handleAgentDetailsModalHide}>
                 <AgentDetailsContainer id={agentDetailsModal.id} />
             </FormModalComponent>

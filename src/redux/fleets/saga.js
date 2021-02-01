@@ -1,7 +1,6 @@
 import { all, takeLatest, put, fork, call } from 'redux-saga/effects'
 
 import * as api from "../../constants/apiConstants";
-import {FLEET_ADD_SUPPLY_API_PATH} from "../../constants/apiConstants";
 import {apiGetRequest, apiPostRequest} from "../../functions/axiosFunctions";
 import {
     EMIT_FLEETS_FETCH,
@@ -96,7 +95,7 @@ export function* emitFleetAddSupply() {
             // Fire event for request
             yield put(storeFleetSupplyRequestInit());
             const data = {id_puce: sim, montant: amount, id_demande_flotte: id};
-            const apiResponse = yield call(apiPostRequest, FLEET_ADD_SUPPLY_API_PATH, data);
+            const apiResponse = yield call(apiPostRequest, api.FLEET_ADD_SUPPLY_API_PATH, data);
             // Fire event to redux
             yield put(storeUpdateFleetData({id, amount}));
             // Fire event for request
@@ -111,7 +110,7 @@ export function* emitFleetAddSupply() {
 // Extract fleet data
 function extractFleetData(apiSim, apiUser, apiAgent, apiClaimer, apiFleet) {
     let fleet = {
-        id: '', reference: '', amount: '', status: '', creation: '',
+        id: '', amount: '', status: '', creation: '',
 
         agent: {id: '', name: ''},
         sim: {id: '', name: '', number: ''},

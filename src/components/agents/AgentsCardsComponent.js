@@ -1,51 +1,15 @@
+import React from 'react';
 import PropTypes from "prop-types";
-import React, {useEffect, useState} from 'react';
 
 import LoaderComponent from "../LoaderComponent";
-import AgentCardComponent from "./AgentCardComponent";
-import BlockModalComponent from "../modals/BlockModalComponent";
-import {emitToggleAgentStatus} from "../../redux/agents/actions";
 import {agentTypeBadgeColor} from "../../functions/typeFunctions";
-import {storeAgentStatusToggleRequestReset} from "../../redux/requests/agents/actions";
+import {dateToString, formatNumber} from "../../functions/generalFunctions";
 
 // Component
-function AgentsCardsComponent({agents, dispatch}) {
-    // Local states
-    const [blockModal, setBlockModal] = useState({show: false, body: '', id: 0});
-
-    // Local effects
-    useEffect(() => {
-        // Cleaner error alert while component did unmount without store dependency
-        return () => {
-            shouldResetErrorData();
-        };
-        // eslint-disable-next-line
-    }, []);
-
-    // Reset error alert
-    const shouldResetErrorData = () => {
-        dispatch(storeAgentStatusToggleRequestReset());
-    };
-
-    // Trigger when user block status confirmed on modal
-    const handleBlockStatus = (id, name) => {
-        setBlockModal({...blockModal, show: true, id, body: `Bloquer l'agent ${name}?`})
-    };
-
-    // Trigger when user change status confirmed on modal
-    const handleBlock = (id) => {
-        handleBlockModalHide();
-        dispatch(emitToggleAgentStatus({id}));
-    };
-
-    // Hide block confirmation modal
-    const handleBlockModalHide = () => {
-        setBlockModal({...blockModal, show: false})
-    }
-
+function AgentsCardsComponent({agents, handleBlock, handleBlockModalShow, handleAgentDetailsModalShow}) {
     // Render
     return (
-        <div>
+        <>
             <div className="row m-1">
                 {agents.map((item, key) => {
                     return (
@@ -55,20 +19,54 @@ function AgentsCardsComponent({agents, dispatch}) {
                                     <h3 className="card-title">
                                         {agentTypeBadgeColor(item.reference).text}
                                     </h3>
+                                    <div className="card-tools">
+                                        <button type="button"
+                                                title="Détails"
+                                                className=" btn-tool btn"
+                                                onClick={() => handleAgentDetailsModalShow(item)}
+                                        >
+                                            <i className="fa fa-eye" />
+                                        </button>
+                                    </div>
                                 </div>
                                 <div className="card-body">
                                     <div className="text-right">
                                         {item.actionLoader ? <LoaderComponent little={true} /> :(
                                             item.status
-                                                ? <i className='fa fa-lock-open text-success hand-cursor'
-                                                     onClick={() => handleBlockStatus(item.id, item.name)}
+                                                ? <i onClick={() => handleBlockModalShow(item)}
+                                                     className='fa fa-lock-open text-success hand-cursor'
                                                 />
                                                 : <i className='fa fa-lock text-danger hand-cursor'
-                                                     onClick={() => dispatch(emitToggleAgentStatus({id: item.id}))}
+                                                     onClick={() => handleBlock(item.id)}
                                                 />
                                         )}
                                     </div>
-                                    <AgentCardComponent agent={item} />
+                                    <ul className="list-group list-group-unbordered">
+                                        <li className="list-group-item">
+                                            <b>Créer le</b>
+                                            <span className="float-right">{dateToString(item.creation)}</span>
+                                        </li>
+                                        <li className="list-group-item">
+                                            <b>Nom</b>
+                                            <span className="float-right">{item.name}</span>
+                                        </li>
+                                        <li className="list-group-item">
+                                            <b>Téléphone</b>
+                                            <span className="float-right">{item.phone}</span>
+                                        </li>
+                                        <li className="list-group-item">
+                                            <b>Zone</b>
+                                            <span className="float-right">{item.zone.name}</span>
+                                        </li>
+                                        <li className="list-group-item">
+                                            <b>Solde total</b>
+                                            <span className="float-right text-success text-bold">{formatNumber(item.account.balance)}</span>
+                                        </li>
+                                        <li className="list-group-item">
+                                            <b>Créer par</b>
+                                            <span className="float-right">{item.creator.name}</span>
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
@@ -82,18 +80,16 @@ function AgentsCardsComponent({agents, dispatch}) {
                     </div>
                 }
             </div>
-            <BlockModalComponent modal={blockModal}
-                                 handleBlock={handleBlock}
-                                 handleClose={handleBlockModalHide}
-            />
-        </div>
+        </>
     )
 }
 
 // Prop types to ensure destroyed props data type
 AgentsCardsComponent.propTypes = {
     agents: PropTypes.array.isRequired,
-    dispatch: PropTypes.func.isRequired,
+    handleBlock: PropTypes.func.isRequired,
+    handleBlockModalShow: PropTypes.func.isRequired,
+    handleAgentDetailsModalShow: PropTypes.func.isRequired,
 };
 
 export default React.memo(AgentsCardsComponent);

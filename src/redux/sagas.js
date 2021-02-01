@@ -5,14 +5,18 @@ import sims from './sims/saga';
 import zones from './zones/saga';
 import agents from './agents/saga';
 import fleets from './fleets/saga';
-import outlays from './outlays/saga';
+import returns from './returns/saga';
+import refuels from './refuels/saga';
+import affords from './affords/saga';
 import settings from './settings/saga';
-import payments from './payments/saga';
 import managers from './managers/saga';
-import handovers from './handovers/saga';
+import supplies from './supplies/saga';
 import operators from './operators/saga';
+import transfers from './transfers/saga';
+import anonymous from './anonymous/saga';
 import clearances from './clearances/saga';
 import collectors from './collectors/saga';
+import recoveries from './recoveries/saga';
 import notifications from './notifications/saga';
 
 // Combine all saga middleware
@@ -23,13 +27,17 @@ export default function* sagas() {
         zones(),
         agents(),
         fleets(),
-        outlays(),
-        payments(),
+        returns(),
+        refuels(),
+        affords(),
+        supplies(),
         managers(),
         settings(),
-        handovers(),
+        transfers(),
+        anonymous(),
         operators(),
         clearances(),
+        recoveries(),
         collectors(),
         notifications(),
     ]);
