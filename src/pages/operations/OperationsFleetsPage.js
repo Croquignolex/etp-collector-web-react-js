@@ -133,7 +133,7 @@ function OperationsFleetsPage({supplies, suppliesRequests, hasMoreData, page, di
                 />
             </FormModalComponent>
             <FormModalComponent modal={recoveryModal} handleClose={handleRecoveryModalHide}>
-                <OperationsCashRecoveryContainer supply={returnModal.item}
+                <OperationsCashRecoveryContainer supply={recoveryModal.item}
                                                  handleClose={handleRecoveryModalHide}
                 />
             </FormModalComponent>
