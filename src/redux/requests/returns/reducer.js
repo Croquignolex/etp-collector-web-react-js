@@ -64,23 +64,6 @@ function reduce(state = initialState, action) {
         case actions.STORE_RETURN_REQUEST_RESET:
             nextState = {...state, add: initialState.add};
             return nextState || state;
-        // ======================================================== Confirm return
-        // Resolve event to set confirm return init request store data
-        case actions.STORE_CONFIRM_RETURN_REQUEST_INIT:
-            nextState = {...state, apply: requestInitValue()};
-            return nextState || state;
-        // Resolve event to set confirm return  failed request store data
-        case actions.STORE_CONFIRM_RETURN_REQUEST_FAILED:
-            nextState = {...state, apply: requestFailedValue(action.message)};
-            return nextState || state;
-        // Resolve event to set confirm return  succeeded request store data
-        case actions.STORE_CONFIRM_RETURN_REQUEST_SUCCEEDED:
-            nextState = {...state, apply: requestSucceededValue(action.message)};
-            return nextState || state;
-        // Resolve event to set confirm return  reset request store data
-        case actions.STORE_CONFIRM_RETURN_REQUEST_RESET:
-            nextState = {...state, apply: initialState.apply};
-            return nextState || state;
         // ========================================================
         // Unknown action
         default: return state;

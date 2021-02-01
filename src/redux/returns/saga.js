@@ -7,11 +7,8 @@ import {
     EMIT_NEW_RETURN,
     EMIT_RETURNS_FETCH,
     storeSetReturnsData,
-    EMIT_CONFIRM_RETURN,
-    storeUpdateReturnData,
     EMIT_NEXT_RETURNS_FETCH,
     storeSetNextReturnsData,
-    storeSetReturnActionData,
     storeStopInfiniteScrollReturnData
 } from "./actions";
 import {
@@ -23,10 +20,7 @@ import {
     storeReturnsRequestSucceed,
     storeNextReturnsRequestInit,
     storeNextReturnsRequestFailed,
-    storeConfirmReturnRequestInit,
     storeNextReturnsRequestSucceed,
-    storeConfirmReturnRequestFailed,
-    storeConfirmReturnRequestSucceed,
 } from "../requests/returns/actions";
 
 // Fetch returns from API
@@ -66,29 +60,6 @@ export function* emitNextReturnsFetch() {
             // Fire event for request
             yield put(storeNextReturnsRequestFailed({message}));
             yield put(storeStopInfiniteScrollReturnData());
-        }
-    });
-}
-
-// Confirm return from API
-export function* emitConfirmReturn() {
-    yield takeLatest(EMIT_CONFIRM_RETURN, function*({id}) {
-        try {
-            // Fire event at redux to toggle action loader
-            yield put(storeSetReturnActionData({id}));
-            // Fire event for request
-            yield put(storeConfirmReturnRequestInit());
-            const apiResponse = yield call(apiPostRequest, `${api.CONFIRM_FLEET_RECOVERIES_API_PATH}/${id}`);
-            // Fire event to redux
-            yield put(storeUpdateReturnData({id}));
-            // Fire event at redux to toggle action loader
-            yield put(storeSetReturnActionData({id}));
-            // Fire event for request
-            yield put(storeConfirmReturnRequestSucceed({message: apiResponse.message}));
-        } catch (message) {
-            // Fire event for request
-            yield put(storeSetReturnActionData({id}));
-            yield put(storeConfirmReturnRequestFailed({message}));
         }
     });
 }
@@ -182,7 +153,6 @@ export default function* sagaReturns() {
     yield all([
         fork(emitNewReturn),
         fork(emitReturnsFetch),
-        fork(emitConfirmReturn),
         fork(emitNextReturnsFetch),
     ]);
 }

@@ -1,15 +1,13 @@
 import PropTypes from "prop-types";
 import React, {useState} from 'react';
 
-import LoaderComponent from "../LoaderComponent";
-import {PENDING} from "../../constants/typeConstants";
 import FormModalComponent from "../modals/FormModalComponent";
 import {fleetTypeBadgeColor} from "../../functions/typeFunctions";
 import {dateToString, formatNumber} from "../../functions/generalFunctions";
 import AgentDetailsContainer from "../../containers/agents/AgentDetailsContainer";
 
 // Component
-function RecoveriesFleetsCardsComponent({returns, handleConfirmModalShow}) {
+function RecoveriesFleetsCardsComponent({returns}) {
     // Local states
     const [agentDetailsModal, setAgentDetailsModal] = useState({show: false, header: "DETAIL DE L'AGENT/RESSOURCE", id: ''});
 
@@ -28,19 +26,6 @@ function RecoveriesFleetsCardsComponent({returns, handleConfirmModalShow}) {
                             <div className="card">
                                 <div className={`${fleetTypeBadgeColor(item.status).background} card-header`}>
                                     <h3 className="card-title">{fleetTypeBadgeColor(item.status).text}</h3>
-                                    <div className="card-tools">
-                                        {item.status === PENDING && (
-                                            item.actionLoader ? <LoaderComponent little={true} /> : (
-                                                <button type="button"
-                                                        title="Confirmer"
-                                                        className="btn btn-tool"
-                                                        onClick={() => handleConfirmModalShow(item)}
-                                                >
-                                                    <i className="fa fa-check" />
-                                                </button>
-                                            )
-                                        )}
-                                    </div>
                                 </div>
                                 <div className="card-body">
                                     <ul className="list-group list-group-unbordered">
@@ -68,10 +53,6 @@ function RecoveriesFleetsCardsComponent({returns, handleConfirmModalShow}) {
                                                    onClick={() => setAgentDetailsModal({...agentDetailsModal, show: true, id: item.agent.id})}
                                                 />
                                             </span>
-                                        </li>
-                                        <li className="list-group-item">
-                                            <b>Responsable</b>
-                                            <span className="float-right">{item.collector.name}</span>
                                         </li>
                                     </ul>
                                 </div>

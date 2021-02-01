@@ -9,17 +9,14 @@ import AppLayoutContainer from "../../containers/AppLayoutContainer";
 import ErrorAlertComponent from "../../components/ErrorAlertComponent";
 import {RECOVERIES_FLEET_PAGE} from "../../constants/pageNameConstants";
 import TableSearchComponent from "../../components/TableSearchComponent";
-import ConfirmModalComponent from "../../components/modals/ConfirmModalComponent";
-import {emitConfirmReturn, emitNextReturnsFetch, emitReturnsFetch} from "../../redux/returns/actions";
+import {emitNextReturnsFetch, emitReturnsFetch} from "../../redux/returns/actions";
 import RecoveriesFleetsCardsComponent from "../../components/recoveries/RecoveriesFleetsCardsComponent";
 import {
     storeReturnsRequestReset,
     storeNextReturnsRequestReset,
-    storeConfirmReturnRequestReset
 } from "../../redux/requests/returns/actions";
 import {
     dateToString,
-    formatNumber,
     needleSearch,
     requestFailed,
     requestLoading,
@@ -29,7 +26,6 @@ import {
 function RecoveriesFleetsPage({returns, returnsRequests, hasMoreData, page, dispatch, location}) {
     // Local states
     const [needle, setNeedle] = useState('');
-    const [confirmModal, setConfirmModal] = useState({show: false, body: '', id: 0});
 
     // Local effects
     useEffect(() => {
@@ -49,29 +45,12 @@ function RecoveriesFleetsPage({returns, returnsRequests, hasMoreData, page, disp
     const shouldResetErrorData = () => {
         dispatch(storeReturnsRequestReset());
         dispatch(storeNextReturnsRequestReset());
-        dispatch(storeConfirmReturnRequestReset());
     };
 
     // Fetch next returns data to enhance infinite scroll
     const handleNextReturnsData = () => {
         dispatch(emitNextReturnsFetch({page}));
     }
-
-    // Show confirm modal form
-    const handleConfirmModalShow = ({id, amount}) => {
-        setConfirmModal({...confirmModal, id, body: `Confirmer le retour flotte de ${formatNumber(amount)}?`, show: true})
-    }
-
-    // Hide confirm modal form
-    const handleConfirmModalHide = () => {
-        setConfirmModal({...confirmModal, show: false})
-    }
-
-    // Trigger when fleet recovery confirm confirmed on modal
-    const handleConfirm = (id) => {
-        handleConfirmModalHide();
-        dispatch(emitConfirmReturn({id}));
-    };
 
     // Render
     return (
@@ -97,9 +76,7 @@ function RecoveriesFleetsPage({returns, returnsRequests, hasMoreData, page, disp
                                             {requestFailed(returnsRequests.apply) && <ErrorAlertComponent message={returnsRequests.apply.message} />}
                                             {/* Search result & Infinite scroll */}
                                             {(needle !== '' && needle !== undefined)
-                                                ? <RecoveriesFleetsCardsComponent returns={searchEngine(returns, needle)}
-                                                                                  handleConfirmModalShow={handleConfirmModalShow}
-                                                />
+                                                ? <RecoveriesFleetsCardsComponent returns={searchEngine(returns, needle)} />
                                                 : (requestLoading(returnsRequests.list) ? <LoaderComponent /> :
                                                         <InfiniteScroll hasMore={hasMoreData}
                                                                         dataLength={returns.length}
@@ -107,9 +84,7 @@ function RecoveriesFleetsPage({returns, returnsRequests, hasMoreData, page, disp
                                                                         next={handleNextReturnsData}
                                                                         style={{ overflow: 'hidden' }}
                                                         >
-                                                            <RecoveriesFleetsCardsComponent returns={returns}
-                                                                                            handleConfirmModalShow={handleConfirmModalShow}
-                                                            />
+                                                            <RecoveriesFleetsCardsComponent returns={returns} />
                                                         </InfiniteScroll>
                                                 )
                                             }
@@ -121,11 +96,6 @@ function RecoveriesFleetsPage({returns, returnsRequests, hasMoreData, page, disp
                     </section>
                 </div>
             </AppLayoutContainer>
-            {/* Modal */}
-            <ConfirmModalComponent modal={confirmModal}
-                                   handleModal={handleConfirm}
-                                   handleClose={handleConfirmModalHide}
-            />
         </>
     )
 }
