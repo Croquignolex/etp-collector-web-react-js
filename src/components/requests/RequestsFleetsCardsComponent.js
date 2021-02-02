@@ -1,15 +1,13 @@
 import PropTypes from "prop-types";
 import React, {useState} from 'react';
 
-import LoaderComponent from "../LoaderComponent";
 import FormModalComponent from "../modals/FormModalComponent";
-import {PENDING, PROCESSING} from "../../constants/typeConstants";
 import {fleetTypeBadgeColor} from "../../functions/typeFunctions";
 import {dateToString, formatNumber} from "../../functions/generalFunctions";
 import AgentDetailsContainer from "../../containers/agents/AgentDetailsContainer";
 
 // Component
-function RequestsFleetsCardsComponent({fleets, handleSupplyModalShow}) {
+function RequestsFleetsCardsComponent({fleets}) {
     // Local states
     const [agentDetailsModal, setAgentDetailsModal] = useState({show: false, header: "DETAIL DE L'AGENT/RESSOURCE", id: ''});
 
@@ -56,23 +54,7 @@ function RequestsFleetsCardsComponent({fleets, handleSupplyModalShow}) {
                                                 />
                                             </span>
                                         </li>
-                                        <li className="list-group-item">
-                                            <b>Demandeur</b>
-                                            <span className="float-right">{item.claimant.name}</span>
-                                        </li>
                                     </ul>
-                                    {[PENDING, PROCESSING].includes(item.status) &&
-                                        <div className="mt-3 text-center">
-                                            {item.actionLoader ? <LoaderComponent little={true} /> :
-                                                <button type="button"
-                                                        className="btn btn-theme"
-                                                        onClick={() => handleSupplyModalShow(item)}
-                                                >
-                                                    <i className="fa fa-plus" /> Effectuer un flottage
-                                                </button>
-                                            }
-                                        </div>
-                                    }
                                 </div>
                             </div>
                         </div>

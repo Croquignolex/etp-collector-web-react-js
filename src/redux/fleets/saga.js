@@ -5,9 +5,7 @@ import {apiGetRequest, apiPostRequest} from "../../functions/axiosFunctions";
 import {
     EMIT_FLEETS_FETCH,
     storeSetFleetsData,
-    storeUpdateFleetData,
     EMIT_ALL_FLEETS_FETCH,
-    EMIT_FLEET_ADD_SUPPLY,
     EMIT_NEXT_FLEETS_FETCH,
     storeSetNextFleetsData,
     storeStopInfiniteScrollFleetData
@@ -18,13 +16,10 @@ import {
     storeFleetsRequestSucceed,
     storeAllFleetsRequestInit,
     storeNextFleetsRequestInit,
-    storeFleetSupplyRequestInit,
     storeAllFleetsRequestFailed,
     storeNextFleetsRequestFailed,
     storeAllFleetsRequestSucceed,
-    storeFleetSupplyRequestFailed,
-    storeNextFleetsRequestSucceed,
-    storeFleetSupplyRequestSucceed
+    storeNextFleetsRequestSucceed
 } from "../requests/fleets/actions";
 
 // Fetch fleets from API
@@ -84,25 +79,6 @@ export function* emitAllFleetsFetch() {
         } catch (message) {
             // Fire event for request
             yield put(storeAllFleetsRequestFailed({message}));
-        }
-    });
-}
-
-// Fleet add supply from API
-export function* emitFleetAddSupply() {
-    yield takeLatest(EMIT_FLEET_ADD_SUPPLY, function*({id, amount, sim}) {
-        try {
-            // Fire event for request
-            yield put(storeFleetSupplyRequestInit());
-            const data = {id_puce: sim, montant: amount, id_demande_flotte: id};
-            const apiResponse = yield call(apiPostRequest, api.FLEET_ADD_SUPPLY_API_PATH, data);
-            // Fire event to redux
-            yield put(storeUpdateFleetData({id, amount}));
-            // Fire event for request
-            yield put(storeFleetSupplyRequestSucceed({message: apiResponse.message}));
-        } catch (message) {
-            // Fire event for request
-            yield put(storeFleetSupplyRequestFailed({message}));
         }
     });
 }
@@ -170,7 +146,6 @@ export default function* sagaFleets() {
     yield all([
         fork(emitFleetsFetch),
         fork(emitAllFleetsFetch),
-        fork(emitFleetAddSupply),
         fork(emitNextFleetsFetch),
     ]);
 }

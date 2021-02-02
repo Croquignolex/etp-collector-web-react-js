@@ -19,9 +19,8 @@ export const UNREAD_NOTIFICATIONS_API_PATH = `${API_URL}/unread_notifications`;
 export const DELETE_NOTIFICATIONS_API_PATH = `${API_URL}/delete_notifications`;
 
 // Requests
-export const FLEET_ADD_SUPPLY_API_PATH = `${API_URL}/flottage`;
-export const FLEETS_API_PATH = `${API_URL}/list_demandes_flote_general`;
 export const ALL_FLEETS_API_PATH = `${API_URL}/list_demandes_flote_general_all`;
+export const FLEETS_API_PATH = `${API_URL}/list_demandes_flote_general_collector`;
 
 export const CLEARANCES_API_PATH = `${API_URL}/list_demandes_destockage`;
 export const ALL_CLEARANCES_API_PATH = `${API_URL}/list_demandes_destockage_all`;
@@ -43,14 +42,6 @@ export const ALL_AGENTS_API_PATH = `${API_URL}/list_agents_all`;
 export const EDIT_AGENT_DOC_API_PATH = `${API_URL}/edit_folder`;
 export const AGENT_ZONE_UPDATE_API_PATH = `${API_URL}/edit_zone_agent`;
 export const TOGGLE_AGENT_STATUS_API_PATH = `${API_URL}/edit_agent_status`;
-
-// Checkout
-export const NEW_HANDOVER_API_PATH = `${API_URL}/passation`;
-export const NEW_OUTLAY_API_PATH = `${API_URL}/decaissement`;
-export const NEW_PAYMENT_API_PATH = `${API_URL}/encassement`;
-export const HANDOVERS_API_PATH = `${API_URL}/passations_list`;
-export const OUTLAYS_API_PATH = `${API_URL}/decaissement_list`;
-export const PAYMENTS_API_PATH = `${API_URL}/encaissement_list`;
 
 // Zones
 export const All_ZONES_API_PATH = `${API_URL}/zone_list_all`;

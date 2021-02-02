@@ -10,11 +10,9 @@ import AppLayoutContainer from "../../containers/AppLayoutContainer";
 import ErrorAlertComponent from "../../components/ErrorAlertComponent";
 import TableSearchComponent from "../../components/TableSearchComponent";
 import {storeAllSimsRequestReset} from "../../redux/requests/sims/actions";
-import FormModalComponent from "../../components/modals/FormModalComponent";
 import {emitFleetsFetch, emitNextFleetsFetch} from "../../redux/fleets/actions";
 import RequestsFleetsCardsComponent from "../../components/requests/RequestsFleetsCardsComponent";
 import {storeFleetsRequestReset, storeNextFleetsRequestReset} from "../../redux/requests/fleets/actions";
-import RequestsFleetsAddSupplyContainer from "../../containers/requests/RequestsFleetsAddSupplyContainer";
 import {
     dateToString,
     needleSearch,
@@ -26,7 +24,6 @@ import {
 function RequestsFleetsPage({fleets, fleetsRequests, hasMoreData, page, dispatch, location}) {
     // Local states
     const [needle, setNeedle] = useState('');
-    const [supplyModal, setSupplyModal] = useState({show: false, header: 'EFFECTUER UN FLOTTAGE', item: {}});
 
     // Local effects
     useEffect(() => {
@@ -55,16 +52,6 @@ function RequestsFleetsPage({fleets, fleetsRequests, hasMoreData, page, dispatch
         dispatch(emitNextFleetsFetch({page}));
     }
 
-    // Show supply modal form
-    const handleSupplyModalShow = (item) => {
-        setSupplyModal({...supplyModal, item, show: true})
-    }
-
-    // Hide supply modal form
-    const handleSupplyModalHide = () => {
-        setSupplyModal({...supplyModal, show: false})
-    }
-
     // Render
     return (
         <>
@@ -88,9 +75,7 @@ function RequestsFleetsPage({fleets, fleetsRequests, hasMoreData, page, dispatch
                                             {requestFailed(fleetsRequests.next) && <ErrorAlertComponent message={fleetsRequests.next.message} />}
                                             {/* Search result & Infinite scroll */}
                                             {(needle !== '' && needle !== undefined)
-                                                ? <RequestsFleetsCardsComponent fleets={searchEngine(fleets, needle)}
-                                                                                handleSupplyModalShow={handleSupplyModalShow}
-                                                />
+                                                ? <RequestsFleetsCardsComponent fleets={searchEngine(fleets, needle)} />
                                                 : (requestLoading(fleetsRequests.list) ? <LoaderComponent /> :
                                                         <InfiniteScroll hasMore={hasMoreData}
                                                                         dataLength={fleets.length}
@@ -98,9 +83,7 @@ function RequestsFleetsPage({fleets, fleetsRequests, hasMoreData, page, dispatch
                                                                         loader={<LoaderComponent />}
                                                                         style={{ overflow: 'hidden' }}
                                                         >
-                                                            <RequestsFleetsCardsComponent fleets={fleets}
-                                                                                          handleSupplyModalShow={handleSupplyModalShow}
-                                                            />
+                                                            <RequestsFleetsCardsComponent fleets={fleets} />
                                                         </InfiniteScroll>
                                                 )
                                             }
@@ -112,12 +95,6 @@ function RequestsFleetsPage({fleets, fleetsRequests, hasMoreData, page, dispatch
                     </section>
                 </div>
             </AppLayoutContainer>
-            {/* Modal */}
-            <FormModalComponent modal={supplyModal} handleClose={handleSupplyModalHide}>
-                <RequestsFleetsAddSupplyContainer fleet={supplyModal.item}
-                                                  handleClose={handleSupplyModalHide}
-                />
-            </FormModalComponent>
         </>
     )
 }
