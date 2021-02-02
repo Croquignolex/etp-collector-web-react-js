@@ -83,8 +83,6 @@ function OperationsClearancesAddRefuelComponent({request, sims, agents, allAgent
     // Reset error alert
     const shouldResetErrorData = () => {
         dispatch(storeAddRefuelRequestReset());
-        dispatch(storeAllSimsRequestReset());
-        dispatch(storeAllAgentsRequestReset());
     };
 
     // Trigger add supply form submit
@@ -158,7 +156,7 @@ function OperationsClearancesAddRefuelComponent({request, sims, agents, allAgent
                     <div className='col'>
                         <FileDocumentComponent id='file'
                                                input={doc}
-                                               label='Dossier agent'
+                                               label='Reçus'
                                                handleInput={handleFileInput}
                         />
                     </div>

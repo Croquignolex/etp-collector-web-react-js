@@ -1,7 +1,4 @@
-import Lodash from "lodash";
-
 import * as actions from "./actions";
-import {DONE, PROCESSING} from "../../constants/typeConstants";
 
 // Partial global store for users data management
 const initialState = {
@@ -25,6 +22,10 @@ function reduce(state = initialState, action) {
         // Resolve event to stop infinite scroll fleets data
         case actions.STORE_STOP_INFINITE_SCROLL_FLEETS_DATA:
             nextState = {...state, hasMoreData: false};
+            return nextState || state;
+        // Resolve event to set new fleet data
+        case actions.STORE_SET_NEW_FLEET_DATA:
+            nextState = {...state, list: [action.fleet, ...state.list]}
             return nextState || state;
         // Unknown action
         default: return state;

@@ -14,6 +14,11 @@ export const STORE_ALL_FLEETS_REQUEST_RESET = 'STORE_ALL_FLEETS_REQUEST_RESET';
 export const STORE_ALL_FLEETS_REQUEST_FAILED = 'STORE_ALL_FLEETS_REQUEST_FAILED';
 export const STORE_ALL_FLEETS_REQUEST_SUCCEEDED = 'STORE_ALL_FLEETS_REQUEST_SUCCEEDED';
 
+export const STORE_ADD_FLEET_REQUEST_INIT = 'STORE_ADD_FLEET_REQUEST_INIT';
+export const STORE_ADD_FLEET_REQUEST_RESET = 'STORE_ADD_FLEET_REQUEST_RESET';
+export const STORE_ADD_FLEET_REQUEST_FAILED = 'STORE_ADD_FLEET_REQUEST_FAILED';
+export const STORE_ADD_FLEET_REQUEST_SUCCEEDED = 'STORE_ADD_FLEET_REQUEST_SUCCEEDED';
+
 // ======================================================== Fleets
 // Set fleets init data into store
 export const storeFleetsRequestInit = () => ({
@@ -79,4 +84,26 @@ export const storeAllFleetsRequestSucceed = ({message}) => ({
 // Set all fleets reset data into store
 export const storeAllFleetsRequestReset = () => ({
     type: STORE_ALL_FLEETS_REQUEST_RESET
+});
+// ======================================================== Add fleet
+// Set add fleet init data into store
+export const storeAddFleetRequestInit = () => ({
+    type: STORE_ADD_FLEET_REQUEST_INIT
+});
+
+// Set add fleet failed data into store
+export const storeAddFleetRequestFailed = ({message}) => ({
+    message,
+    type: STORE_ADD_FLEET_REQUEST_FAILED
+});
+
+// Set add fleet succeeded data into store
+export const storeAddFleetRequestSucceed = ({message}) => ({
+    message,
+    type: STORE_ADD_FLEET_REQUEST_SUCCEEDED
+});
+
+// Set add fleet reset data into store
+export const storeAddFleetRequestReset = () => ({
+    type: STORE_ADD_FLEET_REQUEST_RESET
 });

@@ -64,7 +64,7 @@ export function* emitNextTransfersFetch() {
     });
 }
 
-// Fleets new transfer from API
+// New transfer from API
 export function* emitAddTransfer() {
     yield takeLatest(EMIT_ADD_TRANSFER, function*({amount, managerSim, collectorSim}) {
         try {

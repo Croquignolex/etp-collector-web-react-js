@@ -64,6 +64,23 @@ function reduce(state = initialState, action) {
         case actions.STORE_ALL_FLEETS_REQUEST_RESET:
             nextState = {...state, all: initialState.all};
             return nextState || state;
+        // ======================================================== Add fleet
+        // Resolve event to set add fleet init request store data
+        case actions.STORE_ADD_FLEET_REQUEST_INIT:
+            nextState = {...state, add: requestInitValue()};
+            return nextState || state;
+        // Resolve event to set add fleet failed request store data
+        case actions.STORE_ADD_FLEET_REQUEST_FAILED:
+            nextState = {...state, add: requestFailedValue(action.message)};
+            return nextState || state;
+        // Resolve event to set add fleet succeeded request store data
+        case actions.STORE_ADD_FLEET_REQUEST_SUCCEEDED:
+            nextState = {...state, add: requestSucceededValue(action.message)};
+            return nextState || state;
+        // Resolve event to set add fleet reset request store data
+        case actions.STORE_ADD_FLEET_REQUEST_RESET:
+            nextState = {...state, add: initialState.add};
+            return nextState || state;
         // ========================================================
         // Unknown action
         default: return state;

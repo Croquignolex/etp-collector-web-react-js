@@ -1,9 +1,11 @@
 // Reducer action types
 export const STORE_SET_FLEETS_DATA = 'STORE_SET_FLEETS_DATA';
+export const STORE_SET_NEW_FLEET_DATA = 'STORE_SET_NEW_FLEET_DATA';
 export const STORE_SET_NEXT_FLEETS_DATA = 'STORE_SET_NEXT_FLEETS_DATA';
 export const STORE_STOP_INFINITE_SCROLL_FLEETS_DATA = 'STORE_STOP_INFINITE_SCROLL_FLEETS_DATA';
 
 // Middleware action types
+export const EMIT_ADD_FLEET = 'EMIT_ADD_FLEET';
 export const EMIT_FLEETS_FETCH = 'EMIT_FLEETS_FETCH';
 export const EMIT_ALL_FLEETS_FETCH = 'EMIT_ALL_FLEETS_FETCH';
 export const EMIT_NEXT_FLEETS_FETCH = 'EMIT_NEXT_FLEETS_FETCH';
@@ -15,6 +17,12 @@ export const storeSetFleetsData = ({fleets, hasMoreData, page}) => ({
     fleets,
     hasMoreData,
     type: STORE_SET_FLEETS_DATA
+});
+
+// Set new fleet data in store
+export const storeSetNewFleetData = ({fleet}) => ({
+    fleet,
+    type: STORE_SET_NEW_FLEET_DATA
 });
 
 // Set next fleets data in store
@@ -45,4 +53,12 @@ export const emitNextFleetsFetch = ({page}) => ({
 // Emit all fleets fetch
 export const emitAllFleetsFetch = () => ({
     type: EMIT_ALL_FLEETS_FETCH
+});
+
+// Emit add fleet
+export const emitAddFleet = ({sim, amount, agent}) => ({
+    sim,
+    agent,
+    amount,
+    type: EMIT_ADD_FLEET
 });

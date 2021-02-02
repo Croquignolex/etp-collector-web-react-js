@@ -10,11 +10,10 @@ import {emitAddAfford} from "../../redux/affords/actions";
 import * as constants from "../../constants/defaultConstants";
 import FileDocumentComponent from "../form/FileDocumentComponent";
 import {playWarningSound} from "../../functions/playSoundFunctions";
-import {storeAllSimsRequestReset} from "../../redux/requests/sims/actions";
 import {DEFAULT_FORM_DATA, VENDORS} from "../../constants/defaultConstants";
-import {requiredChecker, requiredFileChecker} from "../../functions/checkerFunctions";
 import {storeAddAffordRequestReset} from "../../redux/requests/affords/actions";
 import {dataToArrayForSelect, mappedSims} from "../../functions/arrayFunctions";
+import {requiredChecker, requiredFileChecker} from "../../functions/checkerFunctions";
 import {
     applySuccess,
     requestFailed,
@@ -81,7 +80,6 @@ function OperationsAffordsAddAffordComponent({request, sims, allSimsRequests, di
 
     // Reset error alert
     const shouldResetErrorData = () => {
-        dispatch(storeAllSimsRequestReset());
         dispatch(storeAddAffordRequestReset());
     };
 

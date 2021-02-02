@@ -46,7 +46,7 @@ function reduce(state = initialState, action) {
         case actions.STORE_NEXT_TRANSFERS_REQUEST_RESET:
             nextState = {...state, next: initialState.next};
             return nextState || state;
-        // ======================================================== Fleet supply
+        // ======================================================== Add transfer
         // Resolve event to set add transfer init request store data
         case actions.STORE_ADD_TRANSFER_REQUEST_INIT:
             nextState = {...state, add: requestInitValue()};
