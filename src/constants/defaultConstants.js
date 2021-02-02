@@ -13,3 +13,7 @@ export const DEFAULT_PASSWORD = '000000';
 export const DEFAULT_COUNTRY = 'CAMAEROUN';
 
 export const UNKNOWN = 'INCONNU';
+export const VENDORS = [
+    {id: 'DIGITAL PARTNER', name: 'DIGITAL PARTNER'},
+    {id: 'BANQUE (MTN)', name: 'BANQUE (MTN)'},
+];

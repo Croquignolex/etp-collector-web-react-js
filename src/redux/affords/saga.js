@@ -2,7 +2,7 @@ import {all, call, fork, put, takeLatest} from 'redux-saga/effects'
 
 import * as api from "../../constants/apiConstants";
 import {storeSetNewRefuelData} from "../refuels/actions";
-import {SUPPLY_BY_AGENT} from "../../constants/typeConstants";
+import {SUPPLY_BY_AGENT, SUPPLY_BY_DIGITAL_PARTNER} from "../../constants/typeConstants";
 import {apiGetRequest, apiPostRequest, getFileFromServer} from "../../functions/axiosFunctions";
 import {
     EMIT_ADD_AFFORD,
@@ -10,7 +10,7 @@ import {
     storeSetAffordsData,
     storeSetNextAffordsData,
     EMIT_NEXT_AFFORDS_FETCH,
-    storeStopInfiniteScrollAffordData
+    storeStopInfiniteScrollAffordData, storeSetNewAffordData
 } from "./actions";
 import {
     storeAffordsRequestInit,
@@ -67,21 +67,21 @@ export function* emitNextAffordsFetch() {
 
 // Fleets new afford from API
 export function* emitAddAfford() {
-    yield takeLatest(EMIT_ADD_AFFORD, function*({agent, amount, sim, receipt}) {
+    yield takeLatest(EMIT_ADD_AFFORD, function*({vendor, amount, sim, receipt}) {
         try {
             // Fire event for request
             yield put(storeAddAffordRequestInit());
             const data = new FormData();
             data.append('id_puce', sim);
             data.append('recu', receipt);
-            data.append('id_agent', agent);
             data.append('montant', amount);
-            data.append('type', SUPPLY_BY_AGENT);
+            data.append('fournisseur', vendor);
+            data.append('type', SUPPLY_BY_DIGITAL_PARTNER);
             const apiResponse = yield call(apiPostRequest, api.NEW_REFUEL_API_PATH, data);
             // Extract dataF
-            const refuel = extractAffordData(apiResponse.data);
+            const afford = extractAffordData(apiResponse.data);
             // Fire event to redux
-            yield put(storeSetNewRefuelData({refuel}))
+            yield put(storeSetNewAffordData({afford}))
             // Fire event for request
             yield put(storeAddAffordRequestSucceed({message: apiResponse.message}));
         } catch (message) {

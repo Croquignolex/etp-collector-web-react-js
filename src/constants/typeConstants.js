@@ -32,3 +32,4 @@ export const AGENT_COLLECTOR_TYPE = [AGENT_TYPE, RESOURCE_TYPE, COLLECTOR_TYPE];
 
 // Supply type
 export const SUPPLY_BY_AGENT = "D'un Agent";
+export const SUPPLY_BY_DIGITAL_PARTNER = "D'un Digital Partner";

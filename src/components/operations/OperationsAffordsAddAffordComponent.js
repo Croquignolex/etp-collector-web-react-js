@@ -5,17 +5,16 @@ import ButtonComponent from "../form/ButtonComponent";
 import AmountComponent from "../form/AmountComponent";
 import SelectComponent from "../form/SelectComponent";
 import ErrorAlertComponent from "../ErrorAlertComponent";
-import {FLEET_TYPE} from "../../constants/typeConstants";
-import {emitAddRefuel} from "../../redux/refuels/actions";
+import {MASTER_TYPE} from "../../constants/typeConstants";
+import {emitAddAfford} from "../../redux/affords/actions";
 import * as constants from "../../constants/defaultConstants";
 import FileDocumentComponent from "../form/FileDocumentComponent";
-import {DEFAULT_FORM_DATA} from "../../constants/defaultConstants";
 import {playWarningSound} from "../../functions/playSoundFunctions";
 import {storeAllSimsRequestReset} from "../../redux/requests/sims/actions";
-import {fileChecker, requiredChecker} from "../../functions/checkerFunctions";
-import {storeAllAgentsRequestReset} from "../../redux/requests/agents/actions";
+import {DEFAULT_FORM_DATA, VENDORS} from "../../constants/defaultConstants";
+import {requiredChecker, requiredFileChecker} from "../../functions/checkerFunctions";
+import {storeAddAffordRequestReset} from "../../redux/requests/affords/actions";
 import {dataToArrayForSelect, mappedSims} from "../../functions/arrayFunctions";
-import {storeAddRefuelRequestReset} from "../../redux/requests/refuels/actions";
 import {
     applySuccess,
     requestFailed,
@@ -24,12 +23,12 @@ import {
 } from "../../functions/generalFunctions";
 
 // Component
-function OperationsAffordsAddAffordComponent({request, sims, agents, allAgentsRequests, allSimsRequests, dispatch, handleClose}) {
+function OperationsAffordsAddAffordComponent({request, sims, allSimsRequests, dispatch, handleClose}) {
     // Local state
     const [amount, setAmount] = useState(DEFAULT_FORM_DATA);
     const [doc, setDoc] = useState(constants.DEFAULT_FORM_DATA);
     const [incomingSim, setIncomingSim] = useState(DEFAULT_FORM_DATA);
-    const [agent, setAgent] = useState({...DEFAULT_FORM_DATA, data: 0});
+    const [vendor, setVendor] = useState({...DEFAULT_FORM_DATA});
 
     // Local effects
     useEffect(() => {
@@ -55,9 +54,9 @@ function OperationsAffordsAddAffordComponent({request, sims, agents, allAgentsRe
         setIncomingSim({...incomingSim,  isValid: true, data})
     }
 
-    const handleAgentSelect = (data) => {
+    const handleVendorSelect = (data) => {
         shouldResetErrorData();
-        setAgent({...agent,  isValid: true, data})
+        setVendor({...vendor,  isValid: true, data})
     }
 
     const handleAmountInput = (data) => {
@@ -72,42 +71,41 @@ function OperationsAffordsAddAffordComponent({request, sims, agents, allAgentsRe
 
     // Build select options
     const incomingSelectOptions = useMemo(() => {
-        return dataToArrayForSelect(mappedSims(sims.filter(item => FLEET_TYPE === item.type.name)))
+        return dataToArrayForSelect(mappedSims(sims.filter(item => MASTER_TYPE === item.type.name)))
     }, [sims]);
 
-    // Build select options
-    const agentSelectOptions = useMemo(() => {
-        return dataToArrayForSelect(agents)
-    }, [agents]);
+    // Build vendor options
+    const agentVendorOptions = useMemo(() => {
+        return dataToArrayForSelect(VENDORS)
+    }, []);
 
     // Reset error alert
     const shouldResetErrorData = () => {
-        dispatch(storeAddRefuelRequestReset());
         dispatch(storeAllSimsRequestReset());
-        dispatch(storeAllAgentsRequestReset());
+        dispatch(storeAddAffordRequestReset());
     };
 
     // Trigger add supply form submit
     const handleSubmit = (e) => {
         e.preventDefault();
         shouldResetErrorData();
-        const _document = fileChecker(doc);
-        const _agent = requiredChecker(agent);
+        const _vendor = requiredChecker(vendor);
         const _amount = requiredChecker(amount);
+        const _document = requiredFileChecker(doc);
         const _incomingSim = requiredChecker(incomingSim);
         // Set value
-        setAgent(_agent);
         setDoc(_document);
+        setVendor(_vendor);
         setAmount(_amount);
         setIncomingSim(_incomingSim);
         const validationOK = (
             _amount.isValid && _incomingSim.isValid &&
-            _agent.isValid && _document.isValid
+            _vendor.isValid && _document.isValid
         );
         // Check
         if(validationOK) {
-            dispatch(emitAddRefuel({
-                agent: _agent.data,
+            dispatch(emitAddAfford({
+                vendor: _vendor.data,
                 amount: _amount.data,
                 sim: _incomingSim.data,
                 receipt: _document.data,
@@ -124,20 +122,20 @@ function OperationsAffordsAddAffordComponent({request, sims, agents, allAgentsRe
             <form onSubmit={handleSubmit}>
                 <div className='row'>
                     <div className='col-sm-6'>
-                        <SelectComponent input={agent}
-                                         id='inputSimAgent'
-                                         label='Agent/ressource'
-                                         options={agentSelectOptions}
-                                         handleInput={handleAgentSelect}
-                                         title='Choisir un agent/ressource'
-                                         requestProcessing={requestLoading(allAgentsRequests)}
-                        />
-                    </div>
-                    <div className='col-sm-6'>
                         <AmountComponent input={amount}
                                          id='inputAmount'
                                          label='Montant à déstocker'
                                          handleInput={handleAmountInput}
+                        />
+                    </div>
+                    <div className='col-sm-6'>
+                        <SelectComponent input={vendor}
+                                         id='inputVendor'
+                                         label='Fournisseur'
+                                         requestProcessing={false}
+                                         options={agentVendorOptions}
+                                         title='Choisir un fournisseur'
+                                         handleInput={handleVendorSelect}
                         />
                     </div>
                 </div>
@@ -157,7 +155,7 @@ function OperationsAffordsAddAffordComponent({request, sims, agents, allAgentsRe
                     <div className='col'>
                         <FileDocumentComponent id='file'
                                                input={doc}
-                                               label='Dossier agent'
+                                               label='Récus'
                                                handleInput={handleFileInput}
                         />
                     </div>
@@ -173,12 +171,10 @@ function OperationsAffordsAddAffordComponent({request, sims, agents, allAgentsRe
 // Prop types to ensure destroyed props data type
 OperationsAffordsAddAffordComponent.propTypes = {
     sims: PropTypes.array.isRequired,
-    agents: PropTypes.array.isRequired,
     dispatch: PropTypes.func.isRequired,
     request: PropTypes.object.isRequired,
     handleClose: PropTypes.func.isRequired,
-    allSimsRequests: PropTypes.object.isRequired,
-    allAgentsRequests: PropTypes.object.isRequired,
+    allSimsRequests: PropTypes.object.isRequired
 };
 
 export default React.memo(OperationsAffordsAddAffordComponent);

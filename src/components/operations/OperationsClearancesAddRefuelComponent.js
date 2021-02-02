@@ -12,10 +12,10 @@ import FileDocumentComponent from "../form/FileDocumentComponent";
 import {DEFAULT_FORM_DATA} from "../../constants/defaultConstants";
 import {playWarningSound} from "../../functions/playSoundFunctions";
 import {storeAllSimsRequestReset} from "../../redux/requests/sims/actions";
-import {fileChecker, requiredChecker} from "../../functions/checkerFunctions";
 import {storeAllAgentsRequestReset} from "../../redux/requests/agents/actions";
 import {dataToArrayForSelect, mappedSims} from "../../functions/arrayFunctions";
 import {storeAddRefuelRequestReset} from "../../redux/requests/refuels/actions";
+import {requiredChecker, requiredFileChecker} from "../../functions/checkerFunctions";
 import {
     applySuccess,
     requestFailed,
@@ -91,9 +91,9 @@ function OperationsClearancesAddRefuelComponent({request, sims, agents, allAgent
     const handleSubmit = (e) => {
         e.preventDefault();
         shouldResetErrorData();
-        const _document = fileChecker(doc);
         const _agent = requiredChecker(agent);
         const _amount = requiredChecker(amount);
+        const _document = requiredFileChecker(doc);
         const _incomingSim = requiredChecker(incomingSim);
         // Set value
         setAgent(_agent);
@@ -121,6 +121,7 @@ function OperationsClearancesAddRefuelComponent({request, sims, agents, allAgent
         <>
             {requestFailed(request) && <ErrorAlertComponent message={request.message} />}
             {requestFailed(allSimsRequests) && <ErrorAlertComponent message={allSimsRequests.message} />}
+            {requestFailed(allAgentsRequests) && <ErrorAlertComponent message={allAgentsRequests.message} />}
             <form onSubmit={handleSubmit}>
                 <div className='row'>
                     <div className='col-sm-6'>

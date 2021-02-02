@@ -2,12 +2,14 @@ import PropTypes from 'prop-types';
 import React, {useEffect, useState} from 'react';
 import InfiniteScroll from "react-infinite-scroll-component";
 
+import {emitAllSimsFetch} from "../../redux/sims/actions";
 import HeaderComponent from "../../components/HeaderComponent";
 import LoaderComponent from "../../components/LoaderComponent";
 import AppLayoutContainer from "../../containers/AppLayoutContainer";
 import ErrorAlertComponent from "../../components/ErrorAlertComponent";
 import TableSearchComponent from "../../components/TableSearchComponent";
 import {OPERATIONS_AFFORDS_PAGE} from "../../constants/pageNameConstants";
+import {storeAllSimsRequestReset} from "../../redux/requests/sims/actions";
 import FormModalComponent from "../../components/modals/FormModalComponent";
 import {emitAffordsFetch, emitNextAffordsFetch} from "../../redux/affords/actions";
 import OperationsAffordsCardsComponent from "../../components/operations/OperationsAffordsCardsComponent";
@@ -32,6 +34,7 @@ function OperationsAffordsPage({affords, affordsRequests, hasMoreData, page, dis
     // Local effects
     useEffect(() => {
         dispatch(emitAffordsFetch());
+        dispatch(emitAllSimsFetch());
         // Cleaner error alert while component did unmount without store dependency
         return () => {
             shouldResetErrorData();
@@ -46,6 +49,7 @@ function OperationsAffordsPage({affords, affordsRequests, hasMoreData, page, dis
     // Reset error alert
     const shouldResetErrorData = () => {
         dispatch(storeAffordsRequestReset());
+        dispatch(storeAllSimsRequestReset());
         dispatch(storeNextAffordsRequestReset());
     };
 
