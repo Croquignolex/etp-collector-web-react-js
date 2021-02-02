@@ -21,6 +21,7 @@ function SideBarComponent({user, pathname}) {
             buildOperationsMenu(),
             buildRecoveriesMenu(),
             buildAgentsMenu(),
+            buildSimsMenu(),
         ];
         // eslint-disable-next-line
     }, [pathname]);
@@ -166,6 +167,17 @@ function buildAgentsMenu() {
         sub: []
     };
 }
+
+// Build sims menu
+function buildSimsMenu() {
+    return {
+        name: page.SIMS_PAGE,
+        path: path.SIMS_PAGE_PATH,
+        icon: 'fa fa-sim-card',
+        sub: []
+    };
+}
+
 
 // Side bar drawer open
 function drawer(toggle, key, sub, activePage) {
