@@ -1,16 +1,16 @@
 import {all, call, fork, put, takeLatest} from 'redux-saga/effects'
 
 import * as api from "../../constants/apiConstants";
-import {storeSetNewRefuelData} from "../refuels/actions";
-import {SUPPLY_BY_AGENT, SUPPLY_BY_DIGITAL_PARTNER} from "../../constants/typeConstants";
+import {SUPPLY_BY_DIGITAL_PARTNER} from "../../constants/typeConstants";
 import {apiGetRequest, apiPostRequest, getFileFromServer} from "../../functions/axiosFunctions";
 import {
     EMIT_ADD_AFFORD,
     EMIT_AFFORDS_FETCH,
     storeSetAffordsData,
+    storeSetNewAffordData,
     storeSetNextAffordsData,
     EMIT_NEXT_AFFORDS_FETCH,
-    storeStopInfiniteScrollAffordData, storeSetNewAffordData
+    storeStopInfiniteScrollAffordData
 } from "./actions";
 import {
     storeAffordsRequestInit,
