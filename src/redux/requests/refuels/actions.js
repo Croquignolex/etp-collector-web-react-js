@@ -14,11 +14,6 @@ export const STORE_ADD_REFUEL_REQUEST_RESET = 'STORE_ADD_REFUEL_REQUEST_RESET';
 export const STORE_ADD_REFUEL_REQUEST_FAILED = 'STORE_ADD_REFUEL_REQUEST_FAILED';
 export const STORE_ADD_REFUEL_REQUEST_SUCCEEDED = 'STORE_ADD_REFUEL_REQUEST_SUCCEEDED';
 
-export const STORE_CONFIRM_REFUEL_REQUEST_INIT = 'STORE_CONFIRM_REFUEL_REQUEST_INIT';
-export const STORE_CONFIRM_REFUEL_REQUEST_RESET = 'STORE_CONFIRM_REFUEL_REQUEST_RESET';
-export const STORE_CONFIRM_REFUEL_REQUEST_FAILED = 'STORE_CONFIRM_REFUEL_REQUEST_FAILED';
-export const STORE_CONFIRM_REFUEL_REQUEST_SUCCEEDED = 'STORE_CONFIRM_REFUEL_REQUEST_SUCCEEDED';
-
 // ======================================================== Refuels
 // Set refuels init data into store
 export const storeRefuelsRequestInit = () => ({
@@ -84,26 +79,4 @@ export const storeAddRefuelRequestSucceed = ({message}) => ({
 // Set add refuel reset data into store
 export const storeAddRefuelRequestReset = () => ({
     type: STORE_ADD_REFUEL_REQUEST_RESET
-});
-// ======================================================== Confirm refuel
-// Set confirm refuel init data into store
-export const storeConfirmRefuelRequestInit = () => ({
-    type: STORE_CONFIRM_REFUEL_REQUEST_INIT
-});
-
-// Set confirm refuel failed data into store
-export const storeConfirmRefuelRequestFailed = ({message}) => ({
-    message,
-    type: STORE_CONFIRM_REFUEL_REQUEST_FAILED
-});
-
-// Set confirm refuel succeeded data into store
-export const storeConfirmRefuelRequestSucceed = ({message}) => ({
-    message,
-    type: STORE_CONFIRM_REFUEL_REQUEST_SUCCEEDED
-});
-
-// Set confirm refuel reset data into store
-export const storeConfirmRefuelRequestReset = () => ({
-    type: STORE_CONFIRM_REFUEL_REQUEST_RESET
 });

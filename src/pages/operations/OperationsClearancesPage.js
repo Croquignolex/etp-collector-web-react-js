@@ -11,18 +11,15 @@ import ErrorAlertComponent from "../../components/ErrorAlertComponent";
 import TableSearchComponent from "../../components/TableSearchComponent";
 import FormModalComponent from "../../components/modals/FormModalComponent";
 import {OPERATIONS_CLEARANCES_PAGE} from "../../constants/pageNameConstants";
-import ConfirmModalComponent from "../../components/modals/ConfirmModalComponent";
-import {emitConfirmRefuel, emitNextRefuelsFetch, emitRefuelsFetch} from "../../redux/refuels/actions";
-import {
-    storeConfirmRefuelRequestReset,
-    storeNextRefuelsRequestReset,
-    storeRefuelsRequestReset
-} from "../../redux/requests/refuels/actions";
+import {emitNextRefuelsFetch, emitRefuelsFetch} from "../../redux/refuels/actions";
 import OperationsClearancesCardsComponent from "../../components/operations/OperationsClearancesCardsComponent";
 import OperationsClearancesAddRefuelContainer from "../../containers/operations/OperationsClearancesAddRefuelContainer";
 import {
+    storeRefuelsRequestReset,
+    storeNextRefuelsRequestReset,
+} from "../../redux/requests/refuels/actions";
+import {
     dateToString,
-    formatNumber,
     needleSearch,
     requestFailed,
     requestLoading,
@@ -32,7 +29,6 @@ import {
 function OperationsClearancesPage({refuels, refuelsRequests, hasMoreData, page, dispatch, location}) {
     // Local states
     const [needle, setNeedle] = useState('');
-    const [confirmModal, setConfirmModal] = useState({show: false, body: '', id: 0});
     const [refuelModal, setRefuelModal] = useState({show: false, header: 'EFFECTUER UN DESTOCKAGE'});
 
     // Local effects
@@ -55,7 +51,6 @@ function OperationsClearancesPage({refuels, refuelsRequests, hasMoreData, page, 
     const shouldResetErrorData = () => {
         dispatch(storeRefuelsRequestReset());
         dispatch(storeNextRefuelsRequestReset());
-        dispatch(storeConfirmRefuelRequestReset());
     };
 
     // Fetch next refuels data to enhance infinite scroll
@@ -72,22 +67,6 @@ function OperationsClearancesPage({refuels, refuelsRequests, hasMoreData, page, 
     const handleRefuelModalHide = () => {
         setRefuelModal({...refuelModal, show: false})
     }
-
-    // Show confirm modal form
-    const handleConfirmModalShow = ({id, amount}) => {
-        setConfirmModal({...confirmModal, id, body: `Confirmer le déstockage de ${formatNumber(amount)}?`, show: true})
-    }
-
-    // Hide confirm modal form
-    const handleConfirmModalHide = () => {
-        setConfirmModal({...confirmModal, show: false})
-    }
-
-    // Trigger when clearance confirm confirmed on modal
-    const handleConfirm = (id) => {
-        handleConfirmModalHide();
-        dispatch(emitConfirmRefuel({id}));
-    };
 
     // Render
     return (
@@ -110,7 +89,6 @@ function OperationsClearancesPage({refuels, refuelsRequests, hasMoreData, page, 
                                             {/* Error message */}
                                             {requestFailed(refuelsRequests.list) && <ErrorAlertComponent message={refuelsRequests.list.message} />}
                                             {requestFailed(refuelsRequests.next) && <ErrorAlertComponent message={refuelsRequests.next.message} />}
-                                            {requestFailed(refuelsRequests.apply) && <ErrorAlertComponent message={refuelsRequests.next.message} />}
                                             <button type="button"
                                                     className="btn btn-theme mb-2"
                                                     onClick={handleRefuelModalShow}
@@ -119,9 +97,7 @@ function OperationsClearancesPage({refuels, refuelsRequests, hasMoreData, page, 
                                             </button>
                                             {/* Search result & Infinite scroll */}
                                             {(needle !== '' && needle !== undefined)
-                                                ? <OperationsClearancesCardsComponent refuels={searchEngine(refuels, needle)}
-                                                                                      handleConfirmModalShow={handleConfirmModalShow}
-                                                />
+                                                ? <OperationsClearancesCardsComponent refuels={searchEngine(refuels, needle)} />
                                                 : (requestLoading(refuelsRequests.list) ? <LoaderComponent /> :
                                                         <InfiniteScroll hasMore={hasMoreData}
                                                                         dataLength={refuels.length}
@@ -129,9 +105,7 @@ function OperationsClearancesPage({refuels, refuelsRequests, hasMoreData, page, 
                                                                         next={handleNextRefuelsData}
                                                                         style={{ overflow: 'hidden' }}
                                                         >
-                                                            <OperationsClearancesCardsComponent refuels={refuels}
-                                                                                                handleConfirmModalShow={handleConfirmModalShow}
-                                                            />
+                                                            <OperationsClearancesCardsComponent refuels={refuels} />
                                                         </InfiniteScroll>
                                                 )
                                             }
@@ -143,11 +117,6 @@ function OperationsClearancesPage({refuels, refuelsRequests, hasMoreData, page, 
                     </section>
                 </div>
             </AppLayoutContainer>
-            {/* Modal */}
-            <ConfirmModalComponent modal={confirmModal}
-                                   handleModal={handleConfirm}
-                                   handleClose={handleConfirmModalHide}
-            />
             <FormModalComponent modal={refuelModal} handleClose={handleRefuelModalHide}>
                 <OperationsClearancesAddRefuelContainer handleClose={handleRefuelModalHide} />
             </FormModalComponent>

@@ -1,14 +1,13 @@
 import PropTypes from "prop-types";
 import React, {useState} from 'react';
 
-import LoaderComponent from "../LoaderComponent";
+import {DONE} from "../../constants/typeConstants";
 import FormModalComponent from "../modals/FormModalComponent";
-import {DONE, PROCESSING} from "../../constants/typeConstants";
 import {dateToString, formatNumber} from "../../functions/generalFunctions";
 import AgentDetailsContainer from "../../containers/agents/AgentDetailsContainer";
 
 // Component
-function OperationsClearancesCardsComponent({refuels, handleConfirmModalShow}) {
+function OperationsClearancesCardsComponent({refuels}) {
     // Local states
     const [agentDetailsModal, setAgentDetailsModal] = useState({show: false, header: "DETAIL DE L'AGENT/RESSOURCE", id: ''});
 
@@ -29,19 +28,6 @@ function OperationsClearancesCardsComponent({refuels, handleConfirmModalShow}) {
                                     <h3 className="card-title text-bold">
                                         <i className="fa fa-money-bill" /> {formatNumber(item.amount)}
                                     </h3>
-                                    <div className="card-tools">
-                                        {item.status === PROCESSING && (
-                                            item.actionLoader ? <LoaderComponent little={true} /> : (
-                                                <button type="button"
-                                                        title="Confirmer"
-                                                        className="btn btn-tool"
-                                                        onClick={() => handleConfirmModalShow(item)}
-                                                >
-                                                    <i className="fa fa-check" />
-                                                </button>
-                                            )
-                                        )}
-                                    </div>
                                 </div>
                                 <div className="card-body">
                                     <ul className="list-group list-group-unbordered">
@@ -61,10 +47,6 @@ function OperationsClearancesCardsComponent({refuels, handleConfirmModalShow}) {
                                         <li className="list-group-item">
                                             <b>Puce réceptrice</b>
                                             <span className="float-right">{item.sim.number}</span>
-                                        </li>
-                                        <li className="list-group-item">
-                                            <b>Responsable</b>
-                                            <span className="float-right">{item.collector.name}</span>
                                         </li>
                                         <li className="list-group-item">
                                             {(item.status === DONE)
@@ -103,8 +85,7 @@ function OperationsClearancesCardsComponent({refuels, handleConfirmModalShow}) {
 
 // Prop types to ensure destroyed props data type
 OperationsClearancesCardsComponent.propTypes = {
-    refuels: PropTypes.array.isRequired,
-    handleConfirmModalShow: PropTypes.func.isRequired,
+    refuels: PropTypes.array.isRequired
 };
 
 export default React.memo(OperationsClearancesCardsComponent);

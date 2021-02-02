@@ -75,15 +75,13 @@ export const CASH_RECOVERIES_API_PATH = `${API_URL}/list_recouvrement_by_rz`;
 export const TRANSFERS_API_PATH = `${API_URL}/list_all_flottage_interne`;
 export const NEW_TRANSFERS_API_PATH = `${API_URL}/flottage_interne_rz_gf`;
 
-
 // Supplies
 export const SUPPLIES_API_PATH = `${API_URL}/list_all_flottage`;
 export const NEW_SUPPLY_API_PATH = `${API_URL}/flottage_express`;
 
 // Refuels
-export const REFUELS_API_PATH = `${API_URL}/list_destockage`;
 export const NEW_REFUEL_API_PATH = `${API_URL}/approvisionnement_etp`;
-export const CONFIRM_REFUEL_API_PATH = `${API_URL}/approuve_destockage`;
+export const REFUELS_API_PATH = `${API_URL}/list_destockage_collector`;
 
 // Affords
 export const AFFORDS_API_PATH = `${API_URL}/list_approvisionnement`;
