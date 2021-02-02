@@ -11,6 +11,7 @@ import {OPERATIONS_AFFORDS_PAGE} from "../../constants/pageNameConstants";
 import FormModalComponent from "../../components/modals/FormModalComponent";
 import {emitAffordsFetch, emitNextAffordsFetch} from "../../redux/affords/actions";
 import OperationsAffordsCardsComponent from "../../components/operations/OperationsAffordsCardsComponent";
+import OperationsAffordsAddAffordContainer from "../../containers/operations/OperationsAffordsAddAffordContainer";
 import {
     storeAffordsRequestReset,
     storeNextAffordsRequestReset
@@ -114,7 +115,7 @@ function OperationsAffordsPage({affords, affordsRequests, hasMoreData, page, dis
             </AppLayoutContainer>
             {/* Modal */}
             <FormModalComponent modal={affordModal} handleClose={handleAffordModalHide}>
-                {/*<OperationsClearancesAddRefuelContainer handleClose={handleAffordModalHide} />*/}
+                <OperationsAffordsAddAffordContainer handleClose={handleAffordModalHide} />
             </FormModalComponent>
         </>
     )
