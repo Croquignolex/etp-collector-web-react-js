@@ -1,27 +1,27 @@
 import {all, call, fork, put, takeLatest} from 'redux-saga/effects'
 
 import * as api from "../../constants/apiConstants";
+import {storeSetNewRefuelData} from "../refuels/actions";
+import {SUPPLY_BY_AGENT} from "../../constants/typeConstants";
 import {apiGetRequest, apiPostRequest, getFileFromServer} from "../../functions/axiosFunctions";
 import {
+    EMIT_ADD_AFFORD,
     EMIT_AFFORDS_FETCH,
-    EMIT_CONFIRM_AFFORD,
     storeSetAffordsData,
-    storeUpdateAffordData,
     storeSetNextAffordsData,
     EMIT_NEXT_AFFORDS_FETCH,
-    storeSetAffordActionData,
     storeStopInfiniteScrollAffordData
 } from "./actions";
 import {
     storeAffordsRequestInit,
+    storeAddAffordRequestInit,
     storeAffordsRequestFailed,
     storeAffordsRequestSucceed,
     storeNextAffordsRequestInit,
+    storeAddAffordRequestFailed,
+    storeAddAffordRequestSucceed,
     storeNextAffordsRequestFailed,
-    storeConfirmAffordRequestInit,
     storeNextAffordsRequestSucceed,
-    storeConfirmAffordRequestFailed,
-    storeConfirmAffordRequestSucceed
 } from "../requests/affords/actions";
 
 // Fetch affords from API
@@ -65,25 +65,28 @@ export function* emitNextAffordsFetch() {
     });
 }
 
-// Confirm afford from API
-export function* emitConfirmAfford() {
-    yield takeLatest(EMIT_CONFIRM_AFFORD, function*({id}) {
+// Fleets new afford from API
+export function* emitAddAfford() {
+    yield takeLatest(EMIT_ADD_AFFORD, function*({agent, amount, sim, receipt}) {
         try {
-            // Fire event at redux to toggle action loader
-            yield put(storeSetAffordActionData({id}));
             // Fire event for request
-            yield put(storeConfirmAffordRequestInit());
-            const apiResponse = yield call(apiPostRequest, `${api.CONFIRM_AFFORD_API_PATH}/${id}`);
+            yield put(storeAddAffordRequestInit());
+            const data = new FormData();
+            data.append('id_puce', sim);
+            data.append('recu', receipt);
+            data.append('id_agent', agent);
+            data.append('montant', amount);
+            data.append('type', SUPPLY_BY_AGENT);
+            const apiResponse = yield call(apiPostRequest, api.NEW_REFUEL_API_PATH, data);
+            // Extract dataF
+            const refuel = extractAffordData(apiResponse.data);
             // Fire event to redux
-            yield put(storeUpdateAffordData({id}));
-            // Fire event at redux to toggle action loader
-            yield put(storeSetAffordActionData({id}));
+            yield put(storeSetNewRefuelData({refuel}))
             // Fire event for request
-            yield put(storeConfirmAffordRequestSucceed({message: apiResponse.message}));
+            yield put(storeAddAffordRequestSucceed({message: apiResponse.message}));
         } catch (message) {
             // Fire event for request
-            yield put(storeSetAffordActionData({id}));
-            yield put(storeConfirmAffordRequestFailed({message}));
+            yield put(storeAddAffordRequestFailed({message}));
         }
     });
 }
@@ -137,8 +140,8 @@ export function extractAffordsData(apiAffords) {
 // Combine to export all functions at once
 export default function* sagaAffords() {
     yield all([
+        fork(emitAddAfford),
         fork(emitAffordsFetch),
-        fork(emitConfirmAfford),
         fork(emitNextAffordsFetch),
     ]);
 }

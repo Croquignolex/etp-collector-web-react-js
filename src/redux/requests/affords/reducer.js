@@ -3,9 +3,9 @@ import {requestFailedValue, requestInitValue, requestSucceededValue} from "../..
 
 // Partial global store for requests data management
 const initialState = {
+    add: {failed: false, loading: false, succeeded: false, message: ""},
     list: {failed: false, loading: false, succeeded: false, message: ""},
     next: {failed: false, loading: false, succeeded: false, message: ""},
-    apply: {failed: false, loading: false, succeeded: false, message: ""},
 };
 
 // Reduce
@@ -46,22 +46,22 @@ function reduce(state = initialState, action) {
         case actions.STORE_NEXT_AFFORDS_REQUEST_RESET:
             nextState = {...state, next: initialState.next};
             return nextState || state;
-        // ======================================================== Confirm afford
-        // Resolve event to set confirm afford init request store data
-        case actions.STORE_CONFIRM_AFFORD_REQUEST_INIT:
-            nextState = {...state, apply: requestInitValue()};
+        // ======================================================== Operation afford
+        // Resolve event to set add afford init request store data
+        case actions.STORE_ADD_AFFORD_REQUEST_INIT:
+            nextState = {...state, add: requestInitValue()};
             return nextState || state;
-        // Resolve event to set confirm afford  failed request store data
-        case actions.STORE_CONFIRM_AFFORD_REQUEST_FAILED:
-            nextState = {...state, apply: requestFailedValue(action.message)};
+        // Resolve event to set add afford failed request store data
+        case actions.STORE_ADD_AFFORD_REQUEST_FAILED:
+            nextState = {...state, add: requestFailedValue(action.message)};
             return nextState || state;
-        // Resolve event to set confirm afford  succeeded request store data
-        case actions.STORE_CONFIRM_AFFORD_REQUEST_SUCCEEDED:
-            nextState = {...state, apply: requestSucceededValue(action.message)};
+        // Resolve event to set add afford succeeded request store data
+        case actions.STORE_ADD_AFFORD_REQUEST_SUCCEEDED:
+            nextState = {...state, add: requestSucceededValue(action.message)};
             return nextState || state;
-        // Resolve event to set confirm afford  reset request store data
-        case actions.STORE_CONFIRM_AFFORD_REQUEST_RESET:
-            nextState = {...state, apply: initialState.apply};
+        // Resolve event to set add afford reset request store data
+        case actions.STORE_ADD_AFFORD_REQUEST_RESET:
+            nextState = {...state, add: initialState.add};
             return nextState || state;
         // ========================================================
         // Unknown action

@@ -8,17 +8,15 @@ import AppLayoutContainer from "../../containers/AppLayoutContainer";
 import ErrorAlertComponent from "../../components/ErrorAlertComponent";
 import TableSearchComponent from "../../components/TableSearchComponent";
 import {OPERATIONS_AFFORDS_PAGE} from "../../constants/pageNameConstants";
-import ConfirmModalComponent from "../../components/modals/ConfirmModalComponent";
-import {emitAffordsFetch, emitConfirmAfford, emitNextAffordsFetch} from "../../redux/affords/actions";
+import FormModalComponent from "../../components/modals/FormModalComponent";
+import {emitAffordsFetch, emitNextAffordsFetch} from "../../redux/affords/actions";
 import OperationsAffordsCardsComponent from "../../components/operations/OperationsAffordsCardsComponent";
 import {
     storeAffordsRequestReset,
-    storeNextAffordsRequestReset,
-    storeConfirmAffordRequestReset
+    storeNextAffordsRequestReset
 } from "../../redux/requests/affords/actions";
 import {
     dateToString,
-    formatNumber,
     needleSearch,
     requestFailed,
     requestLoading,
@@ -28,7 +26,7 @@ import {
 function OperationsAffordsPage({affords, affordsRequests, hasMoreData, page, dispatch, location}) {
     // Local states
     const [needle, setNeedle] = useState('');
-    const [confirmModal, setConfirmModal] = useState({show: false, body: '', id: 0});
+    const [affordModal, setAffordModal] = useState({show: false, header: 'EFFECTUER UN APPROVISIONNEMENT'});
 
     // Local effects
     useEffect(() => {
@@ -48,7 +46,6 @@ function OperationsAffordsPage({affords, affordsRequests, hasMoreData, page, dis
     const shouldResetErrorData = () => {
         dispatch(storeAffordsRequestReset());
         dispatch(storeNextAffordsRequestReset());
-        dispatch(storeConfirmAffordRequestReset());
     };
 
     // Fetch next affords data to enhance infinite scroll
@@ -56,21 +53,15 @@ function OperationsAffordsPage({affords, affordsRequests, hasMoreData, page, dis
         dispatch(emitNextAffordsFetch({page}));
     }
 
-    // Show confirm modal form
-    const handleConfirmModalShow = ({id, amount}) => {
-        setConfirmModal({...confirmModal, id, body: `Confirmer l'approvisionnement de ${formatNumber(amount)}?`, show: true})
+    // Show afford modal form
+    const handleAffordModalShow = (item) => {
+        setAffordModal({...affordModal, item, show: true})
     }
 
-    // Hide confirm modal form
-    const handleConfirmModalHide = () => {
-        setConfirmModal({...confirmModal, show: false})
+    // Hide afford modal form
+    const handleAffordModalHide = () => {
+        setAffordModal({...affordModal, show: false})
     }
-
-    // Trigger when afford confirm confirmed on modal
-    const handleConfirm = (id) => {
-        handleConfirmModalHide();
-        dispatch(emitConfirmAfford({id}));
-    };
 
     // Render
     return (
@@ -93,12 +84,15 @@ function OperationsAffordsPage({affords, affordsRequests, hasMoreData, page, dis
                                             {/* Error message */}
                                             {requestFailed(affordsRequests.list) && <ErrorAlertComponent message={affordsRequests.list.message} />}
                                             {requestFailed(affordsRequests.next) && <ErrorAlertComponent message={affordsRequests.next.message} />}
-                                            {requestFailed(affordsRequests.apply) && <ErrorAlertComponent message={affordsRequests.next.message} />}
+                                            <button type="button"
+                                                    className="btn btn-theme mb-2"
+                                                    onClick={handleAffordModalShow}
+                                            >
+                                                <i className="fa fa-plus" /> Effectuer un déstockage
+                                            </button>
                                             {/* Search result & Infinite scroll */}
                                             {(needle !== '' && needle !== undefined)
-                                                ? <OperationsAffordsCardsComponent affords={searchEngine(affords, needle)}
-                                                                                   handleConfirmModalShow={handleConfirmModalShow}
-                                                />
+                                                ? <OperationsAffordsCardsComponent affords={searchEngine(affords, needle)} />
                                                 : (requestLoading(affordsRequests.list) ? <LoaderComponent /> :
                                                         <InfiniteScroll hasMore={hasMoreData}
                                                                         dataLength={affords.length}
@@ -106,9 +100,7 @@ function OperationsAffordsPage({affords, affordsRequests, hasMoreData, page, dis
                                                                         next={handleNextAffordsData}
                                                                         style={{ overflow: 'hidden' }}
                                                         >
-                                                            <OperationsAffordsCardsComponent affords={affords}
-                                                                                             handleConfirmModalShow={handleConfirmModalShow}
-                                                            />
+                                                            <OperationsAffordsCardsComponent affords={affords} />
                                                         </InfiniteScroll>
                                                 )
                                             }
@@ -121,10 +113,9 @@ function OperationsAffordsPage({affords, affordsRequests, hasMoreData, page, dis
                 </div>
             </AppLayoutContainer>
             {/* Modal */}
-            <ConfirmModalComponent modal={confirmModal}
-                                   handleModal={handleConfirm}
-                                   handleClose={handleConfirmModalHide}
-            />
+            <FormModalComponent modal={affordModal} handleClose={handleAffordModalHide}>
+                {/*<OperationsClearancesAddRefuelContainer handleClose={handleAffordModalHide} />*/}
+            </FormModalComponent>
         </>
     )
 }

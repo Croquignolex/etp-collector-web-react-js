@@ -117,6 +117,7 @@ function OperationsClearancesPage({refuels, refuelsRequests, hasMoreData, page, 
                     </section>
                 </div>
             </AppLayoutContainer>
+            {/* Modal */}
             <FormModalComponent modal={refuelModal} handleClose={handleRefuelModalHide}>
                 <OperationsClearancesAddRefuelContainer handleClose={handleRefuelModalHide} />
             </FormModalComponent>

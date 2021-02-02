@@ -84,5 +84,4 @@ export const NEW_REFUEL_API_PATH = `${API_URL}/approvisionnement_etp`;
 export const REFUELS_API_PATH = `${API_URL}/list_destockage_collector`;
 
 // Affords
-export const AFFORDS_API_PATH = `${API_URL}/list_approvisionnement`;
-export const CONFIRM_AFFORD_API_PATH = `${API_URL}/approuve_approvisionnement`;
+export const AFFORDS_API_PATH = `${API_URL}/list_approvisionnement_collector`;

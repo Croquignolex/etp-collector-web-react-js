@@ -1,12 +1,11 @@
 import React from 'react';
 import PropTypes from "prop-types";
 
-import LoaderComponent from "../LoaderComponent";
-import {DONE, PROCESSING} from "../../constants/typeConstants";
+import {DONE} from "../../constants/typeConstants";
 import {dateToString, formatNumber} from "../../functions/generalFunctions";
 
 // Component
-function OperationsAffordsCardsComponent({affords, handleConfirmModalShow}) {
+function OperationsAffordsCardsComponent({affords}) {
     // Render
     return (
         <>
@@ -19,19 +18,6 @@ function OperationsAffordsCardsComponent({affords, handleConfirmModalShow}) {
                                     <h3 className="card-title text-bold">
                                         <i className="fa fa-money-bill" /> {formatNumber(item.amount)}
                                     </h3>
-                                    <div className="card-tools">
-                                        {item.status === PROCESSING && (
-                                            item.actionLoader ? <LoaderComponent little={true} /> : (
-                                                <button type="button"
-                                                        title="Confirmer"
-                                                        className="btn btn-tool"
-                                                        onClick={() => handleConfirmModalShow(item)}
-                                                >
-                                                    <i className="fa fa-check" />
-                                                </button>
-                                            )
-                                        )}
-                                    </div>
                                 </div>
                                 <div className="card-body">
                                     <ul className="list-group list-group-unbordered">
@@ -84,8 +70,7 @@ function OperationsAffordsCardsComponent({affords, handleConfirmModalShow}) {
 
 // Prop types to ensure destroyed props data type
 OperationsAffordsCardsComponent.propTypes = {
-    affords: PropTypes.array.isRequired,
-    handleConfirmModalShow: PropTypes.func.isRequired,
+    affords: PropTypes.array.isRequired
 };
 
 export default React.memo(OperationsAffordsCardsComponent);
