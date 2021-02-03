@@ -7,7 +7,7 @@ import {dateToString, formatNumber} from "../../functions/generalFunctions";
 import AgentDetailsContainer from "../../containers/agents/AgentDetailsContainer";
 
 // Component
-function RequestsClearancesCardsComponent({clearances}) {
+function RequestsClearancesCardsComponent({clearances, handleDeclareModalShow}) {
     // Local states
     const [agentDetailsModal, setAgentDetailsModal] = useState({show: false, header: "DETAIL DE L'AGENT/RESSOURCE", id: ''});
 
@@ -83,6 +83,7 @@ function RequestsClearancesCardsComponent({clearances}) {
 // Prop types to ensure destroyed props data type
 RequestsClearancesCardsComponent.propTypes = {
     clearances: PropTypes.array.isRequired,
+    handleDeclareModalShow: PropTypes.func.isRequired,
 };
 
 export default React.memo(RequestsClearancesCardsComponent);

@@ -2,12 +2,17 @@ import PropTypes from 'prop-types';
 import React, {useEffect, useState} from 'react';
 import InfiniteScroll from "react-infinite-scroll-component";
 
+import {emitAllSimsFetch} from "../../redux/sims/actions";
+import {emitAllAgentsFetch} from "../../redux/agents/actions";
 import HeaderComponent from "../../components/HeaderComponent";
 import LoaderComponent from "../../components/LoaderComponent";
 import {fleetTypeBadgeColor} from "../../functions/typeFunctions";
 import AppLayoutContainer from "../../containers/AppLayoutContainer";
 import ErrorAlertComponent from "../../components/ErrorAlertComponent";
 import TableSearchComponent from "../../components/TableSearchComponent";
+import {storeAllSimsRequestReset} from "../../redux/requests/sims/actions";
+import FormModalComponent from "../../components/modals/FormModalComponent";
+import {storeAllAgentsRequestReset} from "../../redux/requests/agents/actions";
 import {emitClearancesFetch, emitNextClearancesFetch} from "../../redux/clearances/actions";
 import RequestsClearancesCardsComponent from "../../components/requests/RequestsClearancesCardsComponent";
 import {storeClearancesRequestReset, storeNextClearancesRequestReset} from "../../redux/requests/clearances/actions";
@@ -22,10 +27,14 @@ import {
 function RequestsClearancesPage({clearances, clearancesRequests, hasMoreData, page, dispatch, location}) {
     // Local states
     const [needle, setNeedle] = useState('');
+    const [declareModal, setDeclareModal] = useState({show: false, header: 'PRENDRE EN CHARGE', item: {}});
+    const [clearanceModal, setClearanceModal] = useState({show: false, header: 'PASSER UNE DEMANDE DE DESTOCKAGE'});
 
     // Local effects
     useEffect(() => {
         dispatch(emitClearancesFetch());
+        dispatch(emitAllSimsFetch());
+        dispatch(emitAllAgentsFetch());
         // Cleaner error alert while component did unmount without store dependency
         return () => {
             shouldResetErrorData();
@@ -39,6 +48,8 @@ function RequestsClearancesPage({clearances, clearancesRequests, hasMoreData, pa
 
     // Reset error alert
     const shouldResetErrorData = () => {
+        dispatch(storeAllSimsRequestReset());
+        dispatch(storeAllAgentsRequestReset());
         dispatch(storeClearancesRequestReset());
         dispatch(storeNextClearancesRequestReset());
     };
@@ -46,6 +57,26 @@ function RequestsClearancesPage({clearances, clearancesRequests, hasMoreData, pa
     // Fetch next clearances data to enhance infinite scroll
     const handleNextClearancesData = () => {
         dispatch(emitNextClearancesFetch({page}));
+    }
+
+    // Show clearance modal form
+    const handleClearanceModalShow = (item) => {
+        setClearanceModal({...clearanceModal, item, show: true})
+    }
+
+    // Hide clearance modal form
+    const handleClearanceModalHide = () => {
+        setClearanceModal({...clearanceModal, show: false})
+    }
+
+    // Show declare modal form
+    const handleDeclareModalShow = (item) => {
+        setDeclareModal({...declareModal, item, show: true})
+    }
+
+    // Hide declare modal form
+    const handleDeclareModalHide = () => {
+        setDeclareModal({...declareModal, show: false})
     }
 
     // Render
@@ -69,9 +100,17 @@ function RequestsClearancesPage({clearances, clearancesRequests, hasMoreData, pa
                                             {/* Error message */}
                                             {requestFailed(clearancesRequests.list) && <ErrorAlertComponent message={clearancesRequests.list.message} />}
                                             {requestFailed(clearancesRequests.next) && <ErrorAlertComponent message={clearancesRequests.next.message} />}
+                                            <button type="button"
+                                                    className="btn btn-theme mb-2"
+                                                    onClick={handleClearanceModalShow}
+                                            >
+                                                <i className="fa fa-plus" /> Passe une demande de déstockage
+                                            </button>
                                             {/* Search result & Infinite scroll */}
                                             {(needle !== '' && needle !== undefined)
-                                                ? <RequestsClearancesCardsComponent clearances={searchEngine(clearances, needle)} />
+                                                ? <RequestsClearancesCardsComponent clearances={searchEngine(clearances, needle)}
+                                                                                    handleDeclareModalShow={handleDeclareModalShow}
+                                                />
                                                 : (requestLoading(clearancesRequests.list) ? <LoaderComponent /> :
                                                         <InfiniteScroll hasMore={hasMoreData}
                                                                         loader={<LoaderComponent />}
@@ -79,7 +118,9 @@ function RequestsClearancesPage({clearances, clearancesRequests, hasMoreData, pa
                                                                         style={{ overflow: 'hidden' }}
                                                                         next={handleNextClearancesData}
                                                         >
-                                                            <RequestsClearancesCardsComponent clearances={clearances} />
+                                                            <RequestsClearancesCardsComponent clearances={clearances}
+                                                                                              handleDeclareModalShow={handleDeclareModalShow}
+                                                            />
                                                         </InfiniteScroll>
                                                 )
                                             }
@@ -91,6 +132,15 @@ function RequestsClearancesPage({clearances, clearancesRequests, hasMoreData, pa
                     </section>
                 </div>
             </AppLayoutContainer>
+            {/* Modal */}
+            <FormModalComponent modal={clearanceModal} handleClose={handleClearanceModalHide}>
+                {/*<RequestsClearancesAddClearanceContainer handleClose={handleClearanceModalHide} />*/}
+            </FormModalComponent>
+            <FormModalComponent modal={declareModal} handleClose={handleDeclareModalHide}>
+                {/*<RequestsClearancesAddDeclareContainer clearance={declareModal.item}
+                                                          handleClose={handleDeclareModalHide}
+                />*/}
+            </FormModalComponent>
         </>
     )
 }
