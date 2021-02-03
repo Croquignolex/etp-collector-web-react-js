@@ -49,7 +49,7 @@ function DashboardPage({user, fleets, sims, clearances, agents, settings, dispat
     // Data
     const cardsData = settings.cards;
     const fleetSimsFleetsData = useMemo(() => {
-        return formatNumber(sims.filter(sim => types.FLEET_TYPE === sim.type.name).reduce((acc, val) => acc + val.balance, 0))
+        return formatNumber(sims.filter(sim => user.id === sim.collector.id).reduce((acc, val) => acc + val.balance, 0))
         // eslint-disable-next-line
     }, [sims]);
     const resourcesData = useMemo(() => {
@@ -106,17 +106,6 @@ function DashboardPage({user, fleets, sims, clearances, agents, settings, dispat
                                                             url={path.AGENTS_PAGE_PATH}
                                                             request={allAgentsRequests}
                                                             label={setting.LABEL_RESOURCES}
-                                    />
-                                </div>
-                            }
-                            {cardsData.includes(setting.CARD_SIMS) &&
-                                <div className="col-lg-3 col-md-4 col-sm-6">
-                                    <DashboardCardComponent color='bg-success'
-                                                            data={sims.length}
-                                                            icon='fa fa-sim-card'
-                                                            request={allSimsRequests}
-                                                            url={path.SIMS_PAGE_PATH}
-                                                            label={setting.LABEL_SIMS}
                                     />
                                 </div>
                             }
