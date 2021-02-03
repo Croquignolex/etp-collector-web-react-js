@@ -1,16 +1,15 @@
 import PropTypes from "prop-types";
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
+import DisabledInput from "../form/DisabledInput";
 import ButtonComponent from "../form/ButtonComponent";
 import AmountComponent from "../form/AmountComponent";
-import SelectComponent from "../form/SelectComponent";
-import {emitAddFleet} from "../../redux/fleets/actions";
 import ErrorAlertComponent from "../ErrorAlertComponent";
 import {requiredChecker} from "../../functions/checkerFunctions";
 import {DEFAULT_FORM_DATA} from "../../constants/defaultConstants";
 import {playWarningSound} from "../../functions/playSoundFunctions";
-import {dataToArrayForSelect, mappedSims} from "../../functions/arrayFunctions";
-import {storeAddTransferRequestReset} from "../../redux/requests/transfers/actions";
+import {emitClearanceAddDeclare} from "../../redux/clearances/actions";
+import {storeClearanceDeclareRequestReset} from "../../redux/requests/clearances/actions";
 import {
     applySuccess,
     requestFailed,
@@ -19,11 +18,9 @@ import {
 } from "../../functions/generalFunctions";
 
 // Component
-function RequestsClearancesAddDeclareComponent({request, sims, agents, allAgentsRequests, allSimsRequests, dispatch, handleClose}) {
+function RequestsClearancesAddDeclareComponent({clearance, request, dispatch, handleClose}) {
     // Local state
-    const [amount, setAmount] = useState(DEFAULT_FORM_DATA);
-    const [incomingSim, setIncomingSim] = useState(DEFAULT_FORM_DATA);
-    const [agent, setAgent] = useState({...DEFAULT_FORM_DATA, data: 0});
+    const [amount, setAmount] = useState({...DEFAULT_FORM_DATA, data: clearance.remaining});
 
     // Local effects
     useEffect(() => {
@@ -44,54 +41,29 @@ function RequestsClearancesAddDeclareComponent({request, sims, agents, allAgents
         // eslint-disable-next-line
     }, [request]);
 
-    const handleIncomingSelect = (data) => {
-        shouldResetErrorData();
-        setIncomingSim({...incomingSim,  isValid: true, data})
-    }
-
     const handleAmountInput = (data) => {
         shouldResetErrorData();
         setAmount({...amount, isValid: true, data})
     }
 
-    const handleAgentSelect = (data) => {
-        shouldResetErrorData();
-        setAgent({...agent,  isValid: true, data})
-    }
-
-    // Build select options
-    const agentSelectOptions = useMemo(() => {
-        return dataToArrayForSelect(agents)
-    }, [agents]);
-
-    // Build select options
-    const incomingSelectOptions = useMemo(() => {
-        return dataToArrayForSelect(mappedSims(sims.filter(item => item.agent.id === agent.data)))
-    }, [sims, agent.data]);
-
     // Reset error alert
     const shouldResetErrorData = () => {
-        dispatch(storeAddTransferRequestReset());
+        dispatch(storeClearanceDeclareRequestReset());
     };
 
     // Trigger add supply form submit
     const handleSubmit = (e) => {
         e.preventDefault();
         shouldResetErrorData();
-        const _agent = requiredChecker(agent);
         const _amount = requiredChecker(amount);
-        const _incomingSim = requiredChecker(incomingSim);
         // Set value
-        setAgent(_agent);
         setAmount(_amount);
-        setIncomingSim(_incomingSim);
-        const validationOK = (_amount.isValid && _incomingSim.isValid && _agent.isValid);
+        const validationOK = _amount.isValid;
         // Check
         if(validationOK) {
-            dispatch(emitAddFleet({
-                agent: _agent.data,
+            dispatch(emitClearanceAddDeclare({
+                id: clearance.id,
                 amount: _amount.data,
-                sim: _incomingSim.data,
             }));
         }
         else playWarningSound();
@@ -101,28 +73,18 @@ function RequestsClearancesAddDeclareComponent({request, sims, agents, allAgents
     return (
         <>
             {requestFailed(request) && <ErrorAlertComponent message={request.message} />}
-            {requestFailed(allSimsRequests) && <ErrorAlertComponent message={allSimsRequests.message} />}
-            {requestFailed(allAgentsRequests) && <ErrorAlertComponent message={allAgentsRequests.message} />}
             <form onSubmit={handleSubmit}>
-                <div className='row'>
+                <div className="row">
                     <div className='col-sm-6'>
-                        <SelectComponent input={agent}
-                                         id='inputSimAgent'
-                                         label='Agent/ressource'
-                                         options={agentSelectOptions}
-                                         handleInput={handleAgentSelect}
-                                         title='Choisir un agent/ressource'
-                                         requestProcessing={requestLoading(allAgentsRequests)}
+                        <DisabledInput id='inputAgent'
+                                       val={clearance.agent.name}
+                                       label='Agent/Ressource'
                         />
                     </div>
                     <div className='col-sm-6'>
-                        <SelectComponent input={incomingSim}
-                                         id='inputSimAgent'
-                                         title='Choisir une puce'
-                                         options={incomingSelectOptions}
-                                         label="Puce de l'agent/ressource"
-                                         handleInput={handleIncomingSelect}
-                                         requestProcessing={requestLoading(allSimsRequests)}
+                        <DisabledInput id='inputSim'
+                                       label='Puce à déstocker'
+                                       val={clearance.sim.number}
                         />
                     </div>
                 </div>
@@ -130,7 +92,7 @@ function RequestsClearancesAddDeclareComponent({request, sims, agents, allAgents
                     <div className='col-sm-6'>
                         <AmountComponent input={amount}
                                          id='inputFleet'
-                                         label='Flotte demandé'
+                                         label='Montant pris en charge'
                                          handleInput={handleAmountInput}
                         />
                     </div>
@@ -145,13 +107,10 @@ function RequestsClearancesAddDeclareComponent({request, sims, agents, allAgents
 
 // Prop types to ensure destroyed props data type
 RequestsClearancesAddDeclareComponent.propTypes = {
-    sims: PropTypes.array.isRequired,
-    agents: PropTypes.array.isRequired,
     dispatch: PropTypes.func.isRequired,
     request: PropTypes.object.isRequired,
+    clearance: PropTypes.object.isRequired,
     handleClose: PropTypes.func.isRequired,
-    allSimsRequests: PropTypes.object.isRequired,
-    allAgentsRequests: PropTypes.object.isRequired,
 };
 
 export default React.memo(RequestsClearancesAddDeclareComponent);

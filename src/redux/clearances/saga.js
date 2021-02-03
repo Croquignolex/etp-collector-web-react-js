@@ -202,6 +202,7 @@ export default function* sagaClearances() {
     yield all([
         fork(emitClearancesFetch),
         fork(emitAllClearancesFetch),
+        fork(emitClearanceAddDeclare),
         fork(emitNextClearancesFetch),
     ]);
 }
