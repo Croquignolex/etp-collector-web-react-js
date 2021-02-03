@@ -26,9 +26,9 @@ export const FLEETS_API_PATH = `${API_URL}/list_demandes_flote_general_collector
 export const CLEARANCES_API_PATH = `${API_URL}/list_demandes_destockage`;
 export const NEW_CLEARANCE_API_PATH = `${API_URL}/demande_destockage_agent`;
 export const ALL_CLEARANCES_API_PATH = `${API_URL}/list_demandes_destockage_all`;
+export const DECLARE_CLEARANCE_API_PATH = `${API_URL}/reponse_demandes_destockage`;
 
 // Sims
-export const SIM_API_PATH = `${API_URL}/show_puce`;
 export const SIMS_API_PATH = `${API_URL}/puce_list_agent`;
 export const All_SIMS_API_PATH = `${API_URL}/puce_list_all`;
 

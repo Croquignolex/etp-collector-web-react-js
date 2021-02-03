@@ -7,6 +7,7 @@ const initialState = {
     all: {failed: false, loading: false, succeeded: false, message: ""},
     list: {failed: false, loading: false, succeeded: false, message: ""},
     next: {failed: false, loading: false, succeeded: false, message: ""},
+    declare: {failed: false, loading: false, succeeded: false, message: ""},
 };
 
 // Reduce
@@ -80,6 +81,23 @@ function reduce(state = initialState, action) {
         // Resolve event to set add clearance reset request store data
         case actions.STORE_ADD_CLEARANCE_REQUEST_RESET:
             nextState = {...state, add: initialState.add};
+            return nextState || state;
+        // ======================================================== Clearance declare
+        // Resolve event to set clearance declare init request store data
+        case actions.STORE_CLEARANCE_DECLARE_REQUEST_INIT:
+            nextState = {...state, declare: requestInitValue()};
+            return nextState || state;
+        // Resolve event to set clearance declare failed request store data
+        case actions.STORE_CLEARANCE_DECLARE_REQUEST_FAILED:
+            nextState = {...state, declare: requestFailedValue(action.message)};
+            return nextState || state;
+        // Resolve event to set clearance declare succeeded request store data
+        case actions.STORE_CLEARANCE_DECLARE_REQUEST_SUCCEEDED:
+            nextState = {...state, declare: requestSucceededValue(action.message)};
+            return nextState || state;
+        // Resolve event to set clearance declare reset request store data
+        case actions.STORE_CLEARANCE_DECLARE_REQUEST_RESET:
+            nextState = {...state, declare: initialState.declare};
             return nextState || state;
         // ========================================================
         // Unknown action

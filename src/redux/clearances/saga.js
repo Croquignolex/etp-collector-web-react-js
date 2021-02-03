@@ -6,9 +6,11 @@ import {
     EMIT_ADD_CLEARANCE,
     EMIT_CLEARANCES_FETCH,
     storeSetClearancesData,
+    storeUpdateClearanceData,
     storeSetNewClearanceData,
     EMIT_ALL_CLEARANCES_FETCH,
     storeSetNextClearancesData,
+    EMIT_CLEARANCE_ADD_DECLARE,
     EMIT_NEXT_CLEARANCES_FETCH,
     storeStopInfiniteScrollClearanceData
 } from "./actions";
@@ -23,8 +25,11 @@ import {
     storeAddClearanceRequestSucceed,
     storeAllClearancesRequestFailed,
     storeNextClearancesRequestFailed,
+    storeClearanceDeclareRequestInit,
     storeAllClearancesRequestSucceed,
-    storeNextClearancesRequestSucceed
+    storeNextClearancesRequestSucceed,
+    storeClearanceDeclareRequestSucceed,
+    storeClearanceDeclareRequestFailed
 } from "../requests/clearances/actions";
 
 // Fetch clearances from API
@@ -115,6 +120,24 @@ export function* emitAddClearance() {
     });
 }
 
+// Clearance add declare from API
+export function* emitClearanceAddDeclare() {
+    yield takeLatest(EMIT_CLEARANCE_ADD_DECLARE, function*({id, amount}) {
+        try {
+            // Fire event for request
+            yield put(storeClearanceDeclareRequestInit());
+            const data = {montant: amount};
+            const apiResponse = yield call(apiPostRequest, `${api.DECLARE_CLEARANCE_API_PATH}/${id}`, data);
+            // Fire event to redux
+            yield put(storeUpdateClearanceData({id, amount}));
+            // Fire event for request
+            yield put(storeClearanceDeclareRequestSucceed({message: apiResponse.message}));
+        } catch (message) {
+            // Fire event for request
+            yield put(storeClearanceDeclareRequestFailed({message}));
+        }
+    });
+}
 
 // Extract clearance data
 function extractClearanceData(apiSim, apiUser, apiAgent, apiClaimer, apiFleet) {

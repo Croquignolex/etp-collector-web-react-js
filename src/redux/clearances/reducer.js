@@ -1,4 +1,7 @@
+import Lodash from "lodash";
+
 import * as actions from "./actions";
+import {DONE, PROCESSING} from "../../constants/typeConstants";
 
 // Partial global store for users data management
 const initialState = {
@@ -26,6 +29,30 @@ function reduce(state = initialState, action) {
         // Resolve event to set new clearance data
         case actions.STORE_SET_NEW_CLEARANCE_DATA:
             nextState = {...state, list: [action.clearance, ...state.list]}
+            return nextState || state;
+        // Resolve event to update clearance data
+        case actions.STORE_UPDATE_CLEARANCE_DATA:
+            nextState = {
+                ...state,
+                list: Lodash.map(state.list, (item) => {
+                    if(item.id === action.id) {
+                        const remaining = item.remaining - action.amount
+                        item.remaining = remaining;
+                        item.status = remaining > 0 ? PROCESSING : DONE;
+                    }
+                    return item;
+                })
+            };
+            return nextState || state;
+        // Resolve event to set fleet action data
+        case actions.STORE_SET_CLEARANCE_ACTION_DATA:
+            nextState = {
+                ...state,
+                list: Lodash.map(state.list, (item) => {
+                    if(item.id === action.id) item.actionLoader = !item.actionLoader;
+                    return item;
+                })
+            };
             return nextState || state;
         // Unknown action
         default: return state;
