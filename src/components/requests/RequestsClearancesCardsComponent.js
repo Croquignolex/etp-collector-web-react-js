@@ -5,6 +5,8 @@ import FormModalComponent from "../modals/FormModalComponent";
 import {fleetTypeBadgeColor} from "../../functions/typeFunctions";
 import {dateToString, formatNumber} from "../../functions/generalFunctions";
 import AgentDetailsContainer from "../../containers/agents/AgentDetailsContainer";
+import {PENDING, PROCESSING} from "../../constants/typeConstants";
+import LoaderComponent from "../LoaderComponent";
 
 // Component
 function RequestsClearancesCardsComponent({clearances, handleDeclareModalShow}) {
@@ -58,6 +60,18 @@ function RequestsClearancesCardsComponent({clearances, handleDeclareModalShow}) 
                                             <b>Demandeur</b>
                                             <span className="float-right">{item.claimant.name}</span>
                                         </li>
+                                        {[PENDING, PROCESSING].includes(item.status) &&
+                                            <div className="mt-3 text-center">
+                                                {item.actionLoader ? <LoaderComponent little={true} /> :
+                                                    <button type="button"
+                                                            className="btn btn-theme"
+                                                            onClick={() => handleDeclareModalShow(item)}
+                                                    >
+                                                        <i className="fa fa-plus" /> Prendre en charge
+                                                    </button>
+                                                }
+                                            </div>
+                                        }
                                     </ul>
                                 </div>
                             </div>

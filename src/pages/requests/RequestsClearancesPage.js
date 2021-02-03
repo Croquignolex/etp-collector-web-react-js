@@ -15,7 +15,9 @@ import FormModalComponent from "../../components/modals/FormModalComponent";
 import {storeAllAgentsRequestReset} from "../../redux/requests/agents/actions";
 import {emitClearancesFetch, emitNextClearancesFetch} from "../../redux/clearances/actions";
 import RequestsClearancesCardsComponent from "../../components/requests/RequestsClearancesCardsComponent";
+import RequestsClearancesAddDeclareContainer from "../../containers/requests/RequestsClearancesAddDeclareContainer";
 import {storeClearancesRequestReset, storeNextClearancesRequestReset} from "../../redux/requests/clearances/actions";
+import RequestsClearancesAddClearanceContainer from "../../containers/requests/RequestsClearancesAddClearanceContainer";
 import {
     dateToString,
     needleSearch,
@@ -134,12 +136,12 @@ function RequestsClearancesPage({clearances, clearancesRequests, hasMoreData, pa
             </AppLayoutContainer>
             {/* Modal */}
             <FormModalComponent modal={clearanceModal} handleClose={handleClearanceModalHide}>
-                {/*<RequestsClearancesAddClearanceContainer handleClose={handleClearanceModalHide} />*/}
+                <RequestsClearancesAddClearanceContainer handleClose={handleClearanceModalHide} />
             </FormModalComponent>
             <FormModalComponent modal={declareModal} handleClose={handleDeclareModalHide}>
-                {/*<RequestsClearancesAddDeclareContainer clearance={declareModal.item}
-                                                          handleClose={handleDeclareModalHide}
-                />*/}
+                <RequestsClearancesAddDeclareContainer clearance={declareModal.item}
+                                                       handleClose={handleDeclareModalHide}
+                />
             </FormModalComponent>
         </>
     )
