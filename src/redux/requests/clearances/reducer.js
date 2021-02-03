@@ -3,6 +3,7 @@ import {requestFailedValue, requestInitValue, requestSucceededValue} from "../..
 
 // Partial global store for requests data management
 const initialState = {
+    add: {failed: false, loading: false, succeeded: false, message: ""},
     all: {failed: false, loading: false, succeeded: false, message: ""},
     list: {failed: false, loading: false, succeeded: false, message: ""},
     next: {failed: false, loading: false, succeeded: false, message: ""},
@@ -62,6 +63,23 @@ function reduce(state = initialState, action) {
         // Resolve event to set all clearances reset request store data
         case actions.STORE_ALL_CLEARANCES_REQUEST_RESET:
             nextState = {...state, all: initialState.all};
+            return nextState || state;
+        // ======================================================== Add clearance
+        // Resolve event to set add clearance init request store data
+        case actions.STORE_ADD_CLEARANCE_REQUEST_INIT:
+            nextState = {...state, add: requestInitValue()};
+            return nextState || state;
+        // Resolve event to set add clearance failed request store data
+        case actions.STORE_ADD_CLEARANCE_REQUEST_FAILED:
+            nextState = {...state, add: requestFailedValue(action.message)};
+            return nextState || state;
+        // Resolve event to set add clearance succeeded request store data
+        case actions.STORE_ADD_CLEARANCE_REQUEST_SUCCEEDED:
+            nextState = {...state, add: requestSucceededValue(action.message)};
+            return nextState || state;
+        // Resolve event to set add clearance reset request store data
+        case actions.STORE_ADD_CLEARANCE_REQUEST_RESET:
+            nextState = {...state, add: initialState.add};
             return nextState || state;
         // ========================================================
         // Unknown action

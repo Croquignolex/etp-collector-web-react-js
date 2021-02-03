@@ -1,21 +1,26 @@
 import { all, takeLatest, put, fork, call } from 'redux-saga/effects'
 
 import * as api from "../../constants/apiConstants";
-import {apiGetRequest} from "../../functions/axiosFunctions";
-import {storeStopInfiniteScrollFleetData} from "../fleets/actions";
+import {apiGetRequest, apiPostRequest} from "../../functions/axiosFunctions";
 import {
+    EMIT_ADD_CLEARANCE,
     EMIT_CLEARANCES_FETCH,
     storeSetClearancesData,
+    storeSetNewClearanceData,
     EMIT_ALL_CLEARANCES_FETCH,
     storeSetNextClearancesData,
-    EMIT_NEXT_CLEARANCES_FETCH
+    EMIT_NEXT_CLEARANCES_FETCH,
+    storeStopInfiniteScrollClearanceData
 } from "./actions";
 import {
     storeClearancesRequestInit,
     storeClearancesRequestFailed,
+    storeAddClearanceRequestInit,
     storeClearancesRequestSucceed,
     storeAllClearancesRequestInit,
+    storeAddClearanceRequestFailed,
     storeNextClearancesRequestInit,
+    storeAddClearanceRequestSucceed,
     storeAllClearancesRequestFailed,
     storeNextClearancesRequestFailed,
     storeAllClearancesRequestSucceed,
@@ -58,7 +63,7 @@ export function* emitNextClearancesFetch() {
         } catch (message) {
             // Fire event for request
             yield put(storeNextClearancesRequestFailed({message}));
-            yield put(storeStopInfiniteScrollFleetData());
+            yield put(storeStopInfiniteScrollClearanceData());
         }
     });
 }
@@ -82,6 +87,34 @@ export function* emitAllClearancesFetch() {
         }
     });
 }
+
+// New clearance from API
+export function* emitAddClearance() {
+    yield takeLatest(EMIT_ADD_CLEARANCE, function*({sim, amount, agent}) {
+        try {
+            // Fire event for request
+            yield put(storeAddClearanceRequestInit());
+            const data = {id_puce: sim, id_agent: agent, montant: amount};
+            const apiResponse = yield call(apiPostRequest, api.NEW_CLEARANCE_API_PATH, data);
+            // Extract data
+            const clearance = extractClearanceData(
+                apiResponse.data.puce,
+                apiResponse.data.user,
+                apiResponse.data.agent,
+                apiResponse.data.demandeur,
+                apiResponse.data.demande
+            );
+            // Fire event to redux
+            yield put(storeSetNewClearanceData({clearance}))
+            // Fire event for request
+            yield put(storeAddClearanceRequestSucceed({message: apiResponse.message}));
+        } catch (message) {
+            // Fire event for request
+            yield put(storeAddClearanceRequestFailed({message}));
+        }
+    });
+}
+
 
 // Extract clearance data
 function extractClearanceData(apiSim, apiUser, apiAgent, apiClaimer, apiFleet) {

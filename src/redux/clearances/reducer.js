@@ -23,6 +23,10 @@ function reduce(state = initialState, action) {
         case actions.STORE_STOP_INFINITE_SCROLL_CLEARANCES_DATA:
             nextState = {...state, hasMoreData: false};
             return nextState || state;
+        // Resolve event to set new clearance data
+        case actions.STORE_SET_NEW_CLEARANCE_DATA:
+            nextState = {...state, list: [action.clearance, ...state.list]}
+            return nextState || state;
         // Unknown action
         default: return state;
     }
