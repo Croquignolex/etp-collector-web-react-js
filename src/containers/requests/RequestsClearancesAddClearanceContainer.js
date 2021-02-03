@@ -6,7 +6,7 @@ import RequestsClearancesAddClearanceComponent from "../../components/requests/R
 const mapStateToProps = (state) => ({
     sims: state.sims.list,
     agents: state.agents.list,
-    request: state.fleetsRequests.add,
+    request: state.clearancesRequests.add,
     allSimsRequests: state.simsRequests.all,
     allAgentsRequests: state.agentsRequests.all,
 });

@@ -4,13 +4,13 @@ import React, {useEffect, useMemo, useState} from 'react';
 import ButtonComponent from "../form/ButtonComponent";
 import AmountComponent from "../form/AmountComponent";
 import SelectComponent from "../form/SelectComponent";
-import {emitAddFleet} from "../../redux/fleets/actions";
 import ErrorAlertComponent from "../ErrorAlertComponent";
+import {emitAddClearance} from "../../redux/clearances/actions";
 import {requiredChecker} from "../../functions/checkerFunctions";
 import {DEFAULT_FORM_DATA} from "../../constants/defaultConstants";
 import {playWarningSound} from "../../functions/playSoundFunctions";
 import {dataToArrayForSelect, mappedSims} from "../../functions/arrayFunctions";
-import {storeAddTransferRequestReset} from "../../redux/requests/transfers/actions";
+import {storeAddClearanceRequestReset} from "../../redux/requests/clearances/actions";
 import {
     applySuccess,
     requestFailed,
@@ -71,7 +71,7 @@ function RequestsClearancesAddClearanceComponent({request, sims, agents, allAgen
 
     // Reset error alert
     const shouldResetErrorData = () => {
-        dispatch(storeAddTransferRequestReset());
+        dispatch(storeAddClearanceRequestReset());
     };
 
     // Trigger add supply form submit
@@ -88,7 +88,7 @@ function RequestsClearancesAddClearanceComponent({request, sims, agents, allAgen
         const validationOK = (_amount.isValid && _incomingSim.isValid && _agent.isValid);
         // Check
         if(validationOK) {
-            dispatch(emitAddFleet({
+            dispatch(emitAddClearance({
                 agent: _agent.data,
                 amount: _amount.data,
                 sim: _incomingSim.data,

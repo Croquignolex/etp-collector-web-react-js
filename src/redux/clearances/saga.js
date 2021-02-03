@@ -200,6 +200,7 @@ function extractClearancesData(apiClearances) {
 // Combine to export all functions at once
 export default function* sagaClearances() {
     yield all([
+        fork(emitAddClearance),
         fork(emitClearancesFetch),
         fork(emitAllClearancesFetch),
         fork(emitClearanceAddDeclare),
