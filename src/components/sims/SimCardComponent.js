@@ -2,9 +2,8 @@ import React, {useState} from 'react';
 import PropTypes from "prop-types";
 
 import FormModalComponent from "../modals/FormModalComponent";
+import {dateToString, formatNumber} from "../../functions/generalFunctions";
 import AgentDetailsContainer from "../../containers/agents/AgentDetailsContainer";
-import {AGENT_COLLECTOR_TYPE, COLLECTOR_TYPE} from "../../constants/typeConstants";
-import {dateToString, formatNumber, upperFirstCase} from "../../functions/generalFunctions";
 
 // Component
 function SimCardComponent({sim}) {
@@ -40,24 +39,6 @@ function SimCardComponent({sim}) {
                     <b>Opérateur</b>
                     <span className="float-right">{sim.operator.name}</span>
                 </li>
-                {AGENT_COLLECTOR_TYPE.includes(sim.type.name) &&
-                    <li className="list-group-item">
-                        <b>{upperFirstCase(sim.type.name)}</b>
-                        <span className="float-right">
-                            {sim.type.name === COLLECTOR_TYPE
-                                ? sim.collector.name
-                                : (
-                                    <>
-                                        {sim.agent.name}
-                                        <i className="fa fa-question-circle small ml-1 hand-cursor text-theme"
-                                           onClick={() => setAgentDetailsModal({...agentDetailsModal, show: true, id: sim.agent.id})}
-                                        />
-                                    </>
-                                )
-                            }
-                        </span>
-                    </li>
-                }
             </ul>
             {/* Modal */}
             <FormModalComponent modal={agentDetailsModal} handleClose={handleAgentDetailsModalHide}>

@@ -12,55 +12,55 @@ const initialState = {
 function reduce(state = initialState, action) {
     let nextState;
     switch (action.type) {
-        // ======================================================== Supplies
-        // Resolve event to set supplies init request store data
-        case actions.STORE_SUPPLIES_REQUEST_INIT:
+        // ======================================================== Network fleets
+        // Resolve event to set network supplies init request store data
+        case actions.STORE_NETWORK_SUPPLIES_REQUEST_INIT:
             nextState = {...state, list: requestInitValue()};
             return nextState || state;
-        // Resolve event to set supplies failed request store data
-        case actions.STORE_SUPPLIES_REQUEST_FAILED:
+        // Resolve event to set network supplies failed request store data
+        case actions.STORE_NETWORK_SUPPLIES_REQUEST_FAILED:
             nextState = {...state, list: requestFailedValue(action.message)};
             return nextState || state;
-        // Resolve event to set supplies succeeded request store data
-        case actions.STORE_SUPPLIES_REQUEST_SUCCEEDED:
+        // Resolve event to set network supplies succeeded request store data
+        case actions.STORE_NETWORK_SUPPLIES_REQUEST_SUCCEEDED:
             nextState = {...state, list: requestSucceededValue(action.message)};
             return nextState || state;
-        // Resolve event to set supplies reset request store data
-        case actions.STORE_SUPPLIES_REQUEST_RESET:
+        // Resolve event to set network supplies reset request store data
+        case actions.STORE_NETWORK_SUPPLIES_REQUEST_RESET:
             nextState = {...state, list: initialState.list};
             return nextState || state;
-        // ======================================================== Next supplies
-        // Resolve event to set next supplies init request store data
-        case actions.STORE_NEXT_SUPPLIES_REQUEST_INIT:
+        // ======================================================== Next network fleets
+        // Resolve event to set next network supplies init request store data
+        case actions.STORE_NEXT_NETWORK_SUPPLIES_REQUEST_INIT:
             nextState = {...state, next: requestInitValue()};
             return nextState || state;
-        // Resolve event to set next supplies failed request store data
-        case actions.STORE_NEXT_SUPPLIES_REQUEST_FAILED:
+        // Resolve event to set next network supplies failed request store data
+        case actions.STORE_NEXT_NETWORK_SUPPLIES_REQUEST_FAILED:
             nextState = {...state, next: requestFailedValue(action.message)};
             return nextState || state;
-        // Resolve event to set next supplies succeeded request store data
-        case actions.STORE_NEXT_SUPPLIES_REQUEST_SUCCEEDED:
+        // Resolve event to set next network supplies succeeded request store data
+        case actions.STORE_NEXT_NETWORK_SUPPLIES_REQUEST_SUCCEEDED:
             nextState = {...state, next: requestSucceededValue(action.message)};
             return nextState || state;
-        // Resolve event to set next supplies reset request store data
-        case actions.STORE_NEXT_SUPPLIES_REQUEST_RESET:
+        // Resolve event to set next network supplies reset request store data
+        case actions.STORE_NEXT_NETWORK_SUPPLIES_REQUEST_RESET:
             nextState = {...state, next: initialState.next};
             return nextState || state;
-        // ======================================================== Supplies add supply
-        // Resolve event to set add supply init request store data
-        case actions.STORE_ADD_SUPPLY_REQUEST_INIT:
+        // ======================================================== Network fleets add supply
+        // Resolve event to set add network supply init request store data
+        case actions.STORE_ADD_NETWORK_SUPPLY_REQUEST_INIT:
             nextState = {...state, add: requestInitValue()};
             return nextState || state;
-        // Resolve event to set add supply failed request store data
-        case actions.STORE_ADD_SUPPLY_REQUEST_FAILED:
+        // Resolve event to set add network supply failed request store data
+        case actions.STORE_ADD_NETWORK_SUPPLY_REQUEST_FAILED:
             nextState = {...state, add: requestFailedValue(action.message)};
             return nextState || state;
-        // Resolve event to set add supply succeeded request store data
-        case actions.STORE_ADD_SUPPLY_REQUEST_SUCCEEDED:
+        // Resolve event to set add network supply succeeded request store data
+        case actions.STORE_ADD_NETWORK_SUPPLY_REQUEST_SUCCEEDED:
             nextState = {...state, add: requestSucceededValue(action.message)};
             return nextState || state;
-        // Resolve event to set add supply reset request store data
-        case actions.STORE_ADD_SUPPLY_REQUEST_RESET:
+        // Resolve event to set add network supply reset request store data
+        case actions.STORE_ADD_NETWORK_SUPPLY_REQUEST_RESET:
             nextState = {...state, add: initialState.add};
             return nextState || state;
         // ========================================================

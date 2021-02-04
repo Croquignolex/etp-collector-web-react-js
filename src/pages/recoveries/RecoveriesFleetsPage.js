@@ -11,16 +11,8 @@ import {RECOVERIES_FLEET_PAGE} from "../../constants/pageNameConstants";
 import TableSearchComponent from "../../components/TableSearchComponent";
 import {emitNextReturnsFetch, emitReturnsFetch} from "../../redux/returns/actions";
 import RecoveriesFleetsCardsComponent from "../../components/recoveries/RecoveriesFleetsCardsComponent";
-import {
-    storeReturnsRequestReset,
-    storeNextReturnsRequestReset,
-} from "../../redux/requests/returns/actions";
-import {
-    dateToString,
-    needleSearch,
-    requestFailed,
-    requestLoading,
-} from "../../functions/generalFunctions";
+import {dateToString, needleSearch, requestFailed, requestLoading} from "../../functions/generalFunctions";
+import {storeReturnsRequestReset, storeNextReturnsRequestReset} from "../../redux/requests/returns/actions";
 
 // Component
 function RecoveriesFleetsPage({returns, returnsRequests, hasMoreData, page, dispatch, location}) {
@@ -109,7 +101,6 @@ function searchEngine(data, _needle) {
             return (
                 needleSearch(item.amount, _needle) ||
                 needleSearch(item.agent.name, _needle) ||
-                needleSearch(item.collector.name, _needle) ||
                 needleSearch(item.sim_incoming.number, _needle) ||
                 needleSearch(item.sim_outgoing.number, _needle) ||
                 needleSearch(dateToString(item.creation), _needle) ||

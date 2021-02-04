@@ -20,11 +20,9 @@ export const OPERATIONS_ANONYMOUS_FLEETS_PAGE_PATH = "/operations/anonymous-flee
 export const RECOVERIES_CASH_PAGE_PATH = "/recoveries/cash";
 export const RECOVERIES_FLEETS_PAGE_PATH = "/recoveries/fleets";
 
-// Checkout
-export const CHECKOUT_OUTLAYS_PAGE_PATH = "/checkout/outlays";
-export const HANDING_OVER_PAGE_PATH = "/checkout/handing-over";
-export const CHECKOUT_PAYMENTS_PAGE_PATH = "/checkout/payments";
-
 // Requests
 export const REQUESTS_FLEETS_PAGE_PATH = "/requests/fleets";
 export const REQUESTS_CLEARANCES_PAGE_PATH = "/requests/clearances";
+
+// Network
+export const NETWORK_FLEETS_PAGE_PATH = `/network/fleets`;

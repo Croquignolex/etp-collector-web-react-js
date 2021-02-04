@@ -4,6 +4,10 @@ export const SETTINGS_PAGE = 'Paramètres';
 export const DASHBOARD_PAGE = 'Tableau de bord';
 export const NOTIFICATIONS_PAGE = 'Notifications';
 
+// Network
+export const MY_NETWORK = 'Mon réseau';
+export const MY_NETWORK_FLEET = 'Flottages';
+
 // Commons
 export const SIMS_PAGE = 'Mes puces';
 export const AGENTS = 'Agents/Resources';
