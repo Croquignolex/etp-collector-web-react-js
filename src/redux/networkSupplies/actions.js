@@ -50,10 +50,10 @@ export const emitNextNetworkSuppliesFetch = ({page}) => ({
 });
 
 // Emit add network supply
-export const emitAddNetworkSupply = ({amount, managerSim, agentSim, agent}) => ({
+export const emitAddNetworkSupply = ({amount, collectorSim, agentSim, agent}) => ({
     agent,
     amount,
     agentSim,
-    managerSim,
+    collectorSim,
     type: EMIT_ADD_NETWORK_SUPPLY
 });

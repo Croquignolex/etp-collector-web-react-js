@@ -70,7 +70,6 @@ export const NEW_TRANSFERS_API_PATH = `${API_URL}/flottage_interne_rz_gf`;
 
 // Supplies
 export const SUPPLIES_API_PATH = `${API_URL}/list_all_flottage`;
-export const NEW_SUPPLY_API_PATH = `${API_URL}/flottage_express`;
 
 // Network supplies
 export const NEW_NETWORK_SUPPLY_API_PATH = `${API_URL}/flottage_by_rz`;

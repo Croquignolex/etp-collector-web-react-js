@@ -2,14 +2,18 @@ import PropTypes from 'prop-types';
 import React, {useEffect, useState} from 'react';
 import InfiniteScroll from "react-infinite-scroll-component";
 
+import {emitAllSimsFetch} from "../../redux/sims/actions";
+import {emitAllAgentsFetch} from "../../redux/agents/actions";
 import HeaderComponent from "../../components/HeaderComponent";
 import LoaderComponent from "../../components/LoaderComponent";
-import {MY_NETWORK_FLEET} from "../../constants/pageNameConstants";
 import AppLayoutContainer from "../../containers/AppLayoutContainer";
 import ErrorAlertComponent from "../../components/ErrorAlertComponent";
 import TableSearchComponent from "../../components/TableSearchComponent";
+import {storeAllSimsRequestReset} from "../../redux/requests/sims/actions";
 import FormModalComponent from "../../components/modals/FormModalComponent";
+import {storeAllAgentsRequestReset} from "../../redux/requests/agents/actions";
 import NetworkFleetsCardsComponent from "../../components/network/NetworkFleetsCardsComponent";
+import NetworkFleetsAddSupplyContainer from "../../containers/network/NetworkFleetsAddSupplyContainer";
 import {dateToString, needleSearch, requestFailed, requestLoading} from "../../functions/generalFunctions";
 import {emitNetworkSuppliesFetch, emitNextNetworkSuppliesFetch} from "../../redux/networkSupplies/actions";
 import {storeNetworkSuppliesRequestReset, storeNextNetworkSuppliesRequestReset} from "../../redux/requests/networkSupplies/actions";
@@ -23,8 +27,8 @@ function NetworkFleetsPage({networkSupplies, networkSuppliesRequests, hasMoreDat
     // Local effects
     useEffect(() => {
         dispatch(emitNetworkSuppliesFetch());
-        // dispatch(emitAllSimsFetch());
-        // dispatch(emitAllAgentsFetch());
+        dispatch(emitAllSimsFetch());
+        dispatch(emitAllAgentsFetch());
         // Cleaner error alert while component did unmount without store dependency
         return () => {
             shouldResetErrorData();
@@ -38,9 +42,9 @@ function NetworkFleetsPage({networkSupplies, networkSuppliesRequests, hasMoreDat
 
     // Reset error alert
     const shouldResetErrorData = () => {
-        // dispatch(storeAllSimsRequestReset());
+        dispatch(storeAllSimsRequestReset());
         dispatch(storeNetworkSuppliesRequestReset());
-        // dispatch(storeAllAgentsRequestReset());
+        dispatch(storeAllAgentsRequestReset());
         dispatch(storeNextNetworkSuppliesRequestReset());
     };
 
@@ -110,7 +114,7 @@ function NetworkFleetsPage({networkSupplies, networkSuppliesRequests, hasMoreDat
             </AppLayoutContainer>
             {/* Modal */}
             <FormModalComponent modal={networkSupplyModal} handleClose={handleNetworkSupplyModalHide}>
-                {/*<OperationsFleetsAddSupplyContainer handleClose={handleSupplyModalHide} />*/}
+                <NetworkFleetsAddSupplyContainer handleClose={handleNetworkSupplyModalHide} />
             </FormModalComponent>
         </>
     )
@@ -127,7 +131,6 @@ function searchEngine(data, _needle) {
                 needleSearch(item.remaining, _needle) ||
                 needleSearch(item.agent.name, _needle) ||
                 needleSearch(item.sim_incoming.number, _needle) ||
-                needleSearch(item.sim_outgoing.number, _needle) ||
                 needleSearch(dateToString(item.creation), _needle)
             )
         });

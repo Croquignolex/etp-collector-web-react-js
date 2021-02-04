@@ -36,7 +36,7 @@ function NetworkFleetsCardsComponent({networkSupplies}) {
                                             <span className="float-right">{dateToString(item.creation)}</span>
                                         </li>
                                         <li className="list-group-item">
-                                            <b>Agent/Ressource</b>
+                                            <b>Ressource</b>
                                             <span className="float-right">
                                                 {item.agent.name}
                                                 <i className="fa fa-question-circle small ml-1 hand-cursor text-theme"
