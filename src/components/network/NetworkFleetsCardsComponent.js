@@ -45,10 +45,6 @@ function NetworkFleetsCardsComponent({networkSupplies}) {
                                             </span>
                                         </li>
                                         <li className="list-group-item">
-                                            <b>Puce émetrice</b>
-                                            <span className="float-right">{item.sim_outgoing.number}</span>
-                                        </li>
-                                        <li className="list-group-item">
                                             <b>Puce receptrice</b>
                                             <span className="float-right">{item.sim_incoming.number}</span>
                                         </li>

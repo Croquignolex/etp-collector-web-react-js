@@ -73,8 +73,8 @@ export const SUPPLIES_API_PATH = `${API_URL}/list_all_flottage`;
 export const NEW_SUPPLY_API_PATH = `${API_URL}/flottage_express`;
 
 // Network supplies
-export const NETWORK_SUPPLIES_API_PATH = `${API_URL}/list_all_flottage`;
-export const NEW_NETWORK_SUPPLY_API_PATH = `${API_URL}/flottage_express`;
+export const NEW_NETWORK_SUPPLY_API_PATH = `${API_URL}/flottage_by_rz`;
+export const NETWORK_SUPPLIES_API_PATH = `${API_URL}/list_flottage_rz_by_rz`;
 
 // Refuels
 export const NEW_REFUEL_API_PATH = `${API_URL}/approvisionnement_etp`;

@@ -9,7 +9,7 @@ import AppLayoutContainer from "../../containers/AppLayoutContainer";
 import ErrorAlertComponent from "../../components/ErrorAlertComponent";
 import TableSearchComponent from "../../components/TableSearchComponent";
 import FormModalComponent from "../../components/modals/FormModalComponent";
-import OperationsFleetsCardsComponent from "../../components/operations/OperationsFleetsCardsComponent";
+import NetworkFleetsCardsComponent from "../../components/network/NetworkFleetsCardsComponent";
 import {dateToString, needleSearch, requestFailed, requestLoading} from "../../functions/generalFunctions";
 import {emitNetworkSuppliesFetch, emitNextNetworkSuppliesFetch} from "../../redux/networkSupplies/actions";
 import {storeNetworkSuppliesRequestReset, storeNextNetworkSuppliesRequestReset} from "../../redux/requests/networkSupplies/actions";
@@ -64,7 +64,7 @@ function NetworkFleetsPage({networkSupplies, networkSuppliesRequests, hasMoreDat
         <>
             <AppLayoutContainer pathname={location.pathname}>
                 <div className="content-wrapper">
-                    <HeaderComponent title={MY_NETWORK_FLEET} icon={'fa fa-rss'} />
+                    <HeaderComponent title="Flottages dans mon réseau" icon={'fa fa-rss'} />
                     <section className="content">
                         <div className='container-fluid'>
                             <div className="row">
@@ -88,7 +88,7 @@ function NetworkFleetsPage({networkSupplies, networkSuppliesRequests, hasMoreDat
                                             </button>
                                             {/* Search result & Infinite scroll */}
                                             {(needle !== '' && needle !== undefined)
-                                                ? <OperationsFleetsCardsComponent networkSupplies={searchEngine(networkSupplies, needle)} />
+                                                ? <NetworkFleetsCardsComponent networkSupplies={searchEngine(networkSupplies, needle)} />
                                                 : (requestLoading(networkSuppliesRequests.list) ? <LoaderComponent /> :
                                                         <InfiniteScroll hasMore={hasMoreData}
                                                                         loader={<LoaderComponent />}
@@ -96,7 +96,7 @@ function NetworkFleetsPage({networkSupplies, networkSuppliesRequests, hasMoreDat
                                                                         next={handleNextNetworkSuppliesData}
                                                                         style={{ overflow: 'hidden' }}
                                                         >
-                                                            <OperationsFleetsCardsComponent networkSupplies={networkSupplies} />
+                                                            <NetworkFleetsCardsComponent networkSupplies={networkSupplies} />
                                                         </InfiniteScroll>
                                                 )
                                             }

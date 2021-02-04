@@ -66,19 +66,17 @@ export function* emitNextNetworkSuppliesFetch() {
 
 // Fleets new network supply from API
 export function* emitAddNetworkSupply() {
-    yield takeLatest(EMIT_ADD_NETWORK_SUPPLY, function*({amount, managerSim, agentSim, agent}) {
+    yield takeLatest(EMIT_ADD_NETWORK_SUPPLY, function*({amount, collectorSim, agentSim, agent}) {
         try {
             // Fire event for request
             yield put(storeAddNetworkSupplyRequestInit());
-            const data = {montant: amount, id_puce_flottage: managerSim, id_puce_agent: agentSim, id_agent: agent};
+            const data = {montant: amount, id_agent: agent, id_sim_agent: agentSim, id_sim_rz: collectorSim};
             const apiResponse = yield call(apiPostRequest, api.NEW_NETWORK_SUPPLY_API_PATH, data);
             // Extract data
             const networkSupply = extractNetworkSupplyData(
-                apiResponse.data.puce_emetrice,
                 apiResponse.data.puce_receptrice,
                 apiResponse.data.user,
                 apiResponse.data.agent,
-                apiResponse.data.gestionnaire,
                 apiResponse.data.approvisionnement
             );
             // Fire event to redux
@@ -93,14 +91,11 @@ export function* emitAddNetworkSupply() {
 }
 
 // Extract network supply data
-function extractNetworkSupplyData(apiSimOutgoing, apiSimIncoming, apiUser, apiAgent, apiSupplier, apiNetworkSupply) {
+function extractNetworkSupplyData(apiSimIncoming, apiUser, apiAgent, apiNetworkSupply) {
     let supply = {
         id: '', amount: '', creation: '', remaining: '', status: '',
 
-        request: {id: ''},
         agent: {id: '', name: ''},
-        supplier: {id: '', name: ''},
-        sim_outgoing: {id: '', name: '', number: ''},
         sim_incoming: {id: '', name: '', number: ''},
     };
     if(apiAgent && apiUser) {
@@ -109,24 +104,11 @@ function extractNetworkSupplyData(apiSimOutgoing, apiSimIncoming, apiUser, apiAg
             id: apiUser.id.toString()
         };
     }
-    if(apiSimOutgoing) {
-        supply.sim_outgoing = {
-            name: apiSimOutgoing.nom,
-            number: apiSimOutgoing.numero,
-            id: apiSimOutgoing.id.toString()
-        };
-    }
     if(apiSimIncoming) {
         supply.sim_incoming = {
             name: apiSimIncoming.nom,
             number: apiSimIncoming.numero,
             id: apiSimIncoming.id.toString()
-        };
-    }
-    if(apiSupplier) {
-        supply.supplier = {
-            name: apiSupplier.name,
-            id: apiSupplier.id.toString()
         };
     }
     if(apiNetworkSupply) {
@@ -145,11 +127,9 @@ export function extractNetworkSuppliesData(apiNetworkSupplies) {
     const supplies = [];
     apiNetworkSupplies.forEach(data => {
         supplies.push(extractNetworkSupplyData(
-            data.puce_emetrice,
             data.puce_receptrice,
             data.user,
             data.agent,
-            data.gestionnaire,
             data.approvisionnement,
         ));
     });
