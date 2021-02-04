@@ -17,6 +17,7 @@ import clearances from './clearances/saga';
 import collectors from './collectors/saga';
 import recoveries from './recoveries/saga';
 import notifications from './notifications/saga';
+import networkSupplies from './networkSupplies/saga';
 
 // Combine all saga middleware
 export default function* sagas() {
@@ -38,5 +39,6 @@ export default function* sagas() {
         recoveries(),
         collectors(),
         notifications(),
+        networkSupplies(),
     ]);
 }

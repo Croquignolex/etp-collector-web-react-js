@@ -20,6 +20,7 @@ import notifications from './notifications/reducer';
 import zonesRequests from './requests/zones/reducer';
 import agentsRequests from './requests/agents/reducer';
 import fleetsRequests from './requests/fleets/reducer';
+import networkSupplies from './networkSupplies/reducer';
 import refuelsRequests from './requests/refuels/reducer';
 import returnsRequests from './requests/returns/reducer';
 import affordsRequests from './requests/affords/reducer';
@@ -32,6 +33,7 @@ import collectorsRequests from './requests/collectors/reducer';
 import clearancesRequests from './requests/clearances/reducer';
 import recoveriesRequests from './requests/recoveries/reducer';
 import notificationsRequests from './requests/notifications/reducer';
+import networkSuppliesRequests from './requests/networkSupplies/reducer';
 
 // Combine all reducers
 export default {
@@ -57,6 +59,7 @@ export default {
     notifications,
     fleetsRequests,
     agentsRequests,
+    networkSupplies,
     returnsRequests,
     refuelsRequests,
     affordsRequests,
@@ -69,4 +72,5 @@ export default {
     clearancesRequests,
     collectorsRequests,
     notificationsRequests,
+    networkSuppliesRequests,
 };

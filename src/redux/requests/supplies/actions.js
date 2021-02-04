@@ -9,11 +9,6 @@ export const STORE_NEXT_SUPPLIES_REQUEST_RESET = 'STORE_NEXT_SUPPLIES_REQUEST_RE
 export const STORE_NEXT_SUPPLIES_REQUEST_FAILED = 'STORE_NEXT_SUPPLIES_REQUEST_FAILED';
 export const STORE_NEXT_SUPPLIES_REQUEST_SUCCEEDED = 'STORE_NEXT_SUPPLIES_REQUEST_SUCCEEDED';
 
-export const STORE_ADD_SUPPLY_REQUEST_INIT = 'STORE_ADD_SUPPLY_REQUEST_INIT';
-export const STORE_ADD_SUPPLY_REQUEST_RESET = 'STORE_ADD_SUPPLY_REQUEST_RESET';
-export const STORE_ADD_SUPPLY_REQUEST_FAILED = 'STORE_ADD_SUPPLY_REQUEST_FAILED';
-export const STORE_ADD_SUPPLY_REQUEST_SUCCEEDED = 'STORE_ADD_SUPPLY_REQUEST_SUCCEEDED';
-
 // ======================================================== Supplies
 // Set supplies init data into store
 export const storeSuppliesRequestInit = () => ({
@@ -57,26 +52,4 @@ export const storeNextSuppliesRequestSucceed = ({message}) => ({
 // Set next supplies reset data into store
 export const storeNextSuppliesRequestReset = () => ({
     type: STORE_NEXT_SUPPLIES_REQUEST_RESET
-});
-// ======================================================== Add supply
-// Set add supply init data into store
-export const storeAddSupplyRequestInit = () => ({
-    type: STORE_ADD_SUPPLY_REQUEST_INIT
-});
-
-// Set add supply failed data into store
-export const storeAddSupplyRequestFailed = ({message}) => ({
-    message,
-    type: STORE_ADD_SUPPLY_REQUEST_FAILED
-});
-
-// Set add supply succeeded data into store
-export const storeAddSupplyRequestSucceed = ({message}) => ({
-    message,
-    type: STORE_ADD_SUPPLY_REQUEST_SUCCEEDED
-});
-
-// Set add supply reset data into store
-export const storeAddSupplyRequestReset = () => ({
-    type: STORE_ADD_SUPPLY_REQUEST_RESET
 });

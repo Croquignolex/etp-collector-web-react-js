@@ -11,6 +11,8 @@ import TableSearchComponent from "../../components/TableSearchComponent";
 import FormModalComponent from "../../components/modals/FormModalComponent";
 import OperationsFleetsCardsComponent from "../../components/operations/OperationsFleetsCardsComponent";
 import {dateToString, needleSearch, requestFailed, requestLoading} from "../../functions/generalFunctions";
+import {emitNetworkSuppliesFetch, emitNextNetworkSuppliesFetch} from "../../redux/networkSupplies/actions";
+import {storeNetworkSuppliesRequestReset, storeNextNetworkSuppliesRequestReset} from "../../redux/requests/networkSupplies/actions";
 
 // Component
 function NetworkFleetsPage({networkSupplies, networkSuppliesRequests, hasMoreData, page, dispatch, location}) {
@@ -20,7 +22,7 @@ function NetworkFleetsPage({networkSupplies, networkSuppliesRequests, hasMoreDat
 
     // Local effects
     useEffect(() => {
-        // dispatch(emitSuppliesFetch());
+        dispatch(emitNetworkSuppliesFetch());
         // dispatch(emitAllSimsFetch());
         // dispatch(emitAllAgentsFetch());
         // Cleaner error alert while component did unmount without store dependency
@@ -37,14 +39,14 @@ function NetworkFleetsPage({networkSupplies, networkSuppliesRequests, hasMoreDat
     // Reset error alert
     const shouldResetErrorData = () => {
         // dispatch(storeAllSimsRequestReset());
-        // dispatch(storeSuppliesRequestReset());
+        dispatch(storeNetworkSuppliesRequestReset());
         // dispatch(storeAllAgentsRequestReset());
-        // dispatch(storeNextSuppliesRequestReset());
+        dispatch(storeNextNetworkSuppliesRequestReset());
     };
 
     // Fetch next network supplies data to enhance infinite scroll
     const handleNextNetworkSuppliesData = () => {
-        // dispatch(emitNextSuppliesFetch({page}));
+        dispatch(emitNextNetworkSuppliesFetch({page}));
     }
 
     // Show network supply modal form
