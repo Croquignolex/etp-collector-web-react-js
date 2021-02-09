@@ -6,7 +6,6 @@ import * as path from "../constants/pagePathConstants";
 import {emitAllSimsFetch} from "../redux/sims/actions";
 import * as setting from "../constants/settingsConstants";
 import {emitAllFleetsFetch} from "../redux/fleets/actions";
-import {formatNumber} from "../functions/generalFunctions";
 import {emitFetchUserBalance} from "../redux/user/actions";
 import {emitAllAgentsFetch} from "../redux/agents/actions";
 import HeaderComponent from "../components/HeaderComponent";
@@ -14,6 +13,7 @@ import {DASHBOARD_PAGE} from "../constants/pageNameConstants";
 import AppLayoutContainer from "../containers/AppLayoutContainer";
 import {emitAllClearancesFetch} from "../redux/clearances/actions";
 import {storeAllSimsRequestReset} from "../redux/requests/sims/actions";
+import {formatNumber, requestLoading} from "../functions/generalFunctions";
 import {storeAllFleetsRequestReset} from "../redux/requests/fleets/actions";
 import {storeAllAgentsRequestReset} from "../redux/requests/agents/actions";
 import {storeUserBalanceFetchRequestReset} from "../redux/requests/user/actions";
@@ -65,10 +65,21 @@ function DashboardPage({user, fleets, sims, clearances, agents, settings, dispat
                 <section className="content">
                     <div className='container-fluid'>
                         <div className="row">
-                            {cardsData.includes(setting.CARD_BALANCE) &&
+                            {cardsData.includes(setting.CARD_ACCOUNTS_BALANCE) &&
                                 <div className="col-lg-3 col-md-4 col-sm-6">
                                     <DashboardCardComponent color='bg-dark'
-                                                            icon='fa fa-coin'
+                                                            icon='fa fa-coins'
+                                                            url={path.PROFILE_PAGE_PATH}
+                                                            label={setting.LABEL_ACCOUNTS_BALANCE}
+                                                            data={formatNumber(user.balance - fleetSimsFleetsData)}
+                                                            request={requestLoading(allSimsRequests) ? allSimsRequests : balanceUserRequests}
+                                    />
+                                </div>
+                            }
+                            {cardsData.includes(setting.CARD_BALANCE) &&
+                                <div className="col-lg-3 col-md-4 col-sm-6">
+                                    <DashboardCardComponent icon='fa fa-coin'
+                                                            color='bg-secondary'
                                                             url={path.PROFILE_PAGE_PATH}
                                                             label={setting.LABEL_BALANCE}
                                                             request={balanceUserRequests}
