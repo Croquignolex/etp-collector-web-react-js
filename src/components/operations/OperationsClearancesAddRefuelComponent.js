@@ -5,10 +5,10 @@ import ButtonComponent from "../form/ButtonComponent";
 import AmountComponent from "../form/AmountComponent";
 import SelectComponent from "../form/SelectComponent";
 import ErrorAlertComponent from "../ErrorAlertComponent";
-import {FLEET_TYPE} from "../../constants/typeConstants";
 import {emitAddRefuel} from "../../redux/refuels/actions";
 import * as constants from "../../constants/defaultConstants";
 import FileDocumentComponent from "../form/FileDocumentComponent";
+import {FLEET_COLLECTOR_TYPE} from "../../constants/typeConstants";
 import {DEFAULT_FORM_DATA} from "../../constants/defaultConstants";
 import {playWarningSound} from "../../functions/playSoundFunctions";
 import {dataToArrayForSelect, mappedSims} from "../../functions/arrayFunctions";
@@ -70,7 +70,7 @@ function OperationsClearancesAddRefuelComponent({request, sims, agents, allAgent
 
     // Build select options
     const incomingSelectOptions = useMemo(() => {
-        return dataToArrayForSelect(mappedSims(sims.filter(item => FLEET_TYPE === item.type.name)))
+        return dataToArrayForSelect(mappedSims(sims.filter(item => FLEET_COLLECTOR_TYPE.includes(item.type.name))))
     }, [sims]);
 
     // Build select options
