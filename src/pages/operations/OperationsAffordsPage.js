@@ -93,7 +93,7 @@ function OperationsAffordsPage({affords, affordsRequests, hasMoreData, page, dis
                                                     className="btn btn-theme mb-2"
                                                     onClick={handleAffordModalShow}
                                             >
-                                                <i className="fa fa-plus" /> Effectuer un déstockage
+                                                <i className="fa fa-plus" /> Effectuer un approvisionnement
                                             </button>
                                             {/* Search result & Infinite scroll */}
                                             {(needle !== '' && needle !== undefined)

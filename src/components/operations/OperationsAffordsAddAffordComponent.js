@@ -122,7 +122,7 @@ function OperationsAffordsAddAffordComponent({request, sims, allSimsRequests, di
                     <div className='col-sm-6'>
                         <AmountComponent input={amount}
                                          id='inputAmount'
-                                         label='Montant à déstocker'
+                                         label='Montant à approvisionner'
                                          handleInput={handleAmountInput}
                         />
                     </div>

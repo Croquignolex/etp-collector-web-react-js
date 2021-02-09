@@ -29,7 +29,7 @@ function NavBarComponent({userName, unreadNotifications, dispatch}) {
             <ul className='navbar-nav ml-auto'>
                 <li className='text-center'>
                     {formatString(userName, 19)}<br/>
-                    <strong className='text-theme'>{USER_ROLE}</strong>
+                    <strong className='text-theme'>RESPONSABLE DE ZONE</strong>
                 </li>
             </ul>
             {/* Nav bar*/}
