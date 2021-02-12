@@ -49,7 +49,7 @@ function DashboardPage({user, fleets, sims, clearances, agents, settings, dispat
     // Data
     const cardsData = settings.cards;
     const fleetSimsFleetsData = useMemo(() => {
-        return formatNumber(sims.filter(sim => user.id === sim.collector.id).reduce((acc, val) => acc + val.balance, 0))
+        return formatNumber(sims.filter(sim => user.id === sim.collector.id).reduce((acc, val) => acc + parseInt(val.balance), 0))
         // eslint-disable-next-line
     }, [sims]);
     const resourcesData = useMemo(() => {
@@ -70,20 +70,20 @@ function DashboardPage({user, fleets, sims, clearances, agents, settings, dispat
                                     <DashboardCardComponent color='bg-dark'
                                                             icon='fa fa-coins'
                                                             url={path.PROFILE_PAGE_PATH}
+                                                            request={balanceUserRequests}
+                                                            data={formatNumber(user.balance)}
                                                             label={setting.LABEL_ACCOUNTS_BALANCE}
-                                                            data={formatNumber(user.balance - fleetSimsFleetsData)}
-                                                            request={requestLoading(allSimsRequests) ? allSimsRequests : balanceUserRequests}
                                     />
                                 </div>
                             }
-                            {cardsData.includes(setting.CARD_BALANCE) &&
+                            {cardsData.includes(setting.CARD_ACCOUNTS_BALANCE) &&
                                 <div className="col-lg-3 col-md-4 col-sm-6">
-                                    <DashboardCardComponent icon='fa fa-coin'
-                                                            color='bg-secondary'
+                                    <DashboardCardComponent color='bg-secondary'
+                                                            icon='fa fa-coin'
                                                             url={path.PROFILE_PAGE_PATH}
                                                             label={setting.LABEL_BALANCE}
-                                                            request={balanceUserRequests}
-                                                            data={formatNumber(user.balance)}
+                                                            data={formatNumber(parseInt(user.balance) - fleetSimsFleetsData)}
+                                                            request={requestLoading(allSimsRequests) ? allSimsRequests : balanceUserRequests}
                                     />
                                 </div>
                             }
