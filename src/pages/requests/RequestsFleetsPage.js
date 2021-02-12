@@ -28,7 +28,7 @@ import {
 function RequestsFleetsPage({fleets, fleetsRequests, hasMoreData, page, dispatch, location}) {
     // Local states
     const [needle, setNeedle] = useState('');
-    const [fleetModal, setFleetModal] = useState({show: false, header: 'PASSER UNE DEMANDE DE FLOTTE'});
+    const [fleetModal, setFleetModal] = useState({show: false, header: 'DEMANDE DE FLOTTE'});
 
     // Local effects
     useEffect(() => {
@@ -94,7 +94,7 @@ function RequestsFleetsPage({fleets, fleetsRequests, hasMoreData, page, dispatch
                                                     className="btn btn-theme mb-2"
                                                     onClick={handleFleetModalShow}
                                             >
-                                                <i className="fa fa-plus" /> Passe une demande de flotte
+                                                <i className="fa fa-plus" /> Nouvelle demande de flotte
                                             </button>
                                             {/* Search result & Infinite scroll */}
                                             {(needle !== '' && needle !== undefined)
