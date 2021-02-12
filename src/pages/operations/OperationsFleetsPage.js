@@ -17,13 +17,8 @@ import {emitNextSuppliesFetch, emitSuppliesFetch} from "../../redux/supplies/act
 import OperationsFleetsCardsComponent from "../../components/operations/OperationsFleetsCardsComponent";
 import OperationsFleetsReturnContainer from "../../containers/operations/OperationsFleetsReturnContainer";
 import OperationsCashRecoveryContainer from "../../containers/operations/OperationsCashRecoveryContainer";
+import {dateToString, needleSearch, requestFailed, requestLoading} from "../../functions/generalFunctions";
 import {storeNextSuppliesRequestReset, storeSuppliesRequestReset} from "../../redux/requests/supplies/actions";
-import {
-    dateToString,
-    needleSearch,
-    requestFailed,
-    requestLoading,
-} from "../../functions/generalFunctions";
 
 // Component
 function OperationsFleetsPage({supplies, suppliesRequests, hasMoreData, page, dispatch, location}) {

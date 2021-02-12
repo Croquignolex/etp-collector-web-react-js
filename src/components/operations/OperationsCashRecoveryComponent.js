@@ -95,7 +95,7 @@ function OperationsCashRecoveryComponent({supply, request, dispatch, handleClose
                     <div className='col-sm-6'>
                         <AmountComponent input={amount}
                                          id='inputFleet'
-                                         label='Flotte à retourner'
+                                         label='Montant'
                                          handleInput={handleAmountInput}
                         />
                     </div>
@@ -104,7 +104,7 @@ function OperationsCashRecoveryComponent({supply, request, dispatch, handleClose
                     <div className='col'>
                         <FileDocumentComponent id='file'
                                                input={doc}
-                                               label='Dossier agent'
+                                               label='Réçus'
                                                handleInput={handleFileInput}
                         />
                     </div>
