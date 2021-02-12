@@ -4,7 +4,6 @@ import React, {useEffect, useMemo, useState} from 'react';
 import ButtonComponent from "../form/ButtonComponent";
 import AmountComponent from "../form/AmountComponent";
 import SelectComponent from "../form/SelectComponent";
-import * as types from "../../constants/typeConstants";
 import ErrorAlertComponent from "../ErrorAlertComponent";
 import {requiredChecker} from "../../functions/checkerFunctions";
 import {DEFAULT_FORM_DATA} from "../../constants/defaultConstants";

@@ -58,7 +58,7 @@ function OperationsTransfersAddTransferComponent({request, user, sims, allSimsRe
     // Build select options
     const incomingSelectOptions = useMemo(() => {
         return dataToArrayForSelect(mappedSims(sims.filter(item => FLEET_MASTER_COLLECTOR_TYPE.includes(item.type.name) && item.collector.id !== user.id)))
-    }, [sims]);
+    }, [sims, user.id]);
 
     // Build select options
     const outgoingSelectOptions = useMemo(() => {
