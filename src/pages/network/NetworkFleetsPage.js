@@ -43,8 +43,8 @@ function NetworkFleetsPage({networkSupplies, networkSuppliesRequests, hasMoreDat
     // Reset error alert
     const shouldResetErrorData = () => {
         dispatch(storeAllSimsRequestReset());
-        dispatch(storeNetworkSuppliesRequestReset());
         dispatch(storeAllAgentsRequestReset());
+        dispatch(storeNetworkSuppliesRequestReset());
         dispatch(storeNextNetworkSuppliesRequestReset());
     };
 

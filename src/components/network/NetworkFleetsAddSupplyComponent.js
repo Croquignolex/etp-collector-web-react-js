@@ -73,7 +73,7 @@ function NetworkFleetsAddSupplyComponent({user, request, sims, agents, allAgents
 
     // Build select options
     const agentSelectOptions = useMemo(() => {
-        return dataToArrayForSelect(agents.filter(agent => types.RESOURCE_TYPE === agent.reference))
+        return dataToArrayForSelect(agents)
     }, [agents]);
 
     // Reset error alert
@@ -118,9 +118,9 @@ function NetworkFleetsAddSupplyComponent({user, request, sims, agents, allAgents
                     <div className='col-sm-6'>
                         <SelectComponent input={agent}
                                          id='inputSimAgent'
-                                         label='Ressource'
+                                         label='Agent/Ressource'
                                          options={agentSelectOptions}
-                                         title='Choisir une ressource'
+                                         title='Choisir un agent/ressource'
                                          handleInput={handleAgentSelect}
                                          requestProcessing={requestLoading(allAgentsRequests)}
                         />
