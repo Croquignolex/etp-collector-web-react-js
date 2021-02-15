@@ -93,8 +93,8 @@ function DashboardPage({user, fleets, sims, clearances, agents, settings, dispat
                                                             color='bg-secondary'
                                                             url={path.SIMS_PAGE_PATH}
                                                             request={allSimsRequests}
-                                                            data={fleetSimsFleetsData}
                                                             label={setting.LABEL_FLEET_SIMS_FLEETS}
+                                                            data={formatNumber(fleetSimsFleetsData)}
                                     />
                                 </div>
                             }
