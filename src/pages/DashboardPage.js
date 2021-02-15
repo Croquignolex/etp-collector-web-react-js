@@ -49,11 +49,11 @@ function DashboardPage({user, fleets, sims, clearances, agents, settings, dispat
     // Data
     const cardsData = settings.cards;
     const fleetSimsFleetsData = useMemo(() => {
-        return formatNumber(sims.filter(sim => user.id === sim.collector.id).reduce((acc, val) => acc + parseInt(val.balance), 0))
+        return sims.filter(sim => user.id === sim.collector.id).reduce((acc, val) => acc + parseInt(val.balance), 0)
         // eslint-disable-next-line
     }, [sims]);
     const resourcesData = useMemo(() => {
-        return formatNumber(agents.filter(agent => types.RESOURCE_TYPE === agent.reference).length)
+        return agents.filter(agent => types.RESOURCE_TYPE === agent.reference).length
         // eslint-disable-next-line
     }, [agents]);
 
@@ -82,7 +82,7 @@ function DashboardPage({user, fleets, sims, clearances, agents, settings, dispat
                                                             icon='fa fa-coin'
                                                             url={path.PROFILE_PAGE_PATH}
                                                             label={setting.LABEL_BALANCE}
-                                                            data={formatNumber(parseInt(user.balance) - fleetSimsFleetsData)}
+                                                            data={formatNumber(user.balance - fleetSimsFleetsData)}
                                                             request={requestLoading(allSimsRequests) ? allSimsRequests : balanceUserRequests}
                                     />
                                 </div>
