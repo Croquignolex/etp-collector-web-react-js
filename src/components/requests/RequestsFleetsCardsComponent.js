@@ -78,8 +78,7 @@ function RequestsFleetsCardsComponent({fleets}) {
 
 // Prop types to ensure destroyed props data type
 RequestsFleetsCardsComponent.propTypes = {
-    fleets: PropTypes.array.isRequired,
-    handleSupplyModalShow: PropTypes.func.isRequired
+    fleets: PropTypes.array.isRequired
 };
 
 export default React.memo(RequestsFleetsCardsComponent);

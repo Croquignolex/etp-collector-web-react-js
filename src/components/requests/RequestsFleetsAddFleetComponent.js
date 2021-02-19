@@ -9,14 +9,9 @@ import ErrorAlertComponent from "../ErrorAlertComponent";
 import {requiredChecker} from "../../functions/checkerFunctions";
 import {DEFAULT_FORM_DATA} from "../../constants/defaultConstants";
 import {playWarningSound} from "../../functions/playSoundFunctions";
+import {storeAddFleetRequestReset} from "../../redux/requests/fleets/actions";
 import {dataToArrayForSelect, mappedSims} from "../../functions/arrayFunctions";
-import {storeAddTransferRequestReset} from "../../redux/requests/transfers/actions";
-import {
-    applySuccess,
-    requestFailed,
-    requestLoading,
-    requestSucceeded
-} from "../../functions/generalFunctions";
+import {applySuccess, requestFailed, requestLoading, requestSucceeded} from "../../functions/generalFunctions";
 
 // Component
 function RequestsFleetsAddFleetComponent({request, sims, agents, allAgentsRequests, allSimsRequests, dispatch, handleClose}) {
@@ -71,7 +66,7 @@ function RequestsFleetsAddFleetComponent({request, sims, agents, allAgentsReques
 
     // Reset error alert
     const shouldResetErrorData = () => {
-        dispatch(storeAddTransferRequestReset());
+        dispatch(storeAddFleetRequestReset());
     };
 
     // Trigger add supply form submit
