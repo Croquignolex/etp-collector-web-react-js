@@ -66,7 +66,7 @@ function OperationsClearancesAddRefuelComponent({user, request, sims, agents, al
     // Build select options
     const incomingSelectOptions = useMemo(() => {
         return dataToArrayForSelect(mappedSims(sims.filter(item => ((FLEET_TYPE === item.type.name) || (item.collector.id === user.id)))))
-    }, [sims]);
+    }, [sims, user.id]);
 
     // Build select options
     const agentSelectOptions = useMemo(() => {
