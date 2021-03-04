@@ -5,24 +5,19 @@ import ButtonComponent from "../form/ButtonComponent";
 import AmountComponent from "../form/AmountComponent";
 import SelectComponent from "../form/SelectComponent";
 import ErrorAlertComponent from "../ErrorAlertComponent";
+import {FLEET_TYPE} from "../../constants/typeConstants";
 import {emitAddRefuel} from "../../redux/refuels/actions";
 import * as constants from "../../constants/defaultConstants";
 import FileDocumentComponent from "../form/FileDocumentComponent";
-import {FLEET_COLLECTOR_TYPE} from "../../constants/typeConstants";
 import {DEFAULT_FORM_DATA} from "../../constants/defaultConstants";
 import {playWarningSound} from "../../functions/playSoundFunctions";
 import {dataToArrayForSelect, mappedSims} from "../../functions/arrayFunctions";
 import {storeAddRefuelRequestReset} from "../../redux/requests/refuels/actions";
 import {requiredChecker, requiredFileChecker} from "../../functions/checkerFunctions";
-import {
-    applySuccess,
-    requestFailed,
-    requestLoading,
-    requestSucceeded
-} from "../../functions/generalFunctions";
+import {applySuccess, requestFailed, requestLoading, requestSucceeded} from "../../functions/generalFunctions";
 
 // Component
-function OperationsClearancesAddRefuelComponent({request, sims, agents, allAgentsRequests, allSimsRequests, dispatch, handleClose}) {
+function OperationsClearancesAddRefuelComponent({user, request, sims, agents, allAgentsRequests, allSimsRequests, dispatch, handleClose}) {
     // Local state
     const [amount, setAmount] = useState(DEFAULT_FORM_DATA);
     const [doc, setDoc] = useState(constants.DEFAULT_FORM_DATA);
@@ -70,7 +65,7 @@ function OperationsClearancesAddRefuelComponent({request, sims, agents, allAgent
 
     // Build select options
     const incomingSelectOptions = useMemo(() => {
-        return dataToArrayForSelect(mappedSims(sims.filter(item => FLEET_COLLECTOR_TYPE.includes(item.type.name))))
+        return dataToArrayForSelect(mappedSims(sims.filter(item => ((FLEET_TYPE === item.type.name) || (item.collector.id === user.id)))))
     }, [sims]);
 
     // Build select options
@@ -170,6 +165,7 @@ function OperationsClearancesAddRefuelComponent({request, sims, agents, allAgent
 // Prop types to ensure destroyed props data type
 OperationsClearancesAddRefuelComponent.propTypes = {
     sims: PropTypes.array.isRequired,
+    user: PropTypes.object.isRequired,
     agents: PropTypes.array.isRequired,
     dispatch: PropTypes.func.isRequired,
     request: PropTypes.object.isRequired,

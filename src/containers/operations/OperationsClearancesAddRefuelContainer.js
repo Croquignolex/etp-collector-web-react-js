@@ -4,6 +4,7 @@ import OperationsClearancesAddRefuelComponent from "../../components/operations/
 
 // Map state function to component props
 const mapStateToProps = (state) => ({
+    user: state.user,
     sims: state.sims.list,
     agents: state.agents.list,
     request: state.refuelsRequests.add,
