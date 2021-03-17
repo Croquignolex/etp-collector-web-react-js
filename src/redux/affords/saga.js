@@ -94,14 +94,16 @@ export function* emitAddAfford() {
 // Extract afford data
 function extractAffordData(apiAfford) {
     let afford = {
-        id: '', amount: '', creation: '', vendor: '', receipt: '', status: '',
+        id: '', amount: '', creation: '', receipt: '', status: '',
 
+        vendor: {id: '', name: ''},
         collector: {id: '', name: ''},
         sim: {id: '', name: '', number: ''},
     };
 
     const apiSim = apiAfford.puce;
     const apiCollector = apiAfford.recouvreur;
+    const apiVendor = apiAfford.fournisseur;
 
     if(apiSim) {
         afford.sim = {
@@ -116,12 +118,17 @@ function extractAffordData(apiAfford) {
             id: apiCollector.id.toString()
         };
     }
+    if(apiCollector) {
+        afford.vendor = {
+            name: apiVendor.name,
+            id: apiVendor.id.toString()
+        };
+    }
     if(apiAfford) {
         afford.actionLoader = false;
         afford.status = apiAfford.statut;
         afford.amount = apiAfford.montant;
         afford.id = apiAfford.id.toString();
-        afford.vendor = apiAfford.fournisseur;
         afford.creation = apiAfford.created_at;
         afford.receipt = getFileFromServer(apiAfford.recu);
     }
