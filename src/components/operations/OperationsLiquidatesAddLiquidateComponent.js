@@ -14,7 +14,7 @@ import {storeAddLiquidateRequestReset} from "../../redux/requests/liquidates/act
 import {applySuccess, requestFailed, requestLoading, requestSucceeded} from "../../functions/generalFunctions";
 
 // Component
-function OperationsTransfersAddTransferComponent({request, collectors, allCollectorsRequests, dispatch, handleClose}) {
+function OperationsTransfersAddTransferComponent({request, user, collectors, allCollectorsRequests, dispatch, handleClose}) {
     // Local state
     const [amount, setAmount] = useState(DEFAULT_FORM_DATA);
     const [receiver, setReceiver] = useState(DEFAULT_FORM_DATA);
@@ -50,8 +50,8 @@ function OperationsTransfersAddTransferComponent({request, collectors, allCollec
 
     // Build select options
     const receiverSelectOptions = useMemo(() => {
-        return dataToArrayForSelect(collectors)
-    }, [collectors]);
+        return dataToArrayForSelect(collectors.filter((collector) => collector.id !== user.id))
+    }, [collectors, user]);
 
     // Reset error alert
     const shouldResetErrorData = () => {
@@ -113,6 +113,7 @@ function OperationsTransfersAddTransferComponent({request, collectors, allCollec
 
 // Prop types to ensure destroyed props data type
 OperationsTransfersAddTransferComponent.propTypes = {
+    user: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
     request: PropTypes.object.isRequired,
     handleClose: PropTypes.func.isRequired,
