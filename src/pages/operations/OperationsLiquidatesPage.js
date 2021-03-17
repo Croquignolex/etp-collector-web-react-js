@@ -16,7 +16,15 @@ import {storeUserBalanceFetchRequestReset} from "../../redux/requests/user/actio
 import {storeAllCollectorsRequestReset} from "../../redux/requests/collectors/actions";
 import OperationsLiquidatesCardsComponent from "../../components/operations/OperationsLiquidatesCardsComponent";
 import {emitNextLiquidatesFetch, emitLiquidatesFetch, emitConfirmLiquidate} from "../../redux/liquidates/actions";
-import {dateToString, formatNumber, needleSearch, requestFailed, requestLoading} from "../../functions/generalFunctions";
+import {
+    applySuccess,
+    dateToString,
+    formatNumber,
+    needleSearch,
+    requestFailed,
+    requestLoading,
+    requestSucceeded
+} from "../../functions/generalFunctions";
 import OperationsLiquidatesAddLiquidateContainer from "../../containers/operations/OperationsLiquidatesAddLiquidateContainer";
 import {storeNextLiquidatesRequestReset, storeLiquidatesRequestReset, storeConfirmLiquidateRequestReset} from "../../redux/requests/liquidates/actions";
 
@@ -38,6 +46,15 @@ function OperationsLiquidatesPage({liquidates, user, liquidatesRequests, hasMore
         };
         // eslint-disable-next-line
     }, []);
+
+    // Local effects
+    useEffect(() => {
+        // Reset inputs while toast (well done) into current scope
+        if(requestSucceeded(liquidatesRequests.apply)) {
+            applySuccess(liquidatesRequests.apply.message);
+        }
+        // eslint-disable-next-line
+    }, [liquidatesRequests.apply]);
 
     const handleNeedleInput = (data) => {
         setNeedle(data)
