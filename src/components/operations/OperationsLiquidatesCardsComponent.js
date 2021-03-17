@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from "prop-types";
 
 import {dateToString, formatNumber} from "../../functions/generalFunctions";
+import {DONE} from "../../constants/typeConstants";
 
 // Component
 function OperationsLiquidatesCardsComponent({liquidates}) {
@@ -13,7 +14,7 @@ function OperationsLiquidatesCardsComponent({liquidates}) {
                     return (
                         <div className="col-lg-4 col-md-6" key={key}>
                             <div className="card">
-                                <div className="card-header bg-secondary">
+                                <div className={`card-header ${item.status === DONE ? 'bg-secondary' : 'bg-primary'}`}>
                                     <h3 className="card-title text-bold">
                                         <i className="fa fa-money-bill" /> {formatNumber(item.amount)}
                                     </h3>
@@ -31,6 +32,12 @@ function OperationsLiquidatesCardsComponent({liquidates}) {
                                         <li className="list-group-item">
                                             <b>Recepteur</b>
                                             <span className="float-right">{item.receiver.name}</span>
+                                        </li>
+                                        <li className="list-group-item">
+                                            {(item.status === DONE)
+                                                ? <b className="text-success">Confirmé</b>
+                                                : <b className="text-danger">En attente de confirmation</b>
+                                            }
                                         </li>
                                     </ul>
                                 </div>
