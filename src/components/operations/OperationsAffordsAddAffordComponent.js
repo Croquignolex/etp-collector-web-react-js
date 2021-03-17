@@ -8,21 +8,16 @@ import ErrorAlertComponent from "../ErrorAlertComponent";
 import {MASTER_TYPE} from "../../constants/typeConstants";
 import {emitAddAfford} from "../../redux/affords/actions";
 import * as constants from "../../constants/defaultConstants";
+import {DEFAULT_FORM_DATA} from "../../constants/defaultConstants";
 import FileDocumentComponent from "../form/FileDocumentComponent";
 import {playWarningSound} from "../../functions/playSoundFunctions";
-import {DEFAULT_FORM_DATA, VENDORS} from "../../constants/defaultConstants";
 import {storeAddAffordRequestReset} from "../../redux/requests/affords/actions";
 import {dataToArrayForSelect, mappedSims} from "../../functions/arrayFunctions";
 import {requiredChecker, requiredFileChecker} from "../../functions/checkerFunctions";
-import {
-    applySuccess,
-    requestFailed,
-    requestLoading,
-    requestSucceeded
-} from "../../functions/generalFunctions";
+import {applySuccess, requestFailed, requestLoading, requestSucceeded} from "../../functions/generalFunctions";
 
 // Component
-function OperationsAffordsAddAffordComponent({request, sims, allSimsRequests, dispatch, handleClose}) {
+function OperationsAffordsAddAffordComponent({request, sims, vendors, allSimsRequests, allVendorsRequests, dispatch, handleClose}) {
     // Local state
     const [amount, setAmount] = useState(DEFAULT_FORM_DATA);
     const [doc, setDoc] = useState(constants.DEFAULT_FORM_DATA);
@@ -75,8 +70,8 @@ function OperationsAffordsAddAffordComponent({request, sims, allSimsRequests, di
 
     // Build vendor options
     const agentVendorOptions = useMemo(() => {
-        return dataToArrayForSelect(VENDORS)
-    }, []);
+        return dataToArrayForSelect(vendors)
+    }, [vendors]);
 
     // Reset error alert
     const shouldResetErrorData = () => {
@@ -169,10 +164,12 @@ function OperationsAffordsAddAffordComponent({request, sims, allSimsRequests, di
 // Prop types to ensure destroyed props data type
 OperationsAffordsAddAffordComponent.propTypes = {
     sims: PropTypes.array.isRequired,
+    vendors: PropTypes.array.isRequired,
     dispatch: PropTypes.func.isRequired,
     request: PropTypes.object.isRequired,
     handleClose: PropTypes.func.isRequired,
-    allSimsRequests: PropTypes.object.isRequired
+    allSimsRequests: PropTypes.object.isRequired,
+    allVendorsRequests: PropTypes.object.isRequired,
 };
 
 export default React.memo(OperationsAffordsAddAffordComponent);

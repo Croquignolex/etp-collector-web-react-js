@@ -75,7 +75,7 @@ export function* emitAddAfford() {
             data.append('id_puce', sim);
             data.append('recu', receipt);
             data.append('montant', amount);
-            data.append('fournisseur', vendor);
+            data.append('id_fournisseur', vendor);
             data.append('type', SUPPLY_BY_DIGITAL_PARTNER);
             const apiResponse = yield call(apiPostRequest, api.NEW_REFUEL_API_PATH, data);
             // Extract dataF

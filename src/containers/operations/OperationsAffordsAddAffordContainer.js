@@ -5,8 +5,10 @@ import OperationsAffordsAddAffordComponent from "../../components/operations/Ope
 // Map state function to component props
 const mapStateToProps = (state) => ({
     sims: state.sims.list,
+    vendors: state.vendors.list,
     request: state.affordsRequests.add,
-    allSimsRequests: state.simsRequests.all
+    allSimsRequests: state.simsRequests.all,
+    allVendorsRequests: state.vendorsRequests.all,
 });
 
 // Map dispatch function to component props
