@@ -7,23 +7,15 @@ import HeaderComponent from "../../components/HeaderComponent";
 import LoaderComponent from "../../components/LoaderComponent";
 import AppLayoutContainer from "../../containers/AppLayoutContainer";
 import ErrorAlertComponent from "../../components/ErrorAlertComponent";
-import TableSearchComponent from "../../components/TableSearchComponent";
 import {OPERATIONS_AFFORDS_PAGE} from "../../constants/pageNameConstants";
+import TableSearchComponent from "../../components/TableSearchComponent";
 import {storeAllSimsRequestReset} from "../../redux/requests/sims/actions";
 import FormModalComponent from "../../components/modals/FormModalComponent";
 import {emitAffordsFetch, emitNextAffordsFetch} from "../../redux/affords/actions";
 import OperationsAffordsCardsComponent from "../../components/operations/OperationsAffordsCardsComponent";
+import {dateToString, needleSearch, requestFailed, requestLoading} from "../../functions/generalFunctions";
+import {storeAffordsRequestReset, storeNextAffordsRequestReset} from "../../redux/requests/affords/actions";
 import OperationsAffordsAddAffordContainer from "../../containers/operations/OperationsAffordsAddAffordContainer";
-import {
-    storeAffordsRequestReset,
-    storeNextAffordsRequestReset
-} from "../../redux/requests/affords/actions";
-import {
-    dateToString,
-    needleSearch,
-    requestFailed,
-    requestLoading,
-} from "../../functions/generalFunctions";
 
 // Component
 function OperationsAffordsPage({affords, affordsRequests, hasMoreData, page, dispatch, location}) {
