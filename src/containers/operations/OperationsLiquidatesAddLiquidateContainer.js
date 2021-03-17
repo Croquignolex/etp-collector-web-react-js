@@ -4,7 +4,6 @@ import OperationsLiquidatesAddLiquidateComponent from "../../components/operatio
 
 // Map state function to component props
 const mapStateToProps = (state) => ({
-    user: state.user,
     collectors: state.collectors.list,
     request: state.liquidatesRequests.add,
     allCollectorsRequests: state.collectorsRequests.all,
