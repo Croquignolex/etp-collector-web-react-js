@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from "prop-types";
 
 import LoaderComponent from "../LoaderComponent";
-import {DONE, PENDING} from "../../constants/typeConstants";
+import {APPROVE, PENDING} from "../../constants/typeConstants";
 import {dateToString, formatNumber} from "../../functions/generalFunctions";
 
 // Component
@@ -15,7 +15,7 @@ function OperationsLiquidatesCardsComponent({liquidates, handleConfirmModalShow}
                     return (
                         <div className="col-lg-4 col-md-6" key={key}>
                             <div className="card">
-                                <div className={`card-header ${item.status === DONE ? 'bg-secondary' : 'bg-primary'}`}>
+                                <div className={`card-header ${item.status === APPROVE ? 'bg-secondary' : 'bg-primary'}`}>
                                     <h3 className="card-title text-bold">
                                         <i className="fa fa-money-bill" /> {formatNumber(item.amount)}
                                     </h3>
@@ -48,7 +48,7 @@ function OperationsLiquidatesCardsComponent({liquidates, handleConfirmModalShow}
                                             <span className="float-right">{item.receiver.name}</span>
                                         </li>
                                         <li className="list-group-item">
-                                            {(item.status === DONE)
+                                            {(item.status === APPROVE)
                                                 ? <b className="text-success">Confirmé</b>
                                                 : <b className="text-danger">En attente de confirmation</b>
                                             }
