@@ -2,14 +2,15 @@ import PropTypes from 'prop-types';
 import React, {useEffect, useState} from 'react';
 import InfiniteScroll from "react-infinite-scroll-component";
 
-import {emitAllSimsFetch} from "../../redux/sims/actions";
 import HeaderComponent from "../../components/HeaderComponent";
 import LoaderComponent from "../../components/LoaderComponent";
 import AppLayoutContainer from "../../containers/AppLayoutContainer";
+import {emitAllCollectorsFetch} from "../../redux/collectors/actions";
 import ErrorAlertComponent from "../../components/ErrorAlertComponent";
 import TableSearchComponent from "../../components/TableSearchComponent";
-import FormModalComponent from "../../components/modals/FormModalComponent";
 import {OPERATIONS_TRANSFERS_PAGE} from "../../constants/pageNameConstants";
+import FormModalComponent from "../../components/modals/FormModalComponent";
+import {storeAllCollectorsRequestReset} from "../../redux/requests/collectors/actions";
 import {emitNextLiquidatesFetch, emitLiquidatesFetch} from "../../redux/liquidates/actions";
 import {dateToString, needleSearch, requestFailed, requestLoading} from "../../functions/generalFunctions";
 import OperationsLiquidatesCardsComponent from "../../components/operations/OperationsLiquidatesCardsComponent";
@@ -25,7 +26,7 @@ function OperationsLiquidatesPage({liquidates, liquidatesRequests, hasMoreData, 
     // Local effects
     useEffect(() => {
         dispatch(emitLiquidatesFetch());
-        dispatch(emitAllSimsFetch());
+        dispatch(emitAllCollectorsFetch());
         // Cleaner error alert while component did unmount without store dependency
         return () => {
             shouldResetErrorData();
@@ -41,6 +42,7 @@ function OperationsLiquidatesPage({liquidates, liquidatesRequests, hasMoreData, 
     const shouldResetErrorData = () => {
         dispatch(storeLiquidatesRequestReset());
         dispatch(storeNextLiquidatesRequestReset());
+        dispatch(storeAllCollectorsRequestReset());
     };
 
     // Fetch next liquidates data to enhance infinite scroll

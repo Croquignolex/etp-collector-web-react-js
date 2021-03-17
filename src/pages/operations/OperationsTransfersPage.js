@@ -8,18 +8,14 @@ import LoaderComponent from "../../components/LoaderComponent";
 import AppLayoutContainer from "../../containers/AppLayoutContainer";
 import ErrorAlertComponent from "../../components/ErrorAlertComponent";
 import TableSearchComponent from "../../components/TableSearchComponent";
-import FormModalComponent from "../../components/modals/FormModalComponent";
 import {OPERATIONS_TRANSFERS_PAGE} from "../../constants/pageNameConstants";
+import {storeAllSimsRequestReset} from "../../redux/requests/sims/actions";
+import FormModalComponent from "../../components/modals/FormModalComponent";
 import {emitNextTransfersFetch, emitTransfersFetch} from "../../redux/transfers/actions";
+import {dateToString, needleSearch, requestFailed, requestLoading} from "../../functions/generalFunctions";
 import OperationsTransfersCardsComponent from "../../components/operations/OperationsTransfersCardsComponent";
 import {storeNextTransfersRequestReset, storeTransfersRequestReset} from "../../redux/requests/transfers/actions";
 import OperationsTransfersAddTransferContainer from "../../containers/operations/OperationsTransfersAddTransferContainer";
-import {
-    dateToString,
-    needleSearch,
-    requestFailed,
-    requestLoading,
-} from "../../functions/generalFunctions";
 
 // Component
 function OperationsTransfersPage({transfers, transfersRequests, hasMoreData, page, dispatch, location}) {
@@ -44,6 +40,7 @@ function OperationsTransfersPage({transfers, transfersRequests, hasMoreData, pag
 
     // Reset error alert
     const shouldResetErrorData = () => {
+        dispatch(storeAllSimsRequestReset());
         dispatch(storeTransfersRequestReset());
         dispatch(storeNextTransfersRequestReset());
     };
