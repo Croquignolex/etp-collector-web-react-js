@@ -21,7 +21,7 @@ import OperationsLiquidatesAddLiquidateContainer from "../../containers/operatio
 import {storeNextLiquidatesRequestReset, storeLiquidatesRequestReset, storeConfirmLiquidateRequestReset} from "../../redux/requests/liquidates/actions";
 
 // Component
-function OperationsLiquidatesPage({liquidates, liquidatesRequests, hasMoreData, page, dispatch, location}) {
+function OperationsLiquidatesPage({liquidates, user, liquidatesRequests, hasMoreData, page, dispatch, location}) {
     // Local states
     const [needle, setNeedle] = useState('');
     const [confirmModal, setConfirmModal] = useState({show: false, body: '', id: 0});
@@ -113,7 +113,8 @@ function OperationsLiquidatesPage({liquidates, liquidatesRequests, hasMoreData, 
                                             </button>
                                             {/* Search result & Infinite scroll */}
                                             {(needle !== '' && needle !== undefined)
-                                                ? <OperationsLiquidatesCardsComponent liquidates={searchEngine(liquidates, needle)}
+                                                ? <OperationsLiquidatesCardsComponent user={user}
+                                                                                      liquidates={searchEngine(liquidates, needle)}
                                                                                       handleConfirmModalShow={handleConfirmModalShow}
                                                 />
                                                 : (requestLoading(liquidatesRequests.list) ? <LoaderComponent /> :
@@ -123,7 +124,8 @@ function OperationsLiquidatesPage({liquidates, liquidatesRequests, hasMoreData, 
                                                                         next={handleNextLiquidatesData}
                                                                         style={{ overflow: 'hidden' }}
                                                         >
-                                                            <OperationsLiquidatesCardsComponent liquidates={liquidates}
+                                                            <OperationsLiquidatesCardsComponent user={user}
+                                                                                                liquidates={liquidates}
                                                                                                 handleConfirmModalShow={handleConfirmModalShow}
                                                             />
                                                         </InfiniteScroll>
@@ -171,6 +173,7 @@ function searchEngine(data, _needle) {
 // Prop types to ensure destroyed props data type
 OperationsLiquidatesPage.propTypes = {
     page: PropTypes.number.isRequired,
+    user: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired,
     liquidates: PropTypes.array.isRequired,

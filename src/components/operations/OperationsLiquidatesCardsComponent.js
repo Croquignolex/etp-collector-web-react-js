@@ -6,7 +6,7 @@ import {APPROVE, PENDING} from "../../constants/typeConstants";
 import {dateToString, formatNumber} from "../../functions/generalFunctions";
 
 // Component
-function OperationsLiquidatesCardsComponent({liquidates, handleConfirmModalShow}) {
+function OperationsLiquidatesCardsComponent({liquidates, user, handleConfirmModalShow}) {
     // Render
     return (
         <>
@@ -20,7 +20,7 @@ function OperationsLiquidatesCardsComponent({liquidates, handleConfirmModalShow}
                                         <i className="fa fa-money-bill" /> {formatNumber(item.amount)}
                                     </h3>
                                     <div className="card-tools">
-                                        {item.status === PENDING && (
+                                        {(item.status === PENDING && item.receiver.id === user.id) && (
                                             item.actionLoader ? <LoaderComponent little={true} /> : (
                                                 <button type="button"
                                                         title="Confirmer"
@@ -73,6 +73,7 @@ function OperationsLiquidatesCardsComponent({liquidates, handleConfirmModalShow}
 
 // Prop types to ensure destroyed props data type
 OperationsLiquidatesCardsComponent.propTypes = {
+    user: PropTypes.object.isRequired,
     liquidates: PropTypes.array.isRequired,
     handleConfirmModalShow: PropTypes.func.isRequired,
 };

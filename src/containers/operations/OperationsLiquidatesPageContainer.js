@@ -8,6 +8,7 @@ setPageTitle(OPERATIONS_LIQUIDATES_PAGE);
 
 // Map state function to component props
 const mapStateToProps = (state) => ({
+    user: state.user,
     page: state.liquidates.page,
     liquidates: state.liquidates.list,
     hasMoreData: state.liquidates.hasMoreData,
