@@ -1,17 +1,17 @@
 import {connect} from "react-redux";
 
 import {setPageTitle} from "../../functions/generalFunctions";
-import {OPERATIONS_TRANSFERS_PAGE} from "../../constants/pageNameConstants";
-import OperationsTransfersPage from "../../pages/operations/OperationsTransfersPage";
+import {OPERATIONS_LIQUIDATES_PAGE} from "../../constants/pageNameConstants";
+import OperationsLiquidatesPage from "../../pages/operations/OperationsLiquidatesPage";
 
-setPageTitle(OPERATIONS_TRANSFERS_PAGE);
+setPageTitle(OPERATIONS_LIQUIDATES_PAGE);
 
 // Map state function to component props
 const mapStateToProps = (state) => ({
-    page: state.transfers.page,
-    transfers: state.transfers.list,
-    hasMoreData: state.transfers.hasMoreData,
-    transfersRequests: state.transfersRequests,
+    page: state.liquidates.page,
+    liquidates: state.liquidates.list,
+    hasMoreData: state.liquidates.hasMoreData,
+    liquidatesRequests: state.liquidatesRequests,
 });
 
 // Map dispatch function to component props
@@ -20,4 +20,4 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 // Connect component to Redux
-export default connect(mapStateToProps, mapDispatchToProps)(OperationsTransfersPage);
+export default connect(mapStateToProps, mapDispatchToProps)(OperationsLiquidatesPage);
