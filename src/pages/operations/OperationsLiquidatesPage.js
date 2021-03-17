@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import React, {useEffect, useState} from 'react';
 import InfiniteScroll from "react-infinite-scroll-component";
 
-import {emitFetchUserBalance} from "../../redux/user/actions";
 import HeaderComponent from "../../components/HeaderComponent";
 import LoaderComponent from "../../components/LoaderComponent";
 import AppLayoutContainer from "../../containers/AppLayoutContainer";
@@ -12,10 +11,11 @@ import TableSearchComponent from "../../components/TableSearchComponent";
 import {OPERATIONS_TRANSFERS_PAGE} from "../../constants/pageNameConstants";
 import FormModalComponent from "../../components/modals/FormModalComponent";
 import ConfirmModalComponent from "../../components/modals/ConfirmModalComponent";
-import {storeUserBalanceFetchRequestReset} from "../../redux/requests/user/actions";
 import {storeAllCollectorsRequestReset} from "../../redux/requests/collectors/actions";
 import OperationsLiquidatesCardsComponent from "../../components/operations/OperationsLiquidatesCardsComponent";
 import {emitNextLiquidatesFetch, emitLiquidatesFetch, emitConfirmLiquidate} from "../../redux/liquidates/actions";
+import OperationsLiquidatesAddLiquidateContainer from "../../containers/operations/OperationsLiquidatesAddLiquidateContainer";
+import {storeNextLiquidatesRequestReset, storeLiquidatesRequestReset, storeConfirmLiquidateRequestReset} from "../../redux/requests/liquidates/actions";
 import {
     applySuccess,
     dateToString,
@@ -25,8 +25,6 @@ import {
     requestLoading,
     requestSucceeded
 } from "../../functions/generalFunctions";
-import OperationsLiquidatesAddLiquidateContainer from "../../containers/operations/OperationsLiquidatesAddLiquidateContainer";
-import {storeNextLiquidatesRequestReset, storeLiquidatesRequestReset, storeConfirmLiquidateRequestReset} from "../../redux/requests/liquidates/actions";
 
 // Component
 function OperationsLiquidatesPage({liquidates, user, liquidatesRequests, hasMoreData, page, dispatch, location}) {
@@ -39,7 +37,6 @@ function OperationsLiquidatesPage({liquidates, user, liquidatesRequests, hasMore
     useEffect(() => {
         dispatch(emitLiquidatesFetch());
         dispatch(emitAllCollectorsFetch());
-        dispatch(emitFetchUserBalance());
         // Cleaner error alert while component did unmount without store dependency
         return () => {
             shouldResetErrorData();
@@ -66,7 +63,6 @@ function OperationsLiquidatesPage({liquidates, user, liquidatesRequests, hasMore
         dispatch(storeAllCollectorsRequestReset());
         dispatch(storeNextLiquidatesRequestReset());
         dispatch(storeConfirmLiquidateRequestReset());
-        dispatch(storeUserBalanceFetchRequestReset());
     };
 
     // Fetch next liquidates data to enhance infinite scroll

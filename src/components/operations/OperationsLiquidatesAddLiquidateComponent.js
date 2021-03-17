@@ -16,8 +16,8 @@ import {applySuccess, requestFailed, requestLoading, requestSucceeded} from "../
 // Component
 function OperationsTransfersAddTransferComponent({request, user, collectors, allCollectorsRequests, dispatch, handleClose}) {
     // Local state
+    const [amount, setAmount] = useState(DEFAULT_FORM_DATA);
     const [receiver, setReceiver] = useState(DEFAULT_FORM_DATA);
-    const [amount, setAmount] = useState({...DEFAULT_FORM_DATA, data: (-1 * user.balance)});
 
     // Local effects
     useEffect(() => {
@@ -72,7 +72,6 @@ function OperationsTransfersAddTransferComponent({request, user, collectors, all
         if(validationOK) {
             dispatch(emitAddLiquidate({
                 amount: _amount.data,
-                balance: user.balance,
                 collector: _receiver.data,
             }));
         }
