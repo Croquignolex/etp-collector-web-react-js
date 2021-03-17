@@ -88,3 +88,4 @@ export const ALL_VENDORS_API_PATH = `${API_URL}/all_vendors`;
 // liquidates
 export const NEW_LIQUIDATES_API_PATH = `${API_URL}/give_to_rz`;
 export const LIQUIDATES_API_PATH = `${API_URL}/give_to_rz_list`;
+export const CONFIRM_LIQUIDATE_API_PATH = `${API_URL}/give_to_rz_approuve`;

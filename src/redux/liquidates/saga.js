@@ -5,10 +5,13 @@ import {apiGetRequest, apiPostRequest} from "../../functions/axiosFunctions";
 import {
     EMIT_ADD_LIQUIDATE,
     EMIT_LIQUIDATES_FETCH,
+    EMIT_CONFIRM_LIQUIDATE,
     storeSetLiquidatesData,
-    storeSetNewLiquidateData,
     EMIT_NEXT_LIQUIDATES_FETCH,
+    storeSetNewLiquidateData,
+    storeUpdateLiquidateData,
     storeSetNextLiquidatesData,
+    storeSetLiquidateActionData,
     storeStopInfiniteScrollLiquidateData
 } from "./actions";
 import {
@@ -20,7 +23,10 @@ import {
     storeNextLiquidatesRequestInit,
     storeAddLiquidateRequestSucceed,
     storeNextLiquidatesRequestFailed,
-    storeNextLiquidatesRequestSucceed
+    storeConfirmLiquidateRequestInit,
+    storeNextLiquidatesRequestSucceed,
+    storeConfirmLiquidateRequestFailed,
+    storeConfirmLiquidateRequestSucceed
 } from "../requests/liquidates/actions";
 
 // Fetch liquidates from API
@@ -89,6 +95,29 @@ export function* emitAddLiquidate() {
     });
 }
 
+// Confirm liquidate from API
+export function* emitConfirmLiquidate() {
+    yield takeLatest(EMIT_CONFIRM_LIQUIDATE, function*({id}) {
+        try {
+            // Fire event at redux to toggle action loader
+            yield put(storeSetLiquidateActionData({id}));
+            // Fire event for request
+            yield put(storeConfirmLiquidateRequestInit());
+            const apiResponse = yield call(apiPostRequest, `${api.CONFIRM_LIQUIDATE_API_PATH}/${id}`);
+            // Fire event to redux
+            yield put(storeUpdateLiquidateData({id}));
+            // Fire event at redux to toggle action loader
+            yield put(storeSetLiquidateActionData({id}));
+            // Fire event for request
+            yield put(storeConfirmLiquidateRequestSucceed({message: apiResponse.message}));
+        } catch (message) {
+            // Fire event for request
+            yield put(storeSetLiquidateActionData({id}));
+            yield put(storeConfirmLiquidateRequestFailed({message}));
+        }
+    });
+}
+
 // Extract liquidate data
 function extractLiquidateData(apiLiquidate, apiReceiver, apiSender) {
     let liquidate = {
@@ -137,6 +166,7 @@ export default function* sagaLiquidates() {
     yield all([
         fork(emitAddLiquidate),
         fork(emitLiquidatesFetch),
+        fork(emitConfirmLiquidate),
         fork(emitNextLiquidatesFetch),
     ]);
 }
