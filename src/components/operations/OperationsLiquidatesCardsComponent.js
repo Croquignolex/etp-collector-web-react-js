@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from "prop-types";
 
 import LoaderComponent from "../LoaderComponent";
-import {DONE, PROCESSING} from "../../constants/typeConstants";
+import {DONE, PENDING} from "../../constants/typeConstants";
 import {dateToString, formatNumber} from "../../functions/generalFunctions";
 
 // Component
@@ -20,7 +20,7 @@ function OperationsLiquidatesCardsComponent({liquidates, handleConfirmModalShow}
                                         <i className="fa fa-money-bill" /> {formatNumber(item.amount)}
                                     </h3>
                                     <div className="card-tools">
-                                        {item.status === PROCESSING && (
+                                        {item.status === PENDING && (
                                             item.actionLoader ? <LoaderComponent little={true} /> : (
                                                 <button type="button"
                                                         title="Confirmer"

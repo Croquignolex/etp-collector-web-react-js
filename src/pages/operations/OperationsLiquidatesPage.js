@@ -12,11 +12,11 @@ import {OPERATIONS_TRANSFERS_PAGE} from "../../constants/pageNameConstants";
 import FormModalComponent from "../../components/modals/FormModalComponent";
 import ConfirmModalComponent from "../../components/modals/ConfirmModalComponent";
 import {storeAllCollectorsRequestReset} from "../../redux/requests/collectors/actions";
-import {emitNextLiquidatesFetch, emitLiquidatesFetch} from "../../redux/liquidates/actions";
 import OperationsLiquidatesCardsComponent from "../../components/operations/OperationsLiquidatesCardsComponent";
-import {storeNextLiquidatesRequestReset, storeLiquidatesRequestReset} from "../../redux/requests/liquidates/actions";
+import {emitNextLiquidatesFetch, emitLiquidatesFetch, emitConfirmLiquidate} from "../../redux/liquidates/actions";
 import {dateToString, formatNumber, needleSearch, requestFailed, requestLoading} from "../../functions/generalFunctions";
 import OperationsLiquidatesAddLiquidateContainer from "../../containers/operations/OperationsLiquidatesAddLiquidateContainer";
+import {storeNextLiquidatesRequestReset, storeLiquidatesRequestReset, storeConfirmLiquidateRequestReset} from "../../redux/requests/liquidates/actions";
 
 // Component
 function OperationsLiquidatesPage({liquidates, liquidatesRequests, hasMoreData, page, dispatch, location}) {
@@ -65,7 +65,7 @@ function OperationsLiquidatesPage({liquidates, liquidatesRequests, hasMoreData, 
 
     // Show confirm modal form
     const handleConfirmModalShow = ({id, amount}) => {
-        setConfirmModal({...confirmModal, id, body: `Confirmer le transfert de liquidité de ${formatNumber(amount)}?`, show: true})
+        setConfirmModal({...confirmModal, id, body: `Confirmer la reception du transfert de liquidité de ${formatNumber(amount)}?`, show: true})
     }
 
     // Hide confirm modal form
