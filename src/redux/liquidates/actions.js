@@ -50,8 +50,7 @@ export const emitNextLiquidatesFetch = ({page}) => ({
 });
 
 // Emit add liquidate
-export const emitAddLiquidate = ({id, amount, collector}) => ({
-    id,
+export const emitAddLiquidate = ({amount, collector}) => ({
     amount,
     collector,
     type: EMIT_ADD_LIQUIDATE

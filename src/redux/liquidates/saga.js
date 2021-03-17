@@ -66,7 +66,7 @@ export function* emitNextLiquidatesFetch() {
 
 // New liquidate from API
 export function* emitAddLiquidate() {
-    yield takeLatest(EMIT_ADD_LIQUIDATE, function*({id, amount, collector}) {
+    yield takeLatest(EMIT_ADD_LIQUIDATE, function*({amount, collector}) {
         try {
             // Fire event for request
             yield put(storeAddLiquidateRequestInit());
@@ -74,10 +74,9 @@ export function* emitAddLiquidate() {
             const apiResponse = yield call(apiPostRequest, api.NEW_LIQUIDATES_API_PATH, data);
             // Extract data
             const liquidate = extractLiquidateData(
-                apiResponse.data.puce_emetrice,
-                apiResponse.data.puce_receptrice,
-                apiResponse.data.utilisateur,
-                apiResponse.data.flottage,
+                apiResponse.data.liqudite,
+                apiResponse.data.recepteur,
+                apiResponse.data.emetteur
             );
             // Fire event to redux
             yield put(storeSetNewLiquidateData({liquidate}))
