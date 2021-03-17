@@ -12,55 +12,55 @@ const initialState = {
 function reduce(state = initialState, action) {
     let nextState;
     switch (action.type) {
-        // ======================================================== Payment
-        // Resolve event to set transfers init request store data
-        case actions.STORE_TRANSFERS_REQUEST_INIT:
+        // ======================================================== Liquidates
+        // Resolve event to set liquidates init request store data
+        case actions.STORE_LIQUIDATES_REQUEST_INIT:
             nextState = {...state, list: requestInitValue()};
             return nextState || state;
-        // Resolve event to set transfers failed request store data
-        case actions.STORE_TRANSFERS_REQUEST_FAILED:
+        // Resolve event to set liquidates failed request store data
+        case actions.STORE_LIQUIDATES_REQUEST_FAILED:
             nextState = {...state, list: requestFailedValue(action.message)};
             return nextState || state;
-        // Resolve event to set transfers succeeded request store data
-        case actions.STORE_TRANSFERS_REQUEST_SUCCEEDED:
+        // Resolve event to set liquidates succeeded request store data
+        case actions.STORE_LIQUIDATES_REQUEST_SUCCEEDED:
             nextState = {...state, list: requestSucceededValue(action.message)};
             return nextState || state;
-        // Resolve event to set transfers reset request store data
-        case actions.STORE_TRANSFERS_REQUEST_RESET:
+        // Resolve event to set liquidates reset request store data
+        case actions.STORE_LIQUIDATES_REQUEST_RESET:
             nextState = {...state, list: initialState.list};
             return nextState || state;
-        // ======================================================== Next transfers
-        // Resolve event to set next transfers init request store data
-        case actions.STORE_NEXT_TRANSFERS_REQUEST_INIT:
+        // ======================================================== Next liquidates
+        // Resolve event to set next liquidates init request store data
+        case actions.STORE_NEXT_LIQUIDATES_REQUEST_INIT:
             nextState = {...state, next: requestInitValue()};
             return nextState || state;
-        // Resolve event to set next transfers failed request store data
-        case actions.STORE_NEXT_TRANSFERS_REQUEST_FAILED:
+        // Resolve event to set next liquidates failed request store data
+        case actions.STORE_NEXT_LIQUIDATES_REQUEST_FAILED:
             nextState = {...state, next: requestFailedValue(action.message)};
             return nextState || state;
-        // Resolve event to set next transfers succeeded request store data
-        case actions.STORE_NEXT_TRANSFERS_REQUEST_SUCCEEDED:
+        // Resolve event to set next liquidates succeeded request store data
+        case actions.STORE_NEXT_LIQUIDATES_REQUEST_SUCCEEDED:
             nextState = {...state, next: requestSucceededValue(action.message)};
             return nextState || state;
-        // Resolve event to set next transfers reset request store data
-        case actions.STORE_NEXT_TRANSFERS_REQUEST_RESET:
+        // Resolve event to set next liquidates reset request store data
+        case actions.STORE_NEXT_LIQUIDATES_REQUEST_RESET:
             nextState = {...state, next: initialState.next};
             return nextState || state;
-        // ======================================================== Add transfer
-        // Resolve event to set add transfer init request store data
-        case actions.STORE_ADD_TRANSFER_REQUEST_INIT:
+        // ======================================================== Add liquidate
+        // Resolve event to set add liquidate init request store data
+        case actions.STORE_ADD_LIQUIDATE_REQUEST_INIT:
             nextState = {...state, add: requestInitValue()};
             return nextState || state;
-        // Resolve event to set add transfer failed request store data
-        case actions.STORE_ADD_TRANSFER_REQUEST_FAILED:
+        // Resolve event to set add liquidate failed request store data
+        case actions.STORE_ADD_LIQUIDATE_REQUEST_FAILED:
             nextState = {...state, add: requestFailedValue(action.message)};
             return nextState || state;
-        // Resolve event to set add transfer succeeded request store data
-        case actions.STORE_ADD_TRANSFER_REQUEST_SUCCEEDED:
+        // Resolve event to set add liquidate succeeded request store data
+        case actions.STORE_ADD_LIQUIDATE_REQUEST_SUCCEEDED:
             nextState = {...state, add: requestSucceededValue(action.message)};
             return nextState || state;
-        // Resolve event to set add transfer reset request store data
-        case actions.STORE_ADD_TRANSFER_REQUEST_RESET:
+        // Resolve event to set add liquidate reset request store data
+        case actions.STORE_ADD_LIQUIDATE_REQUEST_RESET:
             nextState = {...state, add: initialState.add};
             return nextState || state;
         // ========================================================
