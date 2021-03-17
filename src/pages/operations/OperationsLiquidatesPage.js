@@ -10,17 +10,19 @@ import ErrorAlertComponent from "../../components/ErrorAlertComponent";
 import TableSearchComponent from "../../components/TableSearchComponent";
 import {OPERATIONS_TRANSFERS_PAGE} from "../../constants/pageNameConstants";
 import FormModalComponent from "../../components/modals/FormModalComponent";
+import ConfirmModalComponent from "../../components/modals/ConfirmModalComponent";
 import {storeAllCollectorsRequestReset} from "../../redux/requests/collectors/actions";
 import {emitNextLiquidatesFetch, emitLiquidatesFetch} from "../../redux/liquidates/actions";
-import {dateToString, needleSearch, requestFailed, requestLoading} from "../../functions/generalFunctions";
 import OperationsLiquidatesCardsComponent from "../../components/operations/OperationsLiquidatesCardsComponent";
 import {storeNextLiquidatesRequestReset, storeLiquidatesRequestReset} from "../../redux/requests/liquidates/actions";
+import {dateToString, formatNumber, needleSearch, requestFailed, requestLoading} from "../../functions/generalFunctions";
 import OperationsLiquidatesAddLiquidateContainer from "../../containers/operations/OperationsLiquidatesAddLiquidateContainer";
 
 // Component
 function OperationsLiquidatesPage({liquidates, liquidatesRequests, hasMoreData, page, dispatch, location}) {
     // Local states
     const [needle, setNeedle] = useState('');
+    const [confirmModal, setConfirmModal] = useState({show: false, body: '', id: 0});
     const [liquidateModal, setLiquidateModal] = useState({show: false, header: 'EFFECTUER UN TRANSFERT DE LIQUIDITES'});
 
     // Local effects
@@ -43,6 +45,7 @@ function OperationsLiquidatesPage({liquidates, liquidatesRequests, hasMoreData, 
         dispatch(storeLiquidatesRequestReset());
         dispatch(storeAllCollectorsRequestReset());
         dispatch(storeNextLiquidatesRequestReset());
+        dispatch(storeConfirmLiquidateRequestReset());
     };
 
     // Fetch next liquidates data to enhance infinite scroll
@@ -59,6 +62,22 @@ function OperationsLiquidatesPage({liquidates, liquidatesRequests, hasMoreData, 
     const handleLiquidateModalHide = () => {
         setLiquidateModal({...liquidateModal, show: false})
     }
+
+    // Show confirm modal form
+    const handleConfirmModalShow = ({id, amount}) => {
+        setConfirmModal({...confirmModal, id, body: `Confirmer le transfert de liquidité de ${formatNumber(amount)}?`, show: true})
+    }
+
+    // Hide confirm modal form
+    const handleConfirmModalHide = () => {
+        setConfirmModal({...confirmModal, show: false})
+    }
+
+    // Trigger when afford confirm confirmed on modal
+    const handleConfirm = (id) => {
+        handleConfirmModalHide();
+        dispatch(emitConfirmLiquidate({id}));
+    };
 
     // Render
     return (
@@ -81,6 +100,7 @@ function OperationsLiquidatesPage({liquidates, liquidatesRequests, hasMoreData, 
                                             {/* Error message */}
                                             {requestFailed(liquidatesRequests.list) && <ErrorAlertComponent message={liquidatesRequests.list.message} />}
                                             {requestFailed(liquidatesRequests.next) && <ErrorAlertComponent message={liquidatesRequests.next.message} />}
+                                            {requestFailed(liquidatesRequests.apply) && <ErrorAlertComponent message={liquidatesRequests.apply.message} />}
                                             <button type="button"
                                                     className="btn btn-theme mb-2"
                                                     onClick={handleLiquidateModalShow}
@@ -89,7 +109,9 @@ function OperationsLiquidatesPage({liquidates, liquidatesRequests, hasMoreData, 
                                             </button>
                                             {/* Search result & Infinite scroll */}
                                             {(needle !== '' && needle !== undefined)
-                                                ? <OperationsLiquidatesCardsComponent liquidates={searchEngine(liquidates, needle)} />
+                                                ? <OperationsLiquidatesCardsComponent liquidates={searchEngine(liquidates, needle)}
+                                                                                      handleConfirmModalShow={handleConfirmModalShow}
+                                                />
                                                 : (requestLoading(liquidatesRequests.list) ? <LoaderComponent /> :
                                                         <InfiniteScroll hasMore={hasMoreData}
                                                                         loader={<LoaderComponent />}
@@ -97,7 +119,9 @@ function OperationsLiquidatesPage({liquidates, liquidatesRequests, hasMoreData, 
                                                                         next={handleNextLiquidatesData}
                                                                         style={{ overflow: 'hidden' }}
                                                         >
-                                                            <OperationsLiquidatesCardsComponent liquidates={liquidates} />
+                                                            <OperationsLiquidatesCardsComponent liquidates={liquidates}
+                                                                                                handleConfirmModalShow={handleConfirmModalShow}
+                                                            />
                                                         </InfiniteScroll>
                                                 )
                                             }
@@ -113,6 +137,10 @@ function OperationsLiquidatesPage({liquidates, liquidatesRequests, hasMoreData, 
             <FormModalComponent modal={liquidateModal} handleClose={handleLiquidateModalHide}>
                 <OperationsLiquidatesAddLiquidateContainer handleClose={handleLiquidateModalHide} />
             </FormModalComponent>
+            <ConfirmModalComponent modal={confirmModal}
+                                   handleModal={handleConfirm}
+                                   handleClose={handleConfirmModalHide}
+            />
         </>
     )
 }
@@ -140,8 +168,8 @@ function searchEngine(data, _needle) {
 OperationsLiquidatesPage.propTypes = {
     page: PropTypes.number.isRequired,
     dispatch: PropTypes.func.isRequired,
-    liquidates: PropTypes.array.isRequired,
     location: PropTypes.object.isRequired,
+    liquidates: PropTypes.array.isRequired,
     hasMoreData: PropTypes.bool.isRequired,
     liquidatesRequests: PropTypes.object.isRequired,
 };
