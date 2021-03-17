@@ -4,12 +4,12 @@ import PropTypes from "prop-types";
 import {dateToString, formatNumber} from "../../functions/generalFunctions";
 
 // Component
-function OperationsTransfersCardsComponent({transfers}) {
+function OperationsLiquidatesCardsComponent({liquidates}) {
     // Render
     return (
         <>
             <div className="row m-1">
-                {transfers.map((item, key) => {
+                {liquidates.map((item, key) => {
                     return (
                         <div className="col-lg-4 col-md-6" key={key}>
                             <div className="card">
@@ -25,16 +25,12 @@ function OperationsTransfersCardsComponent({transfers}) {
                                             <span className="float-right">{dateToString(item.creation)}</span>
                                         </li>
                                         <li className="list-group-item">
-                                            <b>Puce émetrice</b>
-                                            <span className="float-right">{item.sim_outgoing.number}</span>
-                                        </li>
-                                        <li className="list-group-item">
-                                            <b>Puce receptrice</b>
-                                            <span className="float-right">{item.sim_incoming.number}</span>
-                                        </li>
-                                        <li className="list-group-item">
                                             <b>Emetteur</b>
-                                            <span className="float-right">{item.user.name}</span>
+                                            <span className="float-right">{item.sender.name}</span>
+                                        </li>
+                                        <li className="list-group-item">
+                                            <b>Recepteur</b>
+                                            <span className="float-right">{item.receiver.name}</span>
                                         </li>
                                     </ul>
                                 </div>
@@ -42,10 +38,10 @@ function OperationsTransfersCardsComponent({transfers}) {
                         </div>
                     )
                 })}
-                {transfers.length === 0 &&
+                {liquidates.length === 0 &&
                     <div className="col-12">
                         <div className='alert custom-active text-center'>
-                            Pas de transferts
+                            Pas de transferts de liquidités
                         </div>
                     </div>
                 }
@@ -55,8 +51,8 @@ function OperationsTransfersCardsComponent({transfers}) {
 }
 
 // Prop types to ensure destroyed props data type
-OperationsTransfersCardsComponent.propTypes = {
-    transfers: PropTypes.array.isRequired
+OperationsLiquidatesCardsComponent.propTypes = {
+    liquidates: PropTypes.array.isRequired
 };
 
-export default React.memo(OperationsTransfersCardsComponent);
+export default React.memo(OperationsLiquidatesCardsComponent);

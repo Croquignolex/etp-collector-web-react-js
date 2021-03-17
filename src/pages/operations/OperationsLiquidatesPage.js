@@ -15,7 +15,6 @@ import {emitNextLiquidatesFetch, emitLiquidatesFetch} from "../../redux/liquidat
 import {dateToString, needleSearch, requestFailed, requestLoading} from "../../functions/generalFunctions";
 import OperationsLiquidatesCardsComponent from "../../components/operations/OperationsLiquidatesCardsComponent";
 import {storeNextLiquidatesRequestReset, storeLiquidatesRequestReset} from "../../redux/requests/liquidates/actions";
-import OperationsLiquidatesAddLiquidateContainer from "../../containers/operations/OperationsLiquidatesAddLiquidateContainer";
 
 // Component
 function OperationsLiquidatesPage({liquidates, liquidatesRequests, hasMoreData, page, dispatch, location}) {
@@ -85,7 +84,7 @@ function OperationsLiquidatesPage({liquidates, liquidatesRequests, hasMoreData, 
                                                     className="btn btn-theme mb-2"
                                                     onClick={handleLiquidateModalShow}
                                             >
-                                                <i className="fa fa-plus" /> Effectuer un liquidatet
+                                                <i className="fa fa-plus" /> Effectuer un transfert de liquidités
                                             </button>
                                             {/* Search result & Infinite scroll */}
                                             {(needle !== '' && needle !== undefined)
@@ -111,7 +110,7 @@ function OperationsLiquidatesPage({liquidates, liquidatesRequests, hasMoreData, 
             </AppLayoutContainer>
             {/* Modal */}
             <FormModalComponent modal={liquidateModal} handleClose={handleLiquidateModalHide}>
-                <OperationsLiquidatesAddLiquidateContainer handleClose={handleLiquidateModalHide} />
+                {/*<OperationsLiquidatesAddLiquidateContainer handleClose={handleLiquidateModalHide} />*/}
             </FormModalComponent>
         </>
     )
