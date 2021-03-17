@@ -12,6 +12,7 @@ import managers from './managers/reducer';
 import supplies from './supplies/reducer';
 import operators from './operators/reducer';
 import transfers from './transfers/reducer';
+import liquidates from './liquidates/reducer';
 import recoveries from './recoveries/reducer';
 import clearances from './clearances/reducer';
 import collectors from './collectors/reducer';
@@ -32,6 +33,7 @@ import suppliesRequests from './requests/supplies/reducer';
 import operatorsRequests from './requests/operators/reducer';
 import transfersRequests from './requests/transfers/reducer';
 import collectorsRequests from './requests/collectors/reducer';
+import liquidatesRequests from './requests/liquidates/reducer';
 import clearancesRequests from './requests/clearances/reducer';
 import recoveriesRequests from './requests/recoveries/reducer';
 import notificationsRequests from './requests/notifications/reducer';
@@ -54,6 +56,7 @@ export default {
     operators,
     transfers,
     recoveries,
+    liquidates,
     clearances,
     collectors,
     simsRequests,
@@ -73,6 +76,7 @@ export default {
     transfersRequests,
     operatorsRequests,
     recoveriesRequests,
+    liquidatesRequests,
     clearancesRequests,
     collectorsRequests,
     notificationsRequests,

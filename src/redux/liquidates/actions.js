@@ -1,58 +1,58 @@
 // Reducer action types
-export const STORE_SET_TRANSFERS_DATA = 'STORE_SET_TRANSFERS_DATA';
-export const STORE_SET_NEW_TRANSFER_DATA = 'STORE_SET_NEW_TRANSFER_DATA';
-export const STORE_SET_NEXT_TRANSFERS_DATA = 'STORE_SET_NEXT_TRANSFERS_DATA';
-export const STORE_STOP_INFINITE_SCROLL_TRANSFER_DATA = 'STORE_STOP_INFINITE_SCROLL_TRANSFER_DATA';
+export const STORE_SET_LIQUIDATES_DATA = 'STORE_SET_LIQUIDATES_DATA';
+export const STORE_SET_NEW_LIQUIDATE_DATA = 'STORE_SET_NEW_LIQUIDATE_DATA';
+export const STORE_SET_NEXT_LIQUIDATES_DATA = 'STORE_SET_NEXT_LIQUIDATES_DATA';
+export const STORE_STOP_INFINITE_SCROLL_LIQUIDATE_DATA = 'STORE_STOP_INFINITE_SCROLL_LIQUIDATE_DATA';
 
 // Middleware action types
-export const EMIT_ADD_TRANSFER = 'EMIT_ADD_TRANSFER';
-export const EMIT_TRANSFERS_FETCH = 'EMIT_TRANSFERS_FETCH';
-export const EMIT_NEXT_TRANSFERS_FETCH = 'EMIT_NEXT_TRANSFERS_FETCH';
+export const EMIT_ADD_LIQUIDATE = 'EMIT_ADD_LIQUIDATE';
+export const EMIT_LIQUIDATES_FETCH = 'EMIT_LIQUIDATES_FETCH';
+export const EMIT_NEXT_LIQUIDATES_FETCH = 'EMIT_NEXT_LIQUIDATES_FETCH';
 
 //====================== Reducer trigger actions
-// Set transfers data in store
-export const storeSetTransfersData = ({transfers, hasMoreData, page}) => ({
+// Set liquidates data in store
+export const storeSetLiquidatesData = ({liquidates, hasMoreData, page}) => ({
     page,
-    transfers,
+    liquidates,
     hasMoreData,
-    type: STORE_SET_TRANSFERS_DATA
+    type: STORE_SET_LIQUIDATES_DATA
 });
 
-// Set new transfer data in store
-export const storeSetNewTransferData = ({transfer}) => ({
-    transfer,
-    type: STORE_SET_NEW_TRANSFER_DATA
+// Set new liquidate data in store
+export const storeSetNewLiquidateData = ({liquidate}) => ({
+    liquidate,
+    type: STORE_SET_NEW_LIQUIDATE_DATA
 });
 
-// Set next transfers data in store
-export const storeSetNextTransfersData = ({transfers, hasMoreData, page}) => ({
+// Set next liquidates data in store
+export const storeSetNextLiquidatesData = ({liquidates, hasMoreData, page}) => ({
     page,
-    transfers,
+    liquidates,
     hasMoreData,
-    type: STORE_SET_NEXT_TRANSFERS_DATA
+    type: STORE_SET_NEXT_LIQUIDATES_DATA
 });
 
 // Stop infinite scroll
-export const storeStopInfiniteScrollTransferData = () => ({
-    type: STORE_STOP_INFINITE_SCROLL_TRANSFER_DATA
+export const storeStopInfiniteScrollLiquidateData = () => ({
+    type: STORE_STOP_INFINITE_SCROLL_LIQUIDATE_DATA
 });
 
 //====================== Middleware trigger actions
-// Emit transfers fetch
-export const emitTransfersFetch = () => ({
-    type: EMIT_TRANSFERS_FETCH
+// Emit liquidates fetch
+export const emitLiquidatesFetch = () => ({
+    type: EMIT_LIQUIDATES_FETCH
 });
 
-// Emit next transfers fetch
-export const emitNextTransfersFetch = ({page}) => ({
+// Emit next liquidates fetch
+export const emitNextLiquidatesFetch = ({page}) => ({
     page,
-    type: EMIT_NEXT_TRANSFERS_FETCH
+    type: EMIT_NEXT_LIQUIDATES_FETCH
 });
 
-// Emit add transfer
-export const emitAddTransfer = ({amount, managerSim, collectorSim}) => ({
+// Emit add liquidate
+export const emitAddLiquidate = ({id, amount, collector}) => ({
+    id,
     amount,
-    managerSim,
-    collectorSim,
-    type: EMIT_ADD_TRANSFER
+    collector,
+    type: EMIT_ADD_LIQUIDATE
 });

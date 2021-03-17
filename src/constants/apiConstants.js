@@ -84,3 +84,6 @@ export const AFFORDS_API_PATH = `${API_URL}/list_approvisionnement_collector`;
 
 // Vendors
 export const ALL_VENDORS_API_PATH = `${API_URL}/all_vendors`;
+
+// liquidates
+export const LIQUIDATES_API_PATH = `${API_URL}/all_vendors`;

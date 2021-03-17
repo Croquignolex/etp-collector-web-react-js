@@ -11,21 +11,21 @@ const initialState = {
 function reduce(state = initialState, action) {
     let nextState;
     switch (action.type) {
-        // Resolve event to set transfers data
-        case actions.STORE_SET_TRANSFERS_DATA:
-            nextState = {list: action.transfers, page: action.page, hasMoreData: action.hasMoreData};
+        // Resolve event to set liquidates data
+        case actions.STORE_SET_LIQUIDATES_DATA:
+            nextState = {list: action.liquidates, page: action.page, hasMoreData: action.hasMoreData};
             return nextState || state;
-        // Resolve event to set next transfers data
-        case actions.STORE_SET_NEXT_TRANSFERS_DATA:
-            nextState = {list: [...state.list, ...action.transfers], page: action.page, hasMoreData: action.hasMoreData};
+        // Resolve event to set next liquidates data
+        case actions.STORE_SET_NEXT_LIQUIDATES_DATA:
+            nextState = {list: [...state.list, ...action.liquidates], page: action.page, hasMoreData: action.hasMoreData};
             return nextState || state;
-        // Resolve event to stop infinite scroll transfers data
-        case actions.STORE_STOP_INFINITE_SCROLL_TRANSFER_DATA:
+        // Resolve event to stop infinite scroll liquidates data
+        case actions.STORE_STOP_INFINITE_SCROLL_LIQUIDATE_DATA:
             nextState = {...state, hasMoreData: false};
             return nextState || state;
-        // Resolve event to set new transfer data
-        case actions.STORE_SET_NEW_TRANSFER_DATA:
-            nextState = {...state, list: [action.transfer, ...state.list]}
+        // Resolve event to set new liquidate data
+        case actions.STORE_SET_NEW_LIQUIDATE_DATA:
+            nextState = {...state, list: [action.liquidate, ...state.list]}
             return nextState || state;
         // Unknown action
         default: return state;

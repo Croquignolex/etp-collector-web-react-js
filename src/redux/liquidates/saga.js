@@ -3,96 +3,96 @@ import {all, call, fork, put, takeLatest} from 'redux-saga/effects'
 import * as api from "../../constants/apiConstants";
 import {apiGetRequest, apiPostRequest} from "../../functions/axiosFunctions";
 import {
-    EMIT_ADD_TRANSFER,
-    EMIT_TRANSFERS_FETCH,
-    storeSetTransfersData,
-    storeSetNewTransferData,
-    storeSetNextTransfersData,
-    EMIT_NEXT_TRANSFERS_FETCH,
-    storeStopInfiniteScrollTransferData
+    EMIT_ADD_LIQUIDATE,
+    EMIT_LIQUIDATES_FETCH,
+    storeSetLiquidatesData,
+    storeSetNewLiquidateData,
+    EMIT_NEXT_LIQUIDATES_FETCH,
+    storeSetNextLiquidatesData,
+    storeStopInfiniteScrollLiquidateData
 } from "./actions";
 import {
-    storeTransfersRequestInit,
-    storeTransfersRequestFailed,
-    storeAddTransferRequestInit,
-    storeTransfersRequestSucceed,
-    storeAddTransferRequestFailed,
-    storeNextTransfersRequestInit,
-    storeAddTransferRequestSucceed,
-    storeNextTransfersRequestFailed,
-    storeNextTransfersRequestSucceed
-} from "../requests/transfers/actions";
+    storeLiquidatesRequestInit,
+    storeLiquidatesRequestFailed,
+    storeAddLiquidateRequestInit,
+    storeLiquidatesRequestSucceed,
+    storeAddLiquidateRequestFailed,
+    storeNextLiquidatesRequestInit,
+    storeAddLiquidateRequestSucceed,
+    storeNextLiquidatesRequestFailed,
+    storeNextLiquidatesRequestSucceed
+} from "../requests/liquidates/actions";
 
-// Fetch transfers from API
-export function* emitTransfersFetch() {
-    yield takeLatest(EMIT_TRANSFERS_FETCH, function*() {
+// Fetch liquidates from API
+export function* emitLiquidatesFetch() {
+    yield takeLatest(EMIT_LIQUIDATES_FETCH, function*() {
         try {
             // Fire event for request
-            yield put(storeTransfersRequestInit());
-            const apiResponse = yield call(apiGetRequest, `${api.TRANSFERS_API_PATH}?page=1`);
+            yield put(storeLiquidatesRequestInit());
+            const apiResponse = yield call(apiGetRequest, `${api.LIQUIDATES_API_PATH}?page=1`);
             // Extract data
-            const transfers = extractTransfersData(apiResponse.data.flottages);
+            const liquidates = extractLiquidatesData(apiResponse.data.liqudites);
             // Fire event to redux
-            yield put(storeSetTransfersData({transfers, hasMoreData: apiResponse.data.hasMoreData, page: 2}));
+            yield put(storeSetLiquidatesData({liquidates, hasMoreData: apiResponse.data.hasMoreData, page: 2}));
             // Fire event for request
-            yield put(storeTransfersRequestSucceed({message: apiResponse.message}));
+            yield put(storeLiquidatesRequestSucceed({message: apiResponse.message}));
         } catch (message) {
             // Fire event for request
-            yield put(storeTransfersRequestFailed({message}));
+            yield put(storeLiquidatesRequestFailed({message}));
         }
     });
 }
 
-// Fetch next transfers from API
-export function* emitNextTransfersFetch() {
-    yield takeLatest(EMIT_NEXT_TRANSFERS_FETCH, function*({page}) {
+// Fetch next liquidates from API
+export function* emitNextLiquidatesFetch() {
+    yield takeLatest(EMIT_NEXT_LIQUIDATES_FETCH, function*({page}) {
         try {
             // Fire event for request
-            yield put(storeNextTransfersRequestInit());
-            const apiResponse = yield call(apiGetRequest, `${api.TRANSFERS_API_PATH}?page=${page}`);
+            yield put(storeNextLiquidatesRequestInit());
+            const apiResponse = yield call(apiGetRequest, `${api.LIQUIDATES_API_PATH}?page=${page}`);
             // Extract data
-            const transfers = extractTransfersData(apiResponse.data.flottages);
+            const liquidates = extractLiquidatesData(apiResponse.data.liqudites);
             // Fire event to redux
-            yield put(storeSetNextTransfersData({transfers, hasMoreData: apiResponse.data.hasMoreData, page: page + 1}));
+            yield put(storeSetNextLiquidatesData({liquidates, hasMoreData: apiResponse.data.hasMoreData, page: page + 1}));
             // Fire event for request
-            yield put(storeNextTransfersRequestSucceed({message: apiResponse.message}));
+            yield put(storeNextLiquidatesRequestSucceed({message: apiResponse.message}));
         } catch (message) {
             // Fire event for request
-            yield put(storeNextTransfersRequestFailed({message}));
-            yield put(storeStopInfiniteScrollTransferData());
+            yield put(storeNextLiquidatesRequestFailed({message}));
+            yield put(storeStopInfiniteScrollLiquidateData());
         }
     });
 }
 
-// New transfer from API
-export function* emitAddTransfer() {
-    yield takeLatest(EMIT_ADD_TRANSFER, function*({amount, managerSim, collectorSim}) {
+// New liquidate from API
+export function* emitAddLiquidate() {
+    yield takeLatest(EMIT_ADD_LIQUIDATE, function*({amount, managerSim, collectorSim}) {
         try {
             // Fire event for request
-            yield put(storeAddTransferRequestInit());
+            yield put(storeAddLiquidateRequestInit());
             const data = {montant: amount, id_puce_to: collectorSim, id_puce_from: managerSim};
-            const apiResponse = yield call(apiPostRequest, api.NEW_TRANSFERS_API_PATH, data);
+            const apiResponse = yield call(apiPostRequest, api.NEW_LIQUIDATES_API_PATH, data);
             // Extract data
-            const transfer = extractTransferData(
+            const liquidate = extractLiquidateData(
                 apiResponse.data.puce_emetrice,
                 apiResponse.data.puce_receptrice,
                 apiResponse.data.utilisateur,
                 apiResponse.data.flottage,
             );
             // Fire event to redux
-            yield put(storeSetNewTransferData({transfer}))
+            yield put(storeSetNewLiquidateData({liquidate}))
             // Fire event for request
-            yield put(storeAddTransferRequestSucceed({message: apiResponse.message}));
+            yield put(storeAddLiquidateRequestSucceed({message: apiResponse.message}));
         } catch (message) {
             // Fire event for request
-            yield put(storeAddTransferRequestFailed({message}));
+            yield put(storeAddLiquidateRequestFailed({message}));
         }
     });
 }
 
-// Extract transfer data
-function extractTransferData(apiSimOutgoing, apiSimIncoming, apiUser, apiTransfer) {
-    let transfer = {
+// Extract liquidate data
+function extractLiquidateData(apiSimOutgoing, apiSimIncoming, apiUser, apiLiquidate) {
+    let liquidate = {
         id: '', reference: '', amount: '', creation: '',
         note: '', remaining: '', status: '',
 
@@ -101,53 +101,53 @@ function extractTransferData(apiSimOutgoing, apiSimIncoming, apiUser, apiTransfe
         sim_incoming: {id: '', name: '', number: ''},
     };
     if(apiSimOutgoing) {
-        transfer.sim_outgoing = {
+        liquidate.sim_outgoing = {
             name: apiSimOutgoing.nom,
             number: apiSimOutgoing.numero,
             id: apiSimOutgoing.id.toString()
         };
     }
     if(apiSimIncoming) {
-        transfer.sim_incoming = {
+        liquidate.sim_incoming = {
             name: apiSimIncoming.nom,
             number: apiSimIncoming.numero,
             id: apiSimIncoming.id.toString()
         };
     }
     if(apiUser) {
-        transfer.user = {
+        liquidate.user = {
             name: apiUser.name,
             id: apiUser.id.toString()
         };
     }
-    if(apiTransfer) {
-        transfer.actionLoader = false;
-        transfer.amount = apiTransfer.montant;
-        transfer.id = apiTransfer.id.toString();
-        transfer.creation = apiTransfer.created_at;
+    if(apiLiquidate) {
+        liquidate.actionLoader = false;
+        liquidate.amount = apiLiquidate.montant;
+        liquidate.id = apiLiquidate.id.toString();
+        liquidate.creation = apiLiquidate.created_at;
     }
-    return transfer;
+    return liquidate;
 }
 
-// Extract transfers data
-export function extractTransfersData(apiTransfers) {
-    const transfers = [];
-    apiTransfers.forEach(data => {
-        transfers.push(extractTransferData(
+// Extract liquidates data
+export function extractLiquidatesData(apiLiquidates) {
+    const liquidates = [];
+    apiLiquidates.forEach(data => {
+        liquidates.push(extractLiquidateData(
             data.puce_emetrice,
             data.puce_receptrice,
             data.utilisateur,
             data.flottage,
         ));
     });
-    return transfers;
+    return liquidates;
 }
 
 // Combine to export all functions at once
-export default function* sagaTransfers() {
+export default function* sagaLiquidates() {
     yield all([
-        fork(emitAddTransfer),
-        fork(emitTransfersFetch),
-        fork(emitNextTransfersFetch),
+        fork(emitAddLiquidate),
+        fork(emitLiquidatesFetch),
+        fork(emitNextLiquidatesFetch),
     ]);
 }
