@@ -91,37 +91,28 @@ export function* emitAddLiquidate() {
 }
 
 // Extract liquidate data
-function extractLiquidateData(apiSimOutgoing, apiSimIncoming, apiUser, apiLiquidate) {
+function extractLiquidateData(apiLiquidate, apiSender, apiReceiver) {
     let liquidate = {
-        id: '', reference: '', amount: '', creation: '',
-        note: '', remaining: '', status: '',
+        id: '',  amount: '', creation: '', status: '',
 
-        user: {id: '', name: ''},
-        sim_outgoing: {id: '', name: '', number: ''},
-        sim_incoming: {id: '', name: '', number: ''},
+        sender: {id: '', name: ''},
+        receiver: {id: '', name: ''},
     };
-    if(apiSimOutgoing) {
-        liquidate.sim_outgoing = {
-            name: apiSimOutgoing.nom,
-            number: apiSimOutgoing.numero,
-            id: apiSimOutgoing.id.toString()
+    if(apiSender) {
+        liquidate.sender = {
+            name: apiSender.nom,
+            id: apiSender.id.toString()
         };
     }
-    if(apiSimIncoming) {
-        liquidate.sim_incoming = {
-            name: apiSimIncoming.nom,
-            number: apiSimIncoming.numero,
-            id: apiSimIncoming.id.toString()
-        };
-    }
-    if(apiUser) {
-        liquidate.user = {
-            name: apiUser.name,
-            id: apiUser.id.toString()
+    if(apiReceiver) {
+        liquidate.receiver = {
+            name: apiReceiver.name,
+            id: apiReceiver.id.toString()
         };
     }
     if(apiLiquidate) {
         liquidate.actionLoader = false;
+        liquidate.status = apiLiquidate.statut;
         liquidate.amount = apiLiquidate.montant;
         liquidate.id = apiLiquidate.id.toString();
         liquidate.creation = apiLiquidate.created_at;
@@ -134,10 +125,9 @@ export function extractLiquidatesData(apiLiquidates) {
     const liquidates = [];
     apiLiquidates.forEach(data => {
         liquidates.push(extractLiquidateData(
-            data.puce_emetrice,
-            data.puce_receptrice,
-            data.utilisateur,
-            data.flottage,
+            data.liqudite,
+            data.recepteur,
+            data.emetteur,
         ));
     });
     return liquidates;
