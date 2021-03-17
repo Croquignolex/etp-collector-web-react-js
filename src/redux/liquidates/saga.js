@@ -28,6 +28,7 @@ import {
     storeConfirmLiquidateRequestFailed,
     storeConfirmLiquidateRequestSucceed
 } from "../requests/liquidates/actions";
+import {storeSetUserBalanceData} from "../user/actions";
 
 // Fetch liquidates from API
 export function* emitLiquidatesFetch() {
@@ -72,7 +73,7 @@ export function* emitNextLiquidatesFetch() {
 
 // New liquidate from API
 export function* emitAddLiquidate() {
-    yield takeLatest(EMIT_ADD_LIQUIDATE, function*({amount, collector}) {
+    yield takeLatest(EMIT_ADD_LIQUIDATE, function*({amount, balance, collector}) {
         try {
             // Fire event for request
             yield put(storeAddLiquidateRequestInit());
@@ -84,6 +85,7 @@ export function* emitAddLiquidate() {
                 apiResponse.data.recepteur,
                 apiResponse.data.emetteur
             );
+            yield put(storeSetUserBalanceData({balance: balance + amount}));
             // Fire event to redux
             yield put(storeSetNewLiquidateData({liquidate}))
             // Fire event for request

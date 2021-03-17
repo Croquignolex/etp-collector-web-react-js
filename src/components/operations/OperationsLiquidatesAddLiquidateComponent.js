@@ -72,6 +72,7 @@ function OperationsTransfersAddTransferComponent({request, user, collectors, all
         if(validationOK) {
             dispatch(emitAddLiquidate({
                 amount: _amount.data,
+                balance: user.balance,
                 collector: _receiver.data,
             }));
         }
