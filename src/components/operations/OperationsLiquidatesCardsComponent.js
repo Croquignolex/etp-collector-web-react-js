@@ -15,7 +15,7 @@ function OperationsLiquidatesCardsComponent({liquidates}) {
                             <div className="card">
                                 <div className="card-header bg-secondary">
                                     <h3 className="card-title text-bold">
-                                        <i className="fa fa-phone" /> {formatNumber(item.amount)}
+                                        <i className="fa fa-money-bill" /> {formatNumber(item.amount)}
                                     </h3>
                                 </div>
                                 <div className="card-body">

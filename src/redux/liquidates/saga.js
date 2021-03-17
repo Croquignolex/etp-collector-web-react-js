@@ -90,7 +90,7 @@ export function* emitAddLiquidate() {
 }
 
 // Extract liquidate data
-function extractLiquidateData(apiLiquidate, apiSender, apiReceiver) {
+function extractLiquidateData(apiLiquidate, apiReceiver, apiSender) {
     let liquidate = {
         id: '',  amount: '', creation: '', status: '',
 
@@ -99,7 +99,7 @@ function extractLiquidateData(apiLiquidate, apiSender, apiReceiver) {
     };
     if(apiSender) {
         liquidate.sender = {
-            name: apiSender.nom,
+            name: apiSender.name,
             id: apiSender.id.toString()
         };
     }
