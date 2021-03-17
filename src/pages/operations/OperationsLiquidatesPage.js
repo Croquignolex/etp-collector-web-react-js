@@ -40,8 +40,8 @@ function OperationsLiquidatesPage({liquidates, liquidatesRequests, hasMoreData, 
     // Reset error alert
     const shouldResetErrorData = () => {
         dispatch(storeLiquidatesRequestReset());
-        dispatch(storeNextLiquidatesRequestReset());
         dispatch(storeAllCollectorsRequestReset());
+        dispatch(storeNextLiquidatesRequestReset());
     };
 
     // Fetch next liquidates data to enhance infinite scroll
