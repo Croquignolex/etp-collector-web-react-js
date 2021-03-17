@@ -65,7 +65,6 @@ function RecoveriesFleetsPage({returns, returnsRequests, hasMoreData, page, disp
                                             {/* Error message */}
                                             {requestFailed(returnsRequests.list) && <ErrorAlertComponent message={returnsRequests.list.message} />}
                                             {requestFailed(returnsRequests.next) && <ErrorAlertComponent message={returnsRequests.next.message} />}
-                                            {requestFailed(returnsRequests.apply) && <ErrorAlertComponent message={returnsRequests.apply.message} />}
                                             {/* Search result & Infinite scroll */}
                                             {(needle !== '' && needle !== undefined)
                                                 ? <RecoveriesFleetsCardsComponent returns={searchEngine(returns, needle)} />

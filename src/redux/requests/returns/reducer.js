@@ -6,7 +6,6 @@ const initialState = {
     add: {failed: false, loading: false, succeeded: false, message: ""},
     list: {failed: false, loading: false, succeeded: false, message: ""},
     next: {failed: false, loading: false, succeeded: false, message: ""},
-    apply: {failed: false, loading: false, succeeded: false, message: ""},
 };
 
 // Reduce
