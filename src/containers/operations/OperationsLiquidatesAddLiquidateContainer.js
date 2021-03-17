@@ -1,13 +1,13 @@
 import {connect} from "react-redux";
 
-import OperationsTransfersAddTransferComponent from "../../components/operations/OperationsTransfersAddTransferComponent";
+import OperationsLiquidatesAddLiquidateComponent from "../../components/operations/OperationsLiquidatesAddLiquidateComponent";
 
 // Map state function to component props
 const mapStateToProps = (state) => ({
     user: state.user,
-    sims: state.sims.list,
-    request: state.transfersRequests.add,
-    allSimsRequests: state.simsRequests.all,
+    collectors: state.collectors.list,
+    request: state.liquidatesRequests.add,
+    allCollectorsRequests: state.collectorsRequests.all,
 });
 
 // Map dispatch function to component props
@@ -16,4 +16,4 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 // Connect component to Redux
-export default connect(mapStateToProps, mapDispatchToProps)(OperationsTransfersAddTransferComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(OperationsLiquidatesAddLiquidateComponent);

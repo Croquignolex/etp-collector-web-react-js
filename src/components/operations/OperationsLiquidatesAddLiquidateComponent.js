@@ -5,21 +5,19 @@ import ButtonComponent from "../form/ButtonComponent";
 import AmountComponent from "../form/AmountComponent";
 import SelectComponent from "../form/SelectComponent";
 import ErrorAlertComponent from "../ErrorAlertComponent";
-import {emitAddTransfer} from "../../redux/transfers/actions";
+import {emitAddLiquidate} from "../../redux/liquidates/actions";
 import {requiredChecker} from "../../functions/checkerFunctions";
 import {DEFAULT_FORM_DATA} from "../../constants/defaultConstants";
 import {playWarningSound} from "../../functions/playSoundFunctions";
-import {FLEET_MASTER_COLLECTOR_TYPE} from "../../constants/typeConstants";
-import {dataToArrayForSelect, mappedSims} from "../../functions/arrayFunctions";
-import {storeAddTransferRequestReset} from "../../redux/requests/transfers/actions";
+import {dataToArrayForSelect} from "../../functions/arrayFunctions";
+import {storeAddLiquidateRequestReset} from "../../redux/requests/liquidates/actions";
 import {applySuccess, requestFailed, requestLoading, requestSucceeded} from "../../functions/generalFunctions";
 
 // Component
-function OperationsTransfersAddTransferComponent({request, user, sims, allSimsRequests, dispatch, handleClose}) {
+function OperationsTransfersAddTransferComponent({request, user, collectors, allCollectorsRequests, dispatch, handleClose}) {
     // Local state
     const [amount, setAmount] = useState(DEFAULT_FORM_DATA);
-    const [outgoingSim, setOutgoingSim] = useState(DEFAULT_FORM_DATA);
-    const [incomingSim, setIncomingSim] = useState(DEFAULT_FORM_DATA);
+    const [receiver, setReceiver] = useState(DEFAULT_FORM_DATA);
 
     // Local effects
     useEffect(() => {
@@ -40,14 +38,9 @@ function OperationsTransfersAddTransferComponent({request, user, sims, allSimsRe
         // eslint-disable-next-line
     }, [request]);
 
-    const handleOutgoingSelect = (data) => {
+    const handleReceiverSelect = (data) => {
         shouldResetErrorData();
-        setOutgoingSim({...outgoingSim,  isValid: true, data})
-    }
-
-    const handleIncomingSelect = (data) => {
-        shouldResetErrorData();
-        setIncomingSim({...incomingSim,  isValid: true, data})
+        setReceiver({...receiver,  isValid: true, data})
     }
 
     const handleAmountInput = (data) => {
@@ -56,18 +49,13 @@ function OperationsTransfersAddTransferComponent({request, user, sims, allSimsRe
     }
 
     // Build select options
-    const incomingSelectOptions = useMemo(() => {
-        return dataToArrayForSelect(mappedSims(sims.filter(item => FLEET_MASTER_COLLECTOR_TYPE.includes(item.type.name) && item.collector.id !== user.id)))
-    }, [sims, user.id]);
-
-    // Build select options
-    const outgoingSelectOptions = useMemo(() => {
-        return dataToArrayForSelect(mappedSims(sims.filter(item => item.collector.id === user.id)))
-    }, [sims, user.id]);
+    const receiverSelectOptions = useMemo(() => {
+        return dataToArrayForSelect(collectors)
+    }, [collectors]);
 
     // Reset error alert
     const shouldResetErrorData = () => {
-        dispatch(storeAddTransferRequestReset());
+        dispatch(storeAddLiquidateRequestReset());
     };
 
     // Trigger add supply form submit
@@ -75,19 +63,16 @@ function OperationsTransfersAddTransferComponent({request, user, sims, allSimsRe
         e.preventDefault();
         shouldResetErrorData();
         const _amount = requiredChecker(amount);
-        const _outgoingSim = requiredChecker(outgoingSim);
-        const _incomingSim = requiredChecker(incomingSim);
+        const _receiver = requiredChecker(receiver);
         // Set value
         setAmount(_amount);
-        setOutgoingSim(_outgoingSim);
-        setIncomingSim(_incomingSim);
-        const validationOK = (_amount.isValid && _incomingSim.isValid && _outgoingSim.isValid);
+        setReceiver(_receiver);
+        const validationOK = (_amount.isValid && _receiver.isValid);
         // Check
         if(validationOK) {
-            dispatch(emitAddTransfer({
+            dispatch(emitAddLiquidate({
                 amount: _amount.data,
-                managerSim: _outgoingSim.data,
-                collectorSim: _incomingSim.data,
+                collector: _receiver.data,
             }));
         }
         else playWarningSound();
@@ -97,31 +82,19 @@ function OperationsTransfersAddTransferComponent({request, user, sims, allSimsRe
     return (
         <>
             {requestFailed(request) && <ErrorAlertComponent message={request.message} />}
-            {requestFailed(allSimsRequests) && <ErrorAlertComponent message={allSimsRequests.message} />}
+            {requestFailed(allCollectorsRequests) && <ErrorAlertComponent message={allCollectorsRequests.message} />}
             <form onSubmit={handleSubmit}>
                 <div className='row'>
                     <div className='col-sm-6'>
-                        <SelectComponent input={outgoingSim}
-                                         label='Puce émetrice'
-                                         id='inputSimCollector'
-                                         title='Choisir une puce'
-                                         options={outgoingSelectOptions}
-                                         handleInput={handleOutgoingSelect}
-                                         requestProcessing={requestLoading(allSimsRequests)}
+                        <SelectComponent input={receiver}
+                                         label='Recepteur'
+                                         id='inputCollector'
+                                         options={receiverSelectOptions}
+                                         handleInput={handleReceiverSelect}
+                                         title='Choisir un responsable de zone'
+                                         requestProcessing={requestLoading(allCollectorsRequests)}
                         />
                     </div>
-                    <div className='col-sm-6'>
-                        <SelectComponent input={incomingSim}
-                                         id='inputSimManager'
-                                         label='Puce receptrice'
-                                         title='Choisir une puce'
-                                         options={incomingSelectOptions}
-                                         handleInput={handleIncomingSelect}
-                                         requestProcessing={requestLoading(allSimsRequests)}
-                        />
-                    </div>
-                </div>
-                <div className='row'>
                     <div className='col-sm-6'>
                         <AmountComponent input={amount}
                                          id='inputFleet'
@@ -140,12 +113,12 @@ function OperationsTransfersAddTransferComponent({request, user, sims, allSimsRe
 
 // Prop types to ensure destroyed props data type
 OperationsTransfersAddTransferComponent.propTypes = {
-    sims: PropTypes.array.isRequired,
     user: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
     request: PropTypes.object.isRequired,
     handleClose: PropTypes.func.isRequired,
-    allSimsRequests: PropTypes.object.isRequired,
+    collectors: PropTypes.array.isRequired,
+    allCollectorsRequests: PropTypes.object.isRequired,
 };
 
 export default React.memo(OperationsTransfersAddTransferComponent);
