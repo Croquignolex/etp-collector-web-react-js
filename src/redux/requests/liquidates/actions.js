@@ -14,6 +14,11 @@ export const STORE_ADD_LIQUIDATE_REQUEST_RESET = 'STORE_ADD_LIQUIDATE_REQUEST_RE
 export const STORE_ADD_LIQUIDATE_REQUEST_FAILED = 'STORE_ADD_LIQUIDATE_REQUEST_FAILED';
 export const STORE_ADD_LIQUIDATE_REQUEST_SUCCEEDED = 'STORE_ADD_LIQUIDATE_REQUEST_SUCCEEDED';
 
+export const STORE_CONFIRM_LIQUIDATE_REQUEST_INIT = 'STORE_CONFIRM_LIQUIDATE_REQUEST_INIT';
+export const STORE_CONFIRM_LIQUIDATE_REQUEST_RESET = 'STORE_CONFIRM_LIQUIDATE_REQUEST_RESET';
+export const STORE_CONFIRM_LIQUIDATE_REQUEST_FAILED = 'STORE_CONFIRM_LIQUIDATE_REQUEST_FAILED';
+export const STORE_CONFIRM_LIQUIDATE_REQUEST_SUCCEEDED = 'STORE_CONFIRM_LIQUIDATE_REQUEST_SUCCEEDED';
+
 // ======================================================== Liquidates
 // Set liquidates init data into store
 export const storeLiquidatesRequestInit = () => ({
@@ -79,4 +84,26 @@ export const storeAddLiquidateRequestSucceed = ({message}) => ({
 // Set add liquidate reset data into store
 export const storeAddLiquidateRequestReset = () => ({
     type: STORE_ADD_LIQUIDATE_REQUEST_RESET
+});
+// ======================================================== Confirm liquidate
+// Set confirm liquidate init data into store
+export const storeConfirmLiquidateRequestInit = () => ({
+    type: STORE_CONFIRM_LIQUIDATE_REQUEST_INIT
+});
+
+// Set confirm liquidate failed data into store
+export const storeConfirmLiquidateRequestFailed = ({message}) => ({
+    message,
+    type: STORE_CONFIRM_LIQUIDATE_REQUEST_FAILED
+});
+
+// Set confirm liquidate succeeded data into store
+export const storeConfirmLiquidateRequestSucceed = ({message}) => ({
+    message,
+    type: STORE_CONFIRM_LIQUIDATE_REQUEST_SUCCEEDED
+});
+
+// Set confirm liquidate reset data into store
+export const storeConfirmLiquidateRequestReset = () => ({
+    type: STORE_CONFIRM_LIQUIDATE_REQUEST_RESET
 });
