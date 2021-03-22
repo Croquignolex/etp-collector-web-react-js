@@ -11,38 +11,38 @@ const initialState = {
 function reduce(state = initialState, action) {
     let nextState;
     switch (action.type) {
-        // ======================================================== Payment
-        // Resolve event to set transfers init request store data
-        case actions.STORE_TRANSFERS_REQUEST_INIT:
+        // ======================================================== Outlay
+        // Resolve event to set outlays init request store data
+        case actions.STORE_OUTLAYS_REQUEST_INIT:
             nextState = {...state, list: requestInitValue()};
             return nextState || state;
-        // Resolve event to set transfers failed request store data
-        case actions.STORE_TRANSFERS_REQUEST_FAILED:
+        // Resolve event to set outlays failed request store data
+        case actions.STORE_OUTLAYS_REQUEST_FAILED:
             nextState = {...state, list: requestFailedValue(action.message)};
             return nextState || state;
-        // Resolve event to set transfers succeeded request store data
-        case actions.STORE_TRANSFERS_REQUEST_SUCCEEDED:
+        // Resolve event to set outlays succeeded request store data
+        case actions.STORE_OUTLAYS_REQUEST_SUCCEEDED:
             nextState = {...state, list: requestSucceededValue(action.message)};
             return nextState || state;
-        // Resolve event to set transfers reset request store data
-        case actions.STORE_TRANSFERS_REQUEST_RESET:
+        // Resolve event to set outlays reset request store data
+        case actions.STORE_OUTLAYS_REQUEST_RESET:
             nextState = {...state, list: initialState.list};
             return nextState || state;
-        // ======================================================== Next transfers
-        // Resolve event to set next transfers init request store data
-        case actions.STORE_NEXT_TRANSFERS_REQUEST_INIT:
+        // ======================================================== Next outlays
+        // Resolve event to set next outlays init request store data
+        case actions.STORE_NEXT_OUTLAYS_REQUEST_INIT:
             nextState = {...state, next: requestInitValue()};
             return nextState || state;
-        // Resolve event to set next transfers failed request store data
-        case actions.STORE_NEXT_TRANSFERS_REQUEST_FAILED:
+        // Resolve event to set next outlays failed request store data
+        case actions.STORE_NEXT_OUTLAYS_REQUEST_FAILED:
             nextState = {...state, next: requestFailedValue(action.message)};
             return nextState || state;
-        // Resolve event to set next transfers succeeded request store data
-        case actions.STORE_NEXT_TRANSFERS_REQUEST_SUCCEEDED:
+        // Resolve event to set next outlays succeeded request store data
+        case actions.STORE_NEXT_OUTLAYS_REQUEST_SUCCEEDED:
             nextState = {...state, next: requestSucceededValue(action.message)};
             return nextState || state;
-        // Resolve event to set next transfers reset request store data
-        case actions.STORE_NEXT_TRANSFERS_REQUEST_RESET:
+        // Resolve event to set next outlays reset request store data
+        case actions.STORE_NEXT_OUTLAYS_REQUEST_RESET:
             nextState = {...state, next: initialState.next};
             return nextState || state;
         // ========================================================

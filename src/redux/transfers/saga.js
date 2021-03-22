@@ -1,24 +1,19 @@
 import {all, call, fork, put, takeLatest} from 'redux-saga/effects'
 
 import * as api from "../../constants/apiConstants";
-import {apiGetRequest, apiPostRequest} from "../../functions/axiosFunctions";
+import {apiGetRequest} from "../../functions/axiosFunctions";
 import {
-    EMIT_ADD_TRANSFER,
     EMIT_TRANSFERS_FETCH,
     storeSetTransfersData,
-    storeSetNewTransferData,
-    storeSetNextTransfersData,
     EMIT_NEXT_TRANSFERS_FETCH,
+    storeSetNextTransfersData,
     storeStopInfiniteScrollTransferData
 } from "./actions";
 import {
     storeTransfersRequestInit,
     storeTransfersRequestFailed,
-    storeAddTransferRequestInit,
     storeTransfersRequestSucceed,
-    storeAddTransferRequestFailed,
     storeNextTransfersRequestInit,
-    storeAddTransferRequestSucceed,
     storeNextTransfersRequestFailed,
     storeNextTransfersRequestSucceed
 } from "../requests/transfers/actions";
@@ -60,32 +55,6 @@ export function* emitNextTransfersFetch() {
             // Fire event for request
             yield put(storeNextTransfersRequestFailed({message}));
             yield put(storeStopInfiniteScrollTransferData());
-        }
-    });
-}
-
-// New transfer from API
-export function* emitAddTransfer() {
-    yield takeLatest(EMIT_ADD_TRANSFER, function*({amount, managerSim, collectorSim}) {
-        try {
-            // Fire event for request
-            yield put(storeAddTransferRequestInit());
-            const data = {montant: amount, id_puce_to: collectorSim, id_puce_from: managerSim};
-            const apiResponse = yield call(apiPostRequest, api.NEW_TRANSFERS_API_PATH, data);
-            // Extract data
-            const transfer = extractTransferData(
-                apiResponse.data.puce_emetrice,
-                apiResponse.data.puce_receptrice,
-                apiResponse.data.utilisateur,
-                apiResponse.data.flottage,
-            );
-            // Fire event to redux
-            yield put(storeSetNewTransferData({transfer}))
-            // Fire event for request
-            yield put(storeAddTransferRequestSucceed({message: apiResponse.message}));
-        } catch (message) {
-            // Fire event for request
-            yield put(storeAddTransferRequestFailed({message}));
         }
     });
 }
@@ -146,7 +115,6 @@ export function extractTransfersData(apiTransfers) {
 // Combine to export all functions at once
 export default function* sagaTransfers() {
     yield all([
-        fork(emitAddTransfer),
         fork(emitTransfersFetch),
         fork(emitNextTransfersFetch),
     ]);

@@ -7,6 +7,7 @@ import returns from './returns/reducer';
 import refuels from './refuels/reducer';
 import vendors from './vendors/reducer';
 import affords from './affords/reducer';
+import outlays from './outlays/reducer';
 import settings from './settings/reducer';
 import managers from './managers/reducer';
 import supplies from './supplies/reducer';
@@ -27,6 +28,7 @@ import vendorsRequests from './requests/vendors/reducer';
 import refuelsRequests from './requests/refuels/reducer';
 import returnsRequests from './requests/returns/reducer';
 import affordsRequests from './requests/affords/reducer';
+import outlaysRequests from './requests/outlays/reducer';
 import settingsRequests from './requests/settings/reducer';
 import managersRequests from './requests/managers/reducer';
 import suppliesRequests from './requests/supplies/reducer';
@@ -49,6 +51,7 @@ export default {
     returns,
     refuels,
     affords,
+    outlays,
     vendors,
     settings,
     managers,
@@ -69,6 +72,7 @@ export default {
     networkSupplies,
     returnsRequests,
     refuelsRequests,
+    outlaysRequests,
     affordsRequests,
     suppliesRequests,
     managersRequests,
