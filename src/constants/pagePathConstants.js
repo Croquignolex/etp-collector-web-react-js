@@ -27,3 +27,7 @@ export const REQUESTS_CLEARANCES_PAGE_PATH = "/requests/clearances";
 
 // Network
 export const NETWORK_FLEETS_PAGE_PATH = `/network/fleets`;
+
+// Checkout
+export const COLLECTOR_CHECKOUT_OUTLAYS_PAGE_PATH = "/operations/collector-outlays";
+export const COLLECTOR_CHECKOUT_PAYMENTS_PAGE_PATH = "/operations/collector-payments";
