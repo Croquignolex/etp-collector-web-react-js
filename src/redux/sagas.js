@@ -12,6 +12,7 @@ import affords from './affords/saga';
 import outlays from './outlays/saga';
 import settings from './settings/saga';
 import managers from './managers/saga';
+import payments from './payments/saga';
 import supplies from './supplies/saga';
 import operators from './operators/saga';
 import transfers from './transfers/saga';
@@ -35,6 +36,7 @@ export default function* sagas() {
         outlays(),
         vendors(),
         affords(),
+        payments(),
         supplies(),
         managers(),
         settings(),

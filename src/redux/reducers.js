@@ -8,7 +8,8 @@ import refuels from './refuels/reducer';
 import vendors from './vendors/reducer';
 import affords from './affords/reducer';
 import outlays from './outlays/reducer';
-import settings from './settings/reducer';
+import payments from './settings/reducer';
+import settings from './payments/reducer';
 import managers from './managers/reducer';
 import supplies from './supplies/reducer';
 import operators from './operators/reducer';
@@ -31,6 +32,7 @@ import affordsRequests from './requests/affords/reducer';
 import outlaysRequests from './requests/outlays/reducer';
 import settingsRequests from './requests/settings/reducer';
 import managersRequests from './requests/managers/reducer';
+import paymentsRequests from './requests/payments/reducer';
 import suppliesRequests from './requests/supplies/reducer';
 import operatorsRequests from './requests/operators/reducer';
 import transfersRequests from './requests/transfers/reducer';
@@ -53,6 +55,7 @@ export default {
     affords,
     outlays,
     vendors,
+    payments,
     settings,
     managers,
     supplies,
@@ -74,6 +77,7 @@ export default {
     refuelsRequests,
     outlaysRequests,
     affordsRequests,
+    paymentsRequests,
     suppliesRequests,
     managersRequests,
     settingsRequests,
