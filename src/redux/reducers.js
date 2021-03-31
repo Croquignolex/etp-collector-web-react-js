@@ -12,6 +12,7 @@ import payments from './payments/reducer';
 import settings from './settings/reducer';
 import managers from './managers/reducer';
 import supplies from './supplies/reducer';
+import anonymous from './anonymous/reducer';
 import operators from './operators/reducer';
 import transfers from './transfers/reducer';
 import liquidates from './liquidates/reducer';
@@ -36,6 +37,7 @@ import paymentsRequests from './requests/payments/reducer';
 import suppliesRequests from './requests/supplies/reducer';
 import operatorsRequests from './requests/operators/reducer';
 import transfersRequests from './requests/transfers/reducer';
+import anonymousRequests from './requests/anonymous/reducer';
 import collectorsRequests from './requests/collectors/reducer';
 import liquidatesRequests from './requests/liquidates/reducer';
 import clearancesRequests from './requests/clearances/reducer';
@@ -59,6 +61,7 @@ export default {
     settings,
     managers,
     supplies,
+    anonymous,
     operators,
     transfers,
     recoveries,
@@ -81,6 +84,7 @@ export default {
     suppliesRequests,
     managersRequests,
     settingsRequests,
+    anonymousRequests,
     transfersRequests,
     operatorsRequests,
     recoveriesRequests,

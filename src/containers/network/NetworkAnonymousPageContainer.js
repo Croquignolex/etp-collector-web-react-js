@@ -1,10 +1,10 @@
 import {connect} from "react-redux";
 
 import {setPageTitle} from "../../functions/generalFunctions";
-import {OPERATIONS_ANONYMOUS_FLEETS_PAGE} from "../../constants/pageNameConstants";
-import OperationsAnonymousPage from "../../pages/operations/OperationsAnonymousPage";
+import NetworkAnonymousPage from "../../pages/network/NetworkAnonymousPage";
+import {MY_NETWORK_ANONYMOUS_FLEETS_PAGE} from "../../constants/pageNameConstants";
 
-setPageTitle(OPERATIONS_ANONYMOUS_FLEETS_PAGE);
+setPageTitle(MY_NETWORK_ANONYMOUS_FLEETS_PAGE);
 
 // Map state function to component props
 const mapStateToProps = (state) => ({
@@ -20,4 +20,4 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 // Connect component to Redux
-export default connect(mapStateToProps, mapDispatchToProps)(OperationsAnonymousPage);
+export default connect(mapStateToProps, mapDispatchToProps)(NetworkAnonymousPage);

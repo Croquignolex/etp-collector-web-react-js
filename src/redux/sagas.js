@@ -15,6 +15,7 @@ import managers from './managers/saga';
 import payments from './payments/saga';
 import supplies from './supplies/saga';
 import operators from './operators/saga';
+import anonymous from './anonymous/saga';
 import transfers from './transfers/saga';
 import liquidates from './liquidates/saga';
 import clearances from './clearances/saga';
@@ -41,6 +42,7 @@ export default function* sagas() {
         managers(),
         settings(),
         transfers(),
+        anonymous(),
         operators(),
         liquidates(),
         clearances(),
