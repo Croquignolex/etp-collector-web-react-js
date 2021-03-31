@@ -15,7 +15,6 @@ export const OPERATION_AFFORDS_PAGE_PATH = "/operations/affords";
 export const OPERATIONS_TRANSFERS_PAGE_PATH = "/operations/transfers";
 export const OPERATIONS_LIQUIDATES_PAGE_PATH = "/operations/liquidates";
 export const OPERATIONS_CLEARANCES_PAGE_PATH = "/operations/clearances";
-export const OPERATIONS_ANONYMOUS_FLEETS_PAGE_PATH = "/operations/anonymous-fleets";
 
 // Recoveries
 export const RECOVERIES_CASH_PAGE_PATH = "/recoveries/cash";
@@ -27,6 +26,7 @@ export const REQUESTS_CLEARANCES_PAGE_PATH = "/requests/clearances";
 
 // Network
 export const NETWORK_FLEETS_PAGE_PATH = `/network/fleets`;
+export const NETWORK_ANONYMOUS_FLEETS_PAGE_PATH = "/network/anonymous-fleets";
 
 // Checkout
 export const COLLECTOR_CHECKOUT_OUTLAYS_PAGE_PATH = "/operations/collector-outlays";

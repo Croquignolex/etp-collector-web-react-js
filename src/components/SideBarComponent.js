@@ -128,6 +128,7 @@ function buildNetworkMenu() {
         icon: 'fa fa-network-wired',
         sub: [
             {name: page.MY_NETWORK_FLEET, path: path.NETWORK_FLEETS_PAGE_PATH},
+            {name: page.MY_NETWORK_ANONYMOUS_FLEETS_PAGE, path: path.NETWORK_ANONYMOUS_FLEETS_PAGE_PATH},
         ]
     };
 }

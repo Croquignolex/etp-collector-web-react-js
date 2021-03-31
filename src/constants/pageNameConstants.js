@@ -7,6 +7,7 @@ export const NOTIFICATIONS_PAGE = 'Notifications';
 // Network
 export const MY_NETWORK = 'Mon réseau';
 export const MY_NETWORK_FLEET = 'Flottages';
+export const MY_NETWORK_ANONYMOUS_FLEETS_PAGE = 'Flottages Anonyme';
 
 // Commons
 export const SIMS_PAGE = 'Mes puces';
@@ -19,7 +20,6 @@ export const OPERATIONS_CLEARANCES_PAGE = 'Déstockages';
 export const OPERATIONS_AFFORDS_PAGE = 'Approvisionnements';
 export const OPERATIONS_TRANSFERS_PAGE = 'Tranferts de flotte';
 export const OPERATIONS_LIQUIDATES_PAGE = 'Tranferts de liquidité';
-export const OPERATIONS_ANONYMOUS_FLEETS_PAGE = 'Flottages Anonyme';
 
 // Recoveries
 export const RECOVERIES = 'Recouvrement';
