@@ -4,6 +4,7 @@ import NetworkAnonymousAddAnonymousComponent from "../../components/network/Netw
 
 // Map state function to component props
 const mapStateToProps = (state) => ({
+    user: state.user,
     sims: state.sims.list,
     request: state.anonymousRequests.add,
     allSimsRequests: state.simsRequests.all,

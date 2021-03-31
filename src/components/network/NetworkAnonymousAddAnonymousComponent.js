@@ -6,7 +6,6 @@ import ButtonComponent from "../form/ButtonComponent";
 import AmountComponent from "../form/AmountComponent";
 import SelectComponent from "../form/SelectComponent";
 import ErrorAlertComponent from "../ErrorAlertComponent";
-import {FLEET_TYPE} from "../../constants/typeConstants";
 import {emitAddAnonymous} from "../../redux/anonymous/actions";
 import {DEFAULT_FORM_DATA} from "../../constants/defaultConstants";
 import {playWarningSound} from "../../functions/playSoundFunctions";
@@ -16,7 +15,7 @@ import {storeAddAnonymousRequestReset} from "../../redux/requests/anonymous/acti
 import {applySuccess, requestFailed, requestLoading, requestSucceeded} from "../../functions/generalFunctions";
 
 // Component
-function OperationsTransfersAddTransferComponent({request, sims, allSimsRequests, dispatch, handleClose}) {
+function OperationsTransfersAddTransferComponent({request, user, sims, allSimsRequests, dispatch, handleClose}) {
     // Local state
     const [amount, setAmount] = useState(DEFAULT_FORM_DATA);
     const [receiver, setReceiver] = useState(DEFAULT_FORM_DATA);
@@ -64,8 +63,8 @@ function OperationsTransfersAddTransferComponent({request, sims, allSimsRequests
 
     // Build select options
     const outgoingSelectOptions = useMemo(() => {
-        return dataToArrayForSelect(mappedSims(sims.filter(item => FLEET_TYPE === item.type.name)))
-    }, [sims]);
+        return dataToArrayForSelect(mappedSims(sims.filter(item => item.collector.id === user.id)))
+    }, [user.id, sims]);
 
     // Reset error alert
     const shouldResetErrorData = () => {
@@ -152,6 +151,7 @@ function OperationsTransfersAddTransferComponent({request, sims, allSimsRequests
 // Prop types to ensure destroyed props data type
 OperationsTransfersAddTransferComponent.propTypes = {
     sims: PropTypes.array.isRequired,
+    user: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
     request: PropTypes.object.isRequired,
     handleClose: PropTypes.func.isRequired,
