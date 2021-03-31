@@ -13,10 +13,9 @@ import {storeAllSimsRequestReset} from "../../redux/requests/sims/actions";
 import FormModalComponent from "../../components/modals/FormModalComponent";
 import {MY_NETWORK_ANONYMOUS_FLEETS_PAGE} from "../../constants/pageNameConstants";
 import {emitAnonymousFetch, emitNextAnonymousFetch} from "../../redux/anonymous/actions";
+import NetworkAnonymousCardsComponent from "../../components/network/NetworkAnonymousCardsComponent";
 import {dateToString, needleSearch, requestFailed, requestLoading,} from "../../functions/generalFunctions";
-import OperationsAnonymousCardsComponent from "../../components/operations/OperationsAnonymousCardsComponent";
 import {storeAnonymousRequestReset, storeNextAnonymousRequestReset} from "../../redux/requests/anonymous/actions";
-import OperationsAnonymousAddAnonymousContainer from "../../containers/operations/OperationsAnonymousAddAnonymousContainer";
 
 // Component
 function NetworkAnonymousPage({anonymous, anonymousRequests, hasMoreData, page, dispatch, location}) {
@@ -90,7 +89,7 @@ function NetworkAnonymousPage({anonymous, anonymousRequests, hasMoreData, page, 
                                             </button>
                                             {/* Search result & Infinite scroll */}
                                             {(needle !== '' && needle !== undefined)
-                                                ? <OperationsAnonymousCardsComponent anonymous={searchEngine(anonymous, needle)} />
+                                                ? <NetworkAnonymousCardsComponent anonymous={searchEngine(anonymous, needle)} />
                                                 : (requestLoading(anonymousRequests.list) ? <LoaderComponent /> :
                                                         <InfiniteScroll hasMore={hasMoreData}
                                                                         loader={<LoaderComponent />}
@@ -98,7 +97,7 @@ function NetworkAnonymousPage({anonymous, anonymousRequests, hasMoreData, page, 
                                                                         next={handleNextAnonymousData}
                                                                         style={{ overflow: 'hidden' }}
                                                         >
-                                                            <OperationsAnonymousCardsComponent anonymous={anonymous} />
+                                                            <NetworkAnonymousCardsComponent anonymous={anonymous} />
                                                         </InfiniteScroll>
                                                 )
                                             }
@@ -112,7 +111,7 @@ function NetworkAnonymousPage({anonymous, anonymousRequests, hasMoreData, page, 
             </AppLayoutContainer>
             {/* Modal */}
             <FormModalComponent modal={anonymousModal} handleClose={handleAnonymousModalHide}>
-                <OperationsAnonymousAddAnonymousContainer handleClose={handleAnonymousModalHide} />
+                <NetworkAnonymousAddAnonymousContainer handleClose={handleAnonymousModalHide} />
             </FormModalComponent>
         </>
     )
