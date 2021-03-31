@@ -82,7 +82,7 @@ function DashboardPage({user, fleets, sims, clearances, agents, settings, dispat
                                                             icon='fa fa-coin'
                                                             url={path.PROFILE_PAGE_PATH}
                                                             label={setting.LABEL_BALANCE}
-                                                            data={formatNumber(user.balance - fleetSimsFleetsData)}
+                                                            data={formatNumber((-1) * (user.balance + fleetSimsFleetsData))}
                                                             request={requestLoading(allSimsRequests) ? allSimsRequests : balanceUserRequests}
                                     />
                                 </div>
