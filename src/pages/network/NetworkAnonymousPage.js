@@ -16,6 +16,7 @@ import {emitAnonymousFetch, emitNextAnonymousFetch} from "../../redux/anonymous/
 import NetworkAnonymousCardsComponent from "../../components/network/NetworkAnonymousCardsComponent";
 import {dateToString, needleSearch, requestFailed, requestLoading,} from "../../functions/generalFunctions";
 import {storeAnonymousRequestReset, storeNextAnonymousRequestReset} from "../../redux/requests/anonymous/actions";
+import NetworkAnonymousAddAnonymousContainer from "../../containers/network/NetworkAnonymousAddAnonymousContainer";
 
 // Component
 function NetworkAnonymousPage({anonymous, anonymousRequests, hasMoreData, page, dispatch, location}) {
