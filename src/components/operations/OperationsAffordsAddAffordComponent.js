@@ -8,12 +8,12 @@ import ErrorAlertComponent from "../ErrorAlertComponent";
 import {MASTER_TYPE} from "../../constants/typeConstants";
 import {emitAddAfford} from "../../redux/affords/actions";
 import * as constants from "../../constants/defaultConstants";
-import {DEFAULT_FORM_DATA} from "../../constants/defaultConstants";
 import FileDocumentComponent from "../form/FileDocumentComponent";
+import {DEFAULT_FORM_DATA} from "../../constants/defaultConstants";
 import {playWarningSound} from "../../functions/playSoundFunctions";
+import {fileChecker, requiredChecker} from "../../functions/checkerFunctions";
 import {storeAddAffordRequestReset} from "../../redux/requests/affords/actions";
 import {dataToArrayForSelect, mappedSims} from "../../functions/arrayFunctions";
-import {requiredChecker, requiredFileChecker} from "../../functions/checkerFunctions";
 import {applySuccess, requestFailed, requestLoading, requestSucceeded} from "../../functions/generalFunctions";
 
 // Component
@@ -84,7 +84,7 @@ function OperationsAffordsAddAffordComponent({request, sims, vendors, allSimsReq
         shouldResetErrorData();
         const _vendor = requiredChecker(vendor);
         const _amount = requiredChecker(amount);
-        const _document = requiredFileChecker(doc);
+        const _document = fileChecker(doc);
         const _incomingSim = requiredChecker(incomingSim);
         // Set value
         setDoc(_document);
@@ -148,7 +148,7 @@ function OperationsAffordsAddAffordComponent({request, sims, vendors, allSimsReq
                     <div className='col'>
                         <FileDocumentComponent id='file'
                                                input={doc}
-                                               label='Récus'
+                                               label='Récus (facultatif)'
                                                handleInput={handleFileInput}
                         />
                     </div>
