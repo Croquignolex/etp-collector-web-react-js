@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import React, {useEffect, useLayoutEffect} from 'react';
-import {NotificationContainer, NotificationManager} from "react-notifications";
+import {NotificationManager} from "react-notifications";
 
 import 'react-notifications/lib/notifications.css';
 
@@ -52,7 +52,7 @@ function AppLayoutComponent({userCheckRequest, dispatch, pathname, children}) {
     // Render
     return (
         <>
-            <NotificationContainer />
+
             <div className="wrapper">
                 <NavBarContainer />
                 <SideBarContainer pathname={pathname} />

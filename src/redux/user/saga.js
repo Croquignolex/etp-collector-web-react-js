@@ -3,8 +3,8 @@ import { all, takeEvery, takeLatest, put, fork, call } from 'redux-saga/effects'
 import * as api from "../../constants/apiConstants";
 import {AUTH_URL} from "../../constants/generalConstants";
 import {USER_ROLE} from "../../constants/defaultConstants";
-import {apiGetRequest, apiPostRequest} from "../../functions/axiosFunctions";
 import {getProfileImageFromServer} from "../../functions/generalFunctions";
+import {apiGetRequest, apiPostRequest} from "../../functions/axiosFunctions";
 import {storeResetSettingsData, storeSetSettingsData} from "../settings/actions";
 import {LOCAL_STORAGE_USER_DATA, LOCAL_STORAGE_SETTINGS} from "../../constants/localStorageConstants";
 import {
@@ -85,6 +85,8 @@ export function* emitAttemptUserAuthentication() {
         try {
             // Fire event for request
             yield put(storeUserCheckRequestInit());
+            // Remove all data in locale storage
+            yield call(removeAllLocaleStorageItems);
             // Put token in local storage for a check
             yield call(setLocaleStorageItem, LOCAL_STORAGE_USER_DATA, {token});
             const data = {role: USER_ROLE};
