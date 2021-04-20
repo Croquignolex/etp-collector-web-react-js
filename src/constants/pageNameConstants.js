@@ -28,8 +28,8 @@ export const RECOVERIES_CASH_PAGE = "Recouvrement d'espèces";
 
 // Checkout
 export const CHECKOUT = 'Caisse';
-export const COLLECTOR_CHECKOUT_OUTlAYS_PAGE = 'Décaissement RZ';
-export const COLLECTOR_CHECKOUT_PAYMENTS_PAGE = 'Encaissement RZ';
+export const COLLECTOR_CHECKOUT_OUTlAYS_PAGE = 'Encaissement';
+export const COLLECTOR_CHECKOUT_PAYMENTS_PAGE = 'Décaissement';
 
 // Requests
 export const REQUESTS = 'Demandes';
