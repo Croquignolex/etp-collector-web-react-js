@@ -10,7 +10,6 @@ import {emitAllOperatorsFetch} from "../redux/operators/actions";
 import AppLayoutContainer from "../containers/AppLayoutContainer";
 import ErrorAlertComponent from "../components/ErrorAlertComponent";
 import {AGENT_TYPE, RESOURCE_TYPE} from "../constants/typeConstants";
-import TableSearchComponent from "../components/TableSearchComponent";
 import AgentNewContainer from "../containers/agents/AgentNewContainer";
 import FormModalComponent from "../components/modals/FormModalComponent";
 import {storeAllZonesRequestReset} from "../redux/requests/zones/actions";
@@ -18,7 +17,13 @@ import BlockModalComponent from "../components/modals/BlockModalComponent";
 import AgentsCardsComponent from "../components/agents/AgentsCardsComponent";
 import AgentDetailsContainer from "../containers/agents/AgentDetailsContainer";
 import {storeAllOperatorsRequestReset} from "../redux/requests/operators/actions";
-import {emitAgentsFetch, emitNextAgentsFetch, emitToggleAgentStatus} from "../redux/agents/actions";
+import TableSearchWithButtonComponent from "../components/TableSearchWithButtonComponent";
+import {
+    emitAgentsFetch,
+    emitNextAgentsFetch,
+    emitSearchAgentsFetch,
+    emitToggleAgentStatus
+} from "../redux/agents/actions";
 import {
     applySuccess,
     dateToString,
@@ -64,6 +69,10 @@ function AgentsPage({agents, agentsRequests, hasMoreData, page, dispatch, locati
 
     const handleNeedleInput = (data) => {
         setNeedle(data)
+    }
+
+    const handleSearchInput = () => {
+        dispatch(emitSearchAgentsFetch({needle}));
     }
 
     // Reset error alert
@@ -135,7 +144,10 @@ function AgentsPage({agents, agentsRequests, hasMoreData, page, dispatch, locati
                                         {/* Search input */}
                                         <div className="card-header">
                                             <div className="card-tools">
-                                                <TableSearchComponent needle={needle} handleNeedle={handleNeedleInput} />
+                                                <TableSearchWithButtonComponent needle={needle}
+                                                                                handleNeedle={handleNeedleInput}
+                                                                                handleSearch={handleSearchInput}
+                                                />
                                             </div>
                                         </div>
                                         <div className="card-body">
@@ -156,13 +168,15 @@ function AgentsPage({agents, agentsRequests, hasMoreData, page, dispatch, locati
                                                 <i className="fa fa-plus" /> Nouvelle ressource
                                             </button>
                                             {/* Search result & Infinite scroll */}
-                                            {(needle !== '' && needle !== undefined)
-                                                ? <AgentsCardsComponent handleBlock={handleBlock}
-                                                                        agents={searchEngine(agents, needle)}
-                                                                        handleBlockModalShow={handleBlockModalShow}
-                                                                        handleAgentDetailsModalShow={handleAgentDetailsModalShow}
-                                                />
-                                                : (requestLoading(agentsRequests.list) ? <LoaderComponent /> :
+                                            {requestLoading(agentsRequests.list) ? <LoaderComponent /> : ((needle !== '' && needle !== undefined) ?
+                                                    (
+                                                        <AgentsCardsComponent handleBlock={handleBlock}
+                                                                              agents={searchEngine(agents, needle)}
+                                                                              handleBlockModalShow={handleBlockModalShow}
+                                                                              handleAgentDetailsModalShow={handleAgentDetailsModalShow}
+                                                        />
+                                                    ) :
+                                                    (
                                                         <InfiniteScroll hasMore={hasMoreData}
                                                                         dataLength={agents.length}
                                                                         next={handleNextAgentsData}
@@ -175,8 +189,8 @@ function AgentsPage({agents, agentsRequests, hasMoreData, page, dispatch, locati
                                                                                   handleAgentDetailsModalShow={handleAgentDetailsModalShow}
                                                             />
                                                         </InfiniteScroll>
-                                                )
-                                            }
+                                                    )
+                                            )}
                                         </div>
                                     </div>
                                 </div>
