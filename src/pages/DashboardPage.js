@@ -56,6 +56,11 @@ function DashboardPage({user, fleets, sims, clearances, agents, settings, dispat
         return agents.filter(agent => types.RESOURCE_TYPE === agent.reference).length
         // eslint-disable-next-line
     }, [agents]);
+    const cashData = useMemo(() => {
+        if(user.balance <= 0) return parseInt(user.balance) + fleetSimsFleetsData
+        else return 0;
+        // eslint-disable-next-line
+    }, [user.balance]);
 
     // Render
     return (
@@ -82,7 +87,7 @@ function DashboardPage({user, fleets, sims, clearances, agents, settings, dispat
                                                             icon='fa fa-coin'
                                                             url={path.PROFILE_PAGE_PATH}
                                                             label={setting.LABEL_BALANCE}
-                                                            data={formatNumber((-1) * (parseInt(user.balance) + fleetSimsFleetsData))}
+                                                            data={formatNumber(cashData)}
                                                             request={requestLoading(allSimsRequests) ? allSimsRequests : balanceUserRequests}
                                     />
                                 </div>
