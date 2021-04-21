@@ -57,10 +57,12 @@ function DashboardPage({user, fleets, sims, clearances, agents, settings, dispat
         // eslint-disable-next-line
     }, [agents]);
     const cashData = useMemo(() => {
-        if(user.balance <= 0) return parseInt(user.balance) + fleetSimsFleetsData
+        const balance = parseInt(user.balance);
+        console.log(balance, fleetSimsFleetsData)
+        if(balance <= 0) return -1 * (balance + fleetSimsFleetsData)
         else return 0;
         // eslint-disable-next-line
-    }, [user.balance]);
+    }, [user.balance, fleetSimsFleetsData]);
 
     // Render
     return (
