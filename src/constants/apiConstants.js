@@ -94,5 +94,9 @@ export const LIQUIDATES_API_PATH = `${API_URL}/give_to_rz_list`;
 export const CONFIRM_LIQUIDATE_API_PATH = `${API_URL}/give_to_rz_approuve`;
 
 // Outlays & payment
+export const REVENUES_API_PATH = `${API_URL}/treasuries_in`;
+export const EXPENSES_API_PATH = `${API_URL}/treasuries_out`;
+export const NEW_REVENUE_API_PATH = `${API_URL}/treasury_in`;
+export const NEW_EXPENSE_API_PATH = `${API_URL}/treasury_out`;
 export const OUTLAYS_API_PATH = `${API_URL}/decaissement_list`;
 export const PAYMENTS_API_PATH = `${API_URL}/encaissement_list`;
