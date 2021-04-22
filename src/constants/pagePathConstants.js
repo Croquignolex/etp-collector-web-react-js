@@ -29,5 +29,7 @@ export const NETWORK_FLEETS_PAGE_PATH = `/network/fleets`;
 export const NETWORK_ANONYMOUS_FLEETS_PAGE_PATH = "/network/anonymous-fleets";
 
 // Checkout
+export const CHECKOUT_OUTLAYS_PAGE_PATH = "/checkout/outlays";
+export const CHECKOUT_PAYMENTS_PAGE_PATH = "/checkout/payments";
 export const COLLECTOR_CHECKOUT_OUTLAYS_PAGE_PATH = "/operations/collector-outlays";
 export const COLLECTOR_CHECKOUT_PAYMENTS_PAGE_PATH = "/operations/collector-payments";
