@@ -59,10 +59,11 @@ export const ALL_MANAGERS_API_PATH = `${API_URL}/gestionnaires_all`;
 // Operators
 export const All_OPERATORS_API_PATH = `${API_URL}/flote_list_all`;
 
-// Recoveries
+// Fleet recovery
 export const NEW_FLEET_RECOVERIES_API_PATH = `${API_URL}/retour_flotte`;
 export const FLEET_RECOVERIES_API_PATH = `${API_URL}/list_retour_flotte_by_rz`;
 
+// cash recovery
 export const NEW_CASH_RECOVERIES_API_PATH = `${API_URL}/recouvrement`;
 export const CASH_RECOVERIES_API_PATH = `${API_URL}/list_recouvrement_by_rz`;
 
