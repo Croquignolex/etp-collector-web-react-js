@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import PropTypes from "prop-types";
 
+import OperatorComponent from "../OperatorComponent";
 import FormModalComponent from "../modals/FormModalComponent";
 import {dateToString, formatNumber} from "../../functions/generalFunctions";
 import AgentDetailsContainer from "../../containers/agents/AgentDetailsContainer";
@@ -19,6 +20,7 @@ function SimCardComponent({sim}) {
     return (
         <div>
             <ul className="list-group list-group-unbordered">
+                <OperatorComponent operator={sim.operator} />
                 <li className="list-group-item">
                     <b>Créer le</b>
                     <span className="float-right">{dateToString(sim.creation)}</span>
@@ -33,11 +35,9 @@ function SimCardComponent({sim}) {
                 </li>
                 <li className="list-group-item">
                     <b>Solde flotte</b>
-                    <span className="float-right text-success text-bold">{formatNumber(sim.balance)}</span>
-                </li>
-                <li className="list-group-item">
-                    <b>Opérateur</b>
-                    <span className="float-right">{sim.operator.name}</span>
+                    <span className="float-right text-success text-bold">
+                        {formatNumber(sim.balance)}
+                    </span>
                 </li>
             </ul>
             {/* Modal */}
