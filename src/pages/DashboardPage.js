@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, {useEffect, useMemo} from 'react';
 
+import {PENDING} from "../constants/typeConstants";
 import * as path from "../constants/pagePathConstants";
 import * as setting from "../constants/settingsConstants";
 import {formatNumber} from "../functions/generalFunctions";
@@ -58,6 +59,30 @@ function DashboardPage({user, fleets, sims, clearances, settings, dispatch, loca
         const value = data.reduce((acc, val) => acc + parseInt(val.balance, 10), 0)
         return {number, value}
     }, [sims]);
+    const mtnFleetsData = useMemo(() => {
+        const data = fleets.filter(fleet => (fleet.status === PENDING) && fleet.operator.id === '1');
+        const number = data.length
+        const value = data.reduce((acc, val) => acc + parseInt(val.amount), 0)
+        return {number, value}
+    }, [fleets]);
+    const orangeFleetsData = useMemo(() => {
+        const data = fleets.filter(fleet => (fleet.status === PENDING) && fleet.operator.id === '2');
+        const number = data.length
+        const value = data.reduce((acc, val) => acc + parseInt(val.amount), 0)
+        return {number, value}
+    }, [fleets]);
+    const mtnClearancesData = useMemo(() => {
+        const data = clearances.filter(clearance => (clearance.status === PENDING) && clearance.operator.id === '1');
+        const number = data.length
+        const value = data.reduce((acc, val) => acc + parseInt(val.amount), 0)
+        return {number, value}
+    }, [clearances]);
+    const orangeClearancesData = useMemo(() => {
+        const data = clearances.filter(clearance => (clearance.status === PENDING) && clearance.operator.id === '2');
+        const number = data.length
+        const value = data.reduce((acc, val) => acc + parseInt(val.amount), 0)
+        return {number, value}
+    }, [clearances]);
 
     // Render
     return (
@@ -111,28 +136,50 @@ function DashboardPage({user, fleets, sims, clearances, settings, dispatch, loca
                                     />
                                 </div>
                             }
-                            {/*{cardsData.includes(setting.CARD_FLEETS_REQUESTS) &&
+                            {cardsData.includes(setting.CARD_FLEETS_REQUESTS_MTN) &&
                                 <div className="col-lg-3 col-md-4 col-sm-6">
-                                    <DashboardCardComponent icon='fa fa-rss'
-                                                            color='bg-danger'
-                                                            data={fleets.length}
-                                                            request={allFleetsRequests}
-                                                            url={path.REQUESTS_FLEETS_PAGE_PATH}
-                                                            label={setting.LABEL_FLEETS_REQUESTS}
+                                    <DashboardWithOperatorCardComponent color='bg-success'
+                                                                        operator={{id: '1'}}
+                                                                        request={allFleetsRequests}
+                                                                        url={path.REQUESTS_FLEETS_PAGE_PATH}
+                                                                        data={formatNumber(mtnFleetsData.value)}
+                                                                        label={`${setting.LABEL_FLEETS_REQUESTS_MTN} (${mtnFleetsData.number})`}
                                     />
                                 </div>
                             }
-                            {cardsData.includes(setting.CARD_CLEARANCES_REQUEST) &&
+                            {cardsData.includes(setting.CARD_FLEETS_REQUESTS_ORANGE) &&
                                 <div className="col-lg-3 col-md-4 col-sm-6">
-                                    <DashboardCardComponent color='bg-warning'
-                                                            icon='fa fa-rss-square'
-                                                            data={clearances.length}
-                                                            request={allClearancesRequests}
-                                                            url={path.REQUESTS_CLEARANCES_PAGE_PATH}
-                                                            label={setting.LABEL_CLEARANCES_REQUEST}
+                                    <DashboardWithOperatorCardComponent color='bg-success'
+                                                                        operator={{id: '2'}}
+                                                                        request={allFleetsRequests}
+                                                                        url={path.REQUESTS_FLEETS_PAGE_PATH}
+                                                                        data={formatNumber(orangeFleetsData.value)}
+                                                                        label={`${setting.LABEL_FLEETS_REQUESTS_ORANGE} (${orangeFleetsData.number})`}
                                     />
                                 </div>
-                            }*/}
+                            }
+                            {cardsData.includes(setting.CARD_CLEARANCES_REQUEST_MTN) &&
+                                <div className="col-lg-3 col-md-4 col-sm-6">
+                                    <DashboardWithOperatorCardComponent color='bg-primary'
+                                                                        operator={{id: '1'}}
+                                                                        request={allClearancesRequests}
+                                                                        url={path.REQUESTS_CLEARANCES_PAGE_PATH}
+                                                                        data={formatNumber(mtnClearancesData.value)}
+                                                                        label={`${setting.LABEL_CLEARANCES_REQUEST_MTN} (${mtnClearancesData.number})`}
+                                    />
+                                </div>
+                            }
+                            {cardsData.includes(setting.CARD_CLEARANCES_REQUEST_ORANGE) &&
+                                <div className="col-lg-3 col-md-4 col-sm-6">
+                                    <DashboardWithOperatorCardComponent color='bg-primary'
+                                                                        operator={{id: '2'}}
+                                                                        request={allClearancesRequests}
+                                                                        url={path.REQUESTS_CLEARANCES_PAGE_PATH}
+                                                                        data={formatNumber(orangeClearancesData.value)}
+                                                                        label={`${setting.LABEL_CLEARANCES_REQUEST_ORANGE} (${orangeClearancesData.number})`}
+                                    />
+                                </div>
+                            }
                         </div>
                     </div>
                 </section>

@@ -107,7 +107,8 @@ export function* emitAddClearance() {
                 apiResponse.data.user,
                 apiResponse.data.agent,
                 apiResponse.data.demandeur,
-                apiResponse.data.demande
+                apiResponse.data.demande,
+                apiResponse.data.operateur,
             );
             // Fire event to redux
             yield put(storeSetNewClearanceData({clearance}))
@@ -140,11 +141,12 @@ export function* emitClearanceAddDeclare() {
 }
 
 // Extract clearance data
-function extractClearanceData(apiSim, apiUser, apiAgent, apiClaimer, apiFleet) {
+function extractClearanceData(apiSim, apiUser, apiAgent, apiClaimer, apiFleet, apiOperator) {
     let fleet = {
         id: '', amount: '', status: '', creation: '',
 
         agent: {id: '', name: ''},
+        operator: {id: '', name: ''},
         sim: {id: '', name: '', number: ''},
         claimant: {id: '', name: '', phone: ''},
     };
@@ -169,6 +171,12 @@ function extractClearanceData(apiSim, apiUser, apiAgent, apiClaimer, apiFleet) {
             id: apiClaimer.id.toString(),
         }
     }
+    if(apiOperator) {
+        fleet.operator = {
+            name: apiOperator.nom,
+            id: apiUser.id.toString()
+        };
+    }
     if(apiFleet) {
         fleet.actionLoader = false;
         fleet.status = apiFleet.statut;
@@ -190,7 +198,8 @@ function extractClearancesData(apiClearances) {
                 data.user,
                 data.agent,
                 data.demandeur,
-                data.demande
+                data.demande,
+                data.operateur,
             ));
         });
     }

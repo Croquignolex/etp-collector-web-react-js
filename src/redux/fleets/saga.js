@@ -102,7 +102,8 @@ export function* emitAddFleet() {
                 apiResponse.data.user,
                 apiResponse.data.agent,
                 apiResponse.data.demandeur,
-                apiResponse.data.demande
+                apiResponse.data.demande,
+                apiResponse.data.operateur,
             );
             // Fire event to redux
             yield put(storeSetNewFleetData({fleet}))
@@ -116,11 +117,12 @@ export function* emitAddFleet() {
 }
 
 // Extract fleet data
-function extractFleetData(apiSim, apiUser, apiAgent, apiClaimer, apiFleet) {
+function extractFleetData(apiSim, apiUser, apiAgent, apiClaimer, apiFleet, apiOperator) {
     let fleet = {
         id: '', amount: '', status: '', creation: '',
 
         agent: {id: '', name: ''},
+        operator: {id: '', name: ''},
         sim: {id: '', name: '', number: ''},
         claimant: {id: '', name: '', phone: ''},
     };
@@ -128,7 +130,7 @@ function extractFleetData(apiSim, apiUser, apiAgent, apiClaimer, apiFleet) {
     if(apiAgent && apiUser) {
         fleet.agent = {
             name: apiUser.name,
-            id: apiUser.id.toString()
+            id: apiOperator.id.toString()
         };
     }
     if(apiSim) {
@@ -144,6 +146,12 @@ function extractFleetData(apiSim, apiUser, apiAgent, apiClaimer, apiFleet) {
             phone: apiClaimer.phone,
             id: apiClaimer.id.toString(),
         }
+    }
+    if(apiOperator) {
+        fleet.operator = {
+            name: apiOperator.nom,
+            id: apiUser.id.toString()
+        };
     }
     if(apiFleet) {
         fleet.actionLoader = false;
@@ -166,7 +174,8 @@ function extractFleetsData(apiFleets) {
                 data.user,
                 data.agent,
                 data.demandeur,
-                data.demande
+                data.demande,
+                data.operateur,
             ));
         });
     }
