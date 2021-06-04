@@ -2,21 +2,17 @@ import PropTypes from 'prop-types';
 import React, {useEffect, useState} from 'react';
 import InfiniteScroll from "react-infinite-scroll-component";
 
-import {emitAllZonesFetch} from "../redux/zones/actions";
 import HeaderComponent from "../components/HeaderComponent";
 import LoaderComponent from "../components/LoaderComponent";
 import {agentTypeBadgeColor} from "../functions/typeFunctions";
-import {emitAllOperatorsFetch} from "../redux/operators/actions";
 import AppLayoutContainer from "../containers/AppLayoutContainer";
 import ErrorAlertComponent from "../components/ErrorAlertComponent";
 import {AGENT_TYPE, RESOURCE_TYPE} from "../constants/typeConstants";
 import AgentNewContainer from "../containers/agents/AgentNewContainer";
 import FormModalComponent from "../components/modals/FormModalComponent";
-import {storeAllZonesRequestReset} from "../redux/requests/zones/actions";
 import BlockModalComponent from "../components/modals/BlockModalComponent";
 import AgentsCardsComponent from "../components/agents/AgentsCardsComponent";
 import AgentDetailsContainer from "../containers/agents/AgentDetailsContainer";
-import {storeAllOperatorsRequestReset} from "../redux/requests/operators/actions";
 import TableSearchWithButtonComponent from "../components/TableSearchWithButtonComponent";
 import {
     emitAgentsFetch,
@@ -49,8 +45,6 @@ function AgentsPage({agents, agentsRequests, hasMoreData, page, dispatch, locati
     // Local effects
     useEffect(() => {
         dispatch(emitAgentsFetch());
-        dispatch(emitAllZonesFetch());
-        dispatch(emitAllOperatorsFetch());
         // Cleaner error alert while component did unmount without store dependency
         return () => {
             shouldResetErrorData();
@@ -78,9 +72,7 @@ function AgentsPage({agents, agentsRequests, hasMoreData, page, dispatch, locati
     // Reset error alert
     const shouldResetErrorData = () => {
         dispatch(storeAgentsRequestReset());
-        dispatch(storeAllZonesRequestReset());
         dispatch(storeNextAgentsRequestReset());
-        dispatch(storeAllOperatorsRequestReset());
         dispatch(storeAgentStatusToggleRequestReset());
     };
 

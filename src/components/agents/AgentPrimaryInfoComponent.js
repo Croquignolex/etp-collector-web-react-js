@@ -2,8 +2,8 @@ import PropTypes from "prop-types";
 import React, {useState} from 'react';
 
 import FormModalComponent from "../modals/FormModalComponent";
+import {dateToString} from "../../functions/generalFunctions";
 import {agentTypeBadgeColor} from "../../functions/typeFunctions";
-import {dateToString, formatNumber} from "../../functions/generalFunctions";
 import AgentPrimaryInfoEditContainer from "../../containers/agents/AgentPrimaryInfoEditContainer";
 
 // Component
@@ -43,7 +43,7 @@ function AgentPrimaryInfoComponent({agent}) {
                     </div>
                     <ul className="list-group list-group-unbordered mb-3">
                         <li className="list-group-item">
-                            <b>Créer le</b>
+                            <b>Création</b>
                             <span className="float-right">{dateToString(agent.creation)}</span>
                         </li>
                         <li className="list-group-item">
@@ -57,10 +57,6 @@ function AgentPrimaryInfoComponent({agent}) {
                         <li className="list-group-item">
                             <b>Email</b>
                             <span className="float-right">{agent.email}</span>
-                        </li>
-                        <li className="list-group-item">
-                            <b>Solde total</b>
-                            <span className="float-right text-success text-bold">{formatNumber(agent.account.balance)}</span>
                         </li>
                     </ul>
                 </div>
