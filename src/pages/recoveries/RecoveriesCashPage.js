@@ -49,7 +49,7 @@ function RecoveriesCashPage({recoveries, recoveriesRequests, hasMoreData, page, 
         <>
             <AppLayoutContainer pathname={location.pathname}>
                 <div className="content-wrapper">
-                    <HeaderComponent title={RECOVERIES_CASH_PAGE} icon={'fa fa-money-bill'} />
+                    <HeaderComponent title={RECOVERIES_CASH_PAGE} icon={'fa fa-coins'} />
                     <section className="content">
                         <div className='container-fluid'>
                             <div className="row">
@@ -100,6 +100,7 @@ function searchEngine(data, _needle) {
             return (
                 needleSearch(item.amount, _needle) ||
                 needleSearch(item.agent.name, _needle) ||
+                needleSearch(item.collector.name, _needle) ||
                 needleSearch(dateToString(item.creation), _needle) ||
                 needleSearch(fleetTypeBadgeColor(item.status).text, _needle)
             )
