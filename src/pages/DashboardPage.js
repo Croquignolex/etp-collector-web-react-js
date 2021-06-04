@@ -17,6 +17,8 @@ import {storeAllCollectorSimsRequestReset} from "../redux/requests/sims/actions"
 import {storeUserBalanceFetchRequestReset} from "../redux/requests/user/actions";
 import DashboardCardComponent from "../components/dashboard/DashboardCardComponent";
 import {storeAllClearancesRequestReset} from "../redux/requests/clearances/actions";
+import DashboardWithOperatorCardComponent from "../components/dashboard/DashboardWithOperatorCardComponent";
+
 // Component
 function DashboardPage({user, fleets, sims, clearances, settings, dispatch, location,
                            balanceUserRequests, allClearancesRequests, allFleetsRequests, allSimsRequests}) {
@@ -44,10 +46,6 @@ function DashboardPage({user, fleets, sims, clearances, settings, dispatch, loca
 
     // Data
     const cardsData = settings.cards;
-    const fleetSimsFleetsData = useMemo(() => {
-        return sims.filter(sim => user.id === sim.collector.id).reduce((acc, val) => acc + parseInt(val.balance), 0)
-        // eslint-disable-next-line
-    }, [sims]);
     const mtnFleetSimsFleetsData = useMemo(() => {
         const data = sims.filter(sim => (sim.operator.id === '1'));
         const number = data.length
@@ -91,14 +89,25 @@ function DashboardPage({user, fleets, sims, clearances, settings, dispatch, loca
                                     />
                                 </div>
                             }
-                            {cardsData.includes(setting.CARD_FLEET_SIMS_FLEETS) &&
+                            {cardsData.includes(setting.CARD_FLEET_SIMS_FLEETS_MTN) &&
                                 <div className="col-lg-3 col-md-4 col-sm-6">
-                                    <DashboardCardComponent icon='fa fa-phone'
-                                                            color='bg-secondary'
-                                                            url={path.SIMS_PAGE_PATH}
-                                                            request={allSimsRequests}
-                                                            label={setting.LABEL_FLEET_SIMS_FLEETS}
-                                                            data={formatNumber(fleetSimsFleetsData)}
+                                    <DashboardWithOperatorCardComponent color='bg-secondary'
+                                                                        operator={{id: '1'}}
+                                                                        request={allSimsRequests}
+                                                                        url={path.SIMS_PAGE_PATH}
+                                                                        data={formatNumber(mtnFleetSimsFleetsData.value)}
+                                                                        label={`${setting.LABEL_FLEET_SIMS_FLEETS_MTN} (${mtnFleetSimsFleetsData.number})`}
+                                    />
+                                </div>
+                            }
+                            {cardsData.includes(setting.CARD_FLEET_SIMS_FLEETS_ORANGE) &&
+                                <div className="col-lg-3 col-md-4 col-sm-6">
+                                    <DashboardWithOperatorCardComponent color='bg-secondary'
+                                                                        operator={{id: '2'}}
+                                                                        request={allSimsRequests}
+                                                                        url={path.SIMS_PAGE_PATH}
+                                                                        data={formatNumber(orangeFleetSimsFleetsData.value)}
+                                                                        label={`${setting.LABEL_FLEET_SIMS_FLEETS_ORANGE} (${orangeFleetSimsFleetsData.number})`}
                                     />
                                 </div>
                             }
