@@ -7,6 +7,7 @@ export const STORE_STOP_INFINITE_SCROLL_SIMS_DATA = 'STORE_STOP_INFINITE_SCROLL_
 export const EMIT_SIMS_FETCH = 'EMIT_SIMS_FETCH';
 export const EMIT_ALL_SIMS_FETCH = 'EMIT_ALL_SIMS_FETCH';
 export const EMIT_NEXT_SIMS_FETCH = 'EMIT_NEXT_SIMS_FETCH';
+export const EMIT_ALL_COLLECTOR_SIMS_FETCH = 'EMIT_ALL_COLLECTOR_SIMS_FETCH';
 
 //====================== Reducer trigger actions
 // Set sims data in store
@@ -45,4 +46,9 @@ export const emitNextSimsFetch = ({page}) => ({
 // Emit all sims fetch
 export const emitAllSimsFetch = () => ({
     type: EMIT_ALL_SIMS_FETCH
+});
+
+// Emit all collector sims fetch
+export const emitAllCollectorSimsFetch = () => ({
+    type: EMIT_ALL_COLLECTOR_SIMS_FETCH
 });

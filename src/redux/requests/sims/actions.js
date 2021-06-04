@@ -14,6 +14,11 @@ export const STORE_ALL_SIMS_REQUEST_RESET = 'STORE_ALL_SIMS_REQUEST_RESET';
 export const STORE_ALL_SIMS_REQUEST_FAILED = 'STORE_ALL_SIMS_REQUEST_FAILED';
 export const STORE_ALL_SIMS_REQUEST_SUCCEEDED = 'STORE_ALL_SIMS_REQUEST_SUCCEEDED';
 
+export const STORE_ALL_COLLECTOR_SIMS_REQUEST_INIT = 'STORE_ALL_COLLECTOR_SIMS_REQUEST_INIT';
+export const STORE_ALL_COLLECTOR_SIMS_REQUEST_RESET = 'STORE_ALL_COLLECTOR_SIMS_REQUEST_RESET';
+export const STORE_ALL_COLLECTOR_SIMS_REQUEST_FAILED = 'STORE_ALL_COLLECTOR_SIMS_REQUEST_FAILED';
+export const STORE_ALL_COLLECTOR_SIMS_REQUEST_SUCCEEDED = 'STORE_ALL_COLLECTOR_SIMS_REQUEST_SUCCEEDED';
+
 // ======================================================== Sims
 // Set sims init data into store
 export const storeSimsRequestInit = () => ({
@@ -79,4 +84,26 @@ export const storeAllSimsRequestSucceed = ({message}) => ({
 // Set all sims reset data into store
 export const storeAllSimsRequestReset = () => ({
     type: STORE_ALL_SIMS_REQUEST_RESET
+});
+// ======================================================== All collector sims
+// Set all collector sims init data into store
+export const storeAllCollectorSimsRequestInit = () => ({
+    type: STORE_ALL_COLLECTOR_SIMS_REQUEST_INIT
+});
+
+// Set all collector sims failed data into store
+export const storeAllCollectorSimsRequestFailed = ({message}) => ({
+    message,
+    type: STORE_ALL_COLLECTOR_SIMS_REQUEST_FAILED
+});
+
+// Set all collector sims succeeded data into store
+export const storeAllCollectorSimsRequestSucceed = ({message}) => ({
+    message,
+    type: STORE_ALL_COLLECTOR_SIMS_REQUEST_SUCCEEDED
+});
+
+// Set all collector sims reset data into store
+export const storeAllCollectorSimsRequestReset = () => ({
+    type: STORE_ALL_COLLECTOR_SIMS_REQUEST_RESET
 });

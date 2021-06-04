@@ -8,7 +8,7 @@ import {
     EMIT_ALL_SIMS_FETCH,
     EMIT_NEXT_SIMS_FETCH,
     storeSetNextSimsData,
-    storeStopInfiniteScrollSimData
+    storeStopInfiniteScrollSimData, EMIT_ALL_COLLECTOR_SIMS_FETCH
 } from "./actions";
 import {
     storeSimsRequestInit,
@@ -19,8 +19,12 @@ import {
     storeAllSimsRequestFailed,
     storeNextSimsRequestFailed,
     storeAllSimsRequestSucceed,
-    storeNextSimsRequestSucceed
+    storeNextSimsRequestSucceed,
+    storeAllCollectorSimsRequestInit,
+    storeAllCollectorSimsRequestSucceed,
+    storeAllCollectorSimsRequestFailed
 } from "../requests/sims/actions";
+import {ALL_COLLECTOR_SIMS_API_PATH} from "../../constants/apiConstants";
 
 // Fetch all sims from API
 export function* emitAllSimsFetch() {
@@ -79,6 +83,26 @@ export function* emitNextSimsFetch() {
             // Fire event for request
             yield put(storeNextSimsRequestFailed({message}));
             yield put(storeStopInfiniteScrollSimData());
+        }
+    });
+}
+
+// Fetch all collector sims from API
+export function* emitAllCollectorSimsFetch() {
+    yield takeLatest(EMIT_ALL_COLLECTOR_SIMS_FETCH, function*() {
+        try {
+            // Fire event for request
+            yield put(storeAllCollectorSimsRequestInit());
+            const apiResponse = yield call(apiGetRequest, `${api.ALL_COLLECTOR_SIMS_API_PATH}`);
+            // Extract data
+            const sims = extractSimsData(apiResponse.data.puces);
+            // Fire event to redux
+            yield put(storeSetSimsData({sims, hasMoreData: apiResponse.data.hasMoreData, page: 2}));
+            // Fire event for request
+            yield put(storeAllCollectorSimsRequestSucceed({message: apiResponse.message}));
+        } catch (message) {
+            // Fire event for request
+            yield put(storeAllCollectorSimsRequestFailed({message}));
         }
     });
 }
@@ -160,5 +184,6 @@ export default function* sagaSims() {
         fork(emitSimsFetch),
         fork(emitAllSimsFetch),
         fork(emitNextSimsFetch),
+        fork(emitAllCollectorSimsFetch),
     ]);
 }
