@@ -48,6 +48,18 @@ function DashboardPage({user, fleets, sims, clearances, settings, dispatch, loca
         return sims.filter(sim => user.id === sim.collector.id).reduce((acc, val) => acc + parseInt(val.balance), 0)
         // eslint-disable-next-line
     }, [sims]);
+    const mtnFleetSimsFleetsData = useMemo(() => {
+        const data = sims.filter(sim => (sim.operator.id === '1'));
+        const number = data.length
+        const value = data.reduce((acc, val) => acc + parseInt(val.balance, 10), 0)
+        return {number, value}
+    }, [sims]);
+    const orangeFleetSimsFleetsData = useMemo(() => {
+        const data = sims.filter(sim => (sim.operator.id === '2'));
+        const number = data.length
+        const value = data.reduce((acc, val) => acc + parseInt(val.balance, 10), 0)
+        return {number, value}
+    }, [sims]);
 
     // Render
     return (
