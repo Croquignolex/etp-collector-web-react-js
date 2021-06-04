@@ -19,6 +19,7 @@ import {storeAllAgentsRequestReset} from "../redux/requests/agents/actions";
 import {storeUserBalanceFetchRequestReset} from "../redux/requests/user/actions";
 import DashboardCardComponent from "../components/dashboard/DashboardCardComponent";
 import {storeAllClearancesRequestReset} from "../redux/requests/clearances/actions";
+import {CARD_ACCOUNTS_DEBT, LABEL_ACCOUNTS_DEBT} from "../constants/settingsConstants";
 
 // Component
 function DashboardPage({user, fleets, sims, clearances, agents, settings, dispatch, location, balanceUserRequests,
@@ -75,6 +76,17 @@ function DashboardPage({user, fleets, sims, clearances, agents, settings, dispat
                 <section className="content">
                     <div className='container-fluid'>
                         <div className="row">
+                            {cardsData.includes(setting.CARD_ACCOUNTS_DEBT) &&
+                                <div className="col-lg-3 col-md-4 col-sm-6">
+                                    <DashboardCardComponent color='bg-dark'
+                                                            icon='fa fa-minus'
+                                                            url={path.PROFILE_PAGE_PATH}
+                                                            request={balanceUserRequests}
+                                                            data={formatNumber(user.debt)}
+                                                            label={setting.LABEL_ACCOUNTS_DEBT}
+                                    />
+                                </div>
+                            }
                             {cardsData.includes(setting.CARD_ACCOUNTS_BALANCE) &&
                                 <div className="col-lg-3 col-md-4 col-sm-6">
                                     <DashboardCardComponent color='bg-dark'

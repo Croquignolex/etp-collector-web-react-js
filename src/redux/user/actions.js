@@ -51,7 +51,8 @@ export const storeSetUserAvatarData = ({avatar}) => ({
 });
 
 // Set user balance in store
-export const storeSetUserBalanceData = ({balance}) => ({
+export const storeSetUserBalanceData = ({debt, balance}) => ({
+    debt,
     balance,
     type: STORE_SET_USER_BALANCE_DATA
 });

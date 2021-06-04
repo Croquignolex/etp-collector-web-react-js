@@ -173,9 +173,10 @@ export function* emitFetchUserBalance() {
             yield put(storeUserBalanceFetchRequestInit());
             const apiResponse = yield call(apiGetRequest, api.FETCH_BALANCE_API_PATH);
             // Extract data
+            const debt = apiResponse.data.dette;
             const balance = apiResponse.data.balance;
             // Fire event to redux
-            yield put(storeSetUserBalanceData({balance}));
+            yield put(storeSetUserBalanceData({debt, balance}));
             // Fire event for request
             yield put(storeUserBalanceFetchRequestSucceed({message: apiResponse.message}));
         } catch (message) {

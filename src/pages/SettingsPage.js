@@ -16,12 +16,8 @@ import TextareaComponent from "../components/form/TextareaComponent";
 import CheckBoxComponent from "../components/form/CheckBoxComponent";
 import {storeSettingsRequestReset} from "../redux/requests/settings/actions";
 import {DEFAULT_ARRAY_FORM_DATA, DEFAULT_FORM_DATA} from "../constants/defaultConstants";
-import {
-    applySuccess,
-    requestFailed,
-    requestLoading,
-    requestSucceeded
-} from "../functions/generalFunctions";
+import {applySuccess, requestFailed, requestLoading, requestSucceeded} from "../functions/generalFunctions";
+import {CARD_ACCOUNTS_DEBT, LABEL_ACCOUNTS_DEBT} from "../constants/settingsConstants";
 
 // Component
 function SettingsPage({settings, request, dispatch, location}) {
@@ -60,10 +56,11 @@ function SettingsPage({settings, request, dispatch, location}) {
                 {value: setting.CARD_AGENTS, label: setting.LABEL_AGENTS},
                 {value: setting.CARD_BALANCE, label: setting.LABEL_BALANCE},
                 {value: setting.CARD_RESOURCES, label: setting.LABEL_RESOURCES},
+                {value: setting.CARD_ACCOUNTS_DEBT, label: setting.LABEL_ACCOUNTS_DEBT},
                 {value: setting.CARD_FLEETS_REQUESTS, label: setting.LABEL_FLEETS_REQUESTS},
                 {value: setting.CARD_ACCOUNTS_BALANCE, label: setting.LABEL_ACCOUNTS_BALANCE},
                 {value: setting.CARD_FLEET_SIMS_FLEETS, label: setting.LABEL_FLEET_SIMS_FLEETS},
-                {value: setting.CARD_CLEARANCES_REQUEST, label: setting.LABEL_CLEARANCES_REQUEST}
+                {value: setting.CARD_CLEARANCES_REQUEST, label: setting.LABEL_CLEARANCES_REQUEST},
             ],
             charts: [
                 // {value: 0, label: 'name'}
