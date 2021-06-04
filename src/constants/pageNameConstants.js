@@ -15,23 +15,23 @@ export const AGENTS = 'Agents/Resources';
 
 // Operations
 export const OPERATIONS = 'Opérations';
-export const OPERATIONS_FLEETS_PAGE = 'Flottages Agent';
+export const OPERATIONS_FLEETS_PAGE = 'Flottages';
 export const OPERATIONS_CLEARANCES_PAGE = 'Déstockages';
 export const OPERATIONS_AFFORDS_PAGE = 'Approvisionnements';
-export const OPERATIONS_TRANSFERS_PAGE = 'Tranferts de flotte';
-export const OPERATIONS_LIQUIDATES_PAGE = 'Tranferts de liquidité';
+export const OPERATIONS_TRANSFERS_PAGE = 'Tranferts de flottes';
+export const OPERATIONS_LIQUIDATES_PAGE = 'Tranferts de liquidités';
 
 // Recoveries
-export const RECOVERIES = 'Recouvrement';
-export const RECOVERIES_FLEET_PAGE = 'Retour flotte';
-export const RECOVERIES_CASH_PAGE = "Recouvrement d'espèces";
+export const RECOVERIES = 'Recouvrements';
+export const RECOVERIES_FLEET_PAGE = 'Retours flottes';
+export const RECOVERIES_CASH_PAGE = "Recouvrements d'espèces";
 
 // Checkout
 export const CHECKOUT = 'Caisse';
-export const CHECKOUT_OUTlAYS_PAGE = 'Décaissement';
-export const CHECKOUT_PAYMENTS_PAGE = 'Encaissement';
-export const COLLECTOR_CHECKOUT_OUTlAYS_PAGE = 'Encaissement de la GF';
-export const COLLECTOR_CHECKOUT_PAYMENTS_PAGE = 'Décaissement vers la GF';
+export const CHECKOUT_OUTlAYS_PAGE = 'Décaissements';
+export const CHECKOUT_PAYMENTS_PAGE = 'Encaissements';
+export const COLLECTOR_CHECKOUT_OUTlAYS_PAGE = 'Encaissements de la GF';
+export const COLLECTOR_CHECKOUT_PAYMENTS_PAGE = 'Décaissements vers la GF';
 
 // Requests
 export const REQUESTS = 'Demandes';

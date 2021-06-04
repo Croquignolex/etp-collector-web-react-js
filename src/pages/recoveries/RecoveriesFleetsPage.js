@@ -49,7 +49,7 @@ function RecoveriesFleetsPage({returns, returnsRequests, hasMoreData, page, disp
         <>
             <AppLayoutContainer pathname={location.pathname}>
                 <div className="content-wrapper">
-                    <HeaderComponent title={RECOVERIES_FLEET_PAGE} icon={'fa fa-wifi'} />
+                    <HeaderComponent title={RECOVERIES_FLEET_PAGE} icon={'fa fa-redo'} />
                     <section className="content">
                         <div className='container-fluid'>
                             <div className="row">
@@ -100,6 +100,7 @@ function searchEngine(data, _needle) {
             return (
                 needleSearch(item.amount, _needle) ||
                 needleSearch(item.agent.name, _needle) ||
+                needleSearch(item.collector.name, _needle) ||
                 needleSearch(item.sim_incoming.number, _needle) ||
                 needleSearch(item.sim_outgoing.number, _needle) ||
                 needleSearch(dateToString(item.creation), _needle) ||
