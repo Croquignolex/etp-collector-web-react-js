@@ -53,10 +53,8 @@ function SettingsPage({settings, request, dispatch, location}) {
                 // {value: 0, label: 'name'}
             ],
             cards: [
-                {value: setting.CARD_AGENTS, label: setting.LABEL_AGENTS},
                 {value: setting.CARD_BALANCE, label: setting.LABEL_BALANCE},
                 {value: setting.CARD_BALANCE, label: setting.LABEL_BALANCE},
-                {value: setting.CARD_RESOURCES, label: setting.LABEL_RESOURCES},
                 {value: setting.CARD_ACCOUNTS_DEBT, label: setting.LABEL_ACCOUNTS_DEBT},
                 {value: setting.CARD_FLEETS_REQUESTS, label: setting.LABEL_FLEETS_REQUESTS},
                 {value: setting.CARD_FLEET_SIMS_FLEETS, label: setting.LABEL_FLEET_SIMS_FLEETS},

@@ -2,18 +2,18 @@ import PropTypes from 'prop-types';
 import React, {useEffect, useMemo} from 'react';
 
 import * as path from "../constants/pagePathConstants";
-import {emitAllSimsFetch} from "../redux/sims/actions";
 import * as setting from "../constants/settingsConstants";
 import {formatNumber} from "../functions/generalFunctions";
 import {emitAllFleetsFetch} from "../redux/fleets/actions";
 import {emitFetchUserBalance} from "../redux/user/actions";
 import HeaderComponent from "../components/HeaderComponent";
 import {DASHBOARD_PAGE} from "../constants/pageNameConstants";
+import {emitAllCollectorSimsFetch} from "../redux/sims/actions";
 import AppLayoutContainer from "../containers/AppLayoutContainer";
 import {emitAllClearancesFetch} from "../redux/clearances/actions";
-import {storeAllSimsRequestReset} from "../redux/requests/sims/actions";
-import {storeAllFleetsRequestReset} from "../redux/requests/fleets/actions";
 import {storeAllAgentsRequestReset} from "../redux/requests/agents/actions";
+import {storeAllFleetsRequestReset} from "../redux/requests/fleets/actions";
+import {storeAllCollectorSimsRequestReset} from "../redux/requests/sims/actions";
 import {storeUserBalanceFetchRequestReset} from "../redux/requests/user/actions";
 import DashboardCardComponent from "../components/dashboard/DashboardCardComponent";
 import {storeAllClearancesRequestReset} from "../redux/requests/clearances/actions";
@@ -22,10 +22,10 @@ function DashboardPage({user, fleets, sims, clearances, settings, dispatch, loca
                            balanceUserRequests, allClearancesRequests, allFleetsRequests, allSimsRequests}) {
     // Local effects
     useEffect(() => {
-        dispatch(emitAllSimsFetch());
         dispatch(emitAllFleetsFetch());
         dispatch(emitFetchUserBalance());
         dispatch(emitAllClearancesFetch());
+        dispatch(emitAllCollectorSimsFetch());
         // Cleaner error alert while component did unmount without store dependency
         return () => {
             shouldResetErrorData();
@@ -35,10 +35,10 @@ function DashboardPage({user, fleets, sims, clearances, settings, dispatch, loca
 
     // Reset error alert
     const shouldResetErrorData = () => {
-        dispatch(storeAllSimsRequestReset());
         dispatch(storeAllFleetsRequestReset());
         dispatch(storeAllAgentsRequestReset());
         dispatch(storeAllClearancesRequestReset());
+        dispatch(storeAllCollectorSimsRequestReset());
         dispatch(storeUserBalanceFetchRequestReset());
     };
 
@@ -102,7 +102,7 @@ function DashboardPage({user, fleets, sims, clearances, settings, dispatch, loca
                                     />
                                 </div>
                             }
-                            {cardsData.includes(setting.CARD_FLEETS_REQUESTS) &&
+                            {/*{cardsData.includes(setting.CARD_FLEETS_REQUESTS) &&
                                 <div className="col-lg-3 col-md-4 col-sm-6">
                                     <DashboardCardComponent icon='fa fa-rss'
                                                             color='bg-danger'
@@ -123,7 +123,7 @@ function DashboardPage({user, fleets, sims, clearances, settings, dispatch, loca
                                                             label={setting.LABEL_CLEARANCES_REQUEST}
                                     />
                                 </div>
-                            }
+                            }*/}
                         </div>
                     </div>
                 </section>
