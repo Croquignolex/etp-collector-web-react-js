@@ -6,11 +6,6 @@ import {APP_NAME} from "../constants/generalConstants";
 import * as path from "../constants/pagePathConstants";
 import * as page from "../constants/pageNameConstants";
 import {formatString} from "../functions/generalFunctions";
-import {CHECKOUT_INTERNAL_OUTLAYS_PAGE, CHECKOUT_INTERNAL_PAYMENTS_PAGE} from "../constants/pageNameConstants";
-import {
-    CHECKOUT_INTERNAL_OUTLAYS_PAGE_PATH,
-    CHECKOUT_INTERNAL_PAYMENTS_PAGE_PATH
-} from "../constants/pagePathConstants";
 
 // Component
 function SideBarComponent({user, pathname}) {
@@ -162,8 +157,6 @@ function buildOperationsMenu() {
             {name: page.OPERATIONS_FLEETS_PAGE, path: path.OPERATIONS_FLEETS_PAGE_PATH},
             {name: page.OPERATIONS_CLEARANCES_PAGE, path: path.OPERATIONS_CLEARANCES_PAGE_PATH},
             {name: page.OPERATIONS_AFFORDS_PAGE, path: path.OPERATION_AFFORDS_PAGE_PATH},
-            {name: page.COLLECTOR_CHECKOUT_PAYMENTS_PAGE, path: path.COLLECTOR_CHECKOUT_PAYMENTS_PAGE_PATH},
-            {name: page.COLLECTOR_CHECKOUT_OUTlAYS_PAGE, path: path.COLLECTOR_CHECKOUT_OUTLAYS_PAGE_PATH},
         ]
     }
 }
