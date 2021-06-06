@@ -7,6 +7,8 @@ export const STORE_STOP_INFINITE_SCROLL_SIMS_DATA = 'STORE_STOP_INFINITE_SCROLL_
 export const EMIT_SIMS_FETCH = 'EMIT_SIMS_FETCH';
 export const EMIT_ALL_SIMS_FETCH = 'EMIT_ALL_SIMS_FETCH';
 export const EMIT_NEXT_SIMS_FETCH = 'EMIT_NEXT_SIMS_FETCH';
+export const EMIT_INTERNAL_SIMS_FETCH = 'EMIT_INTERNAL_SIMS_FETCH';
+export const EMIT_EXTERNAL_SIMS_FETCH = 'EMIT_EXTERNAL_SIMS_FETCH';
 export const EMIT_ALL_COLLECTOR_SIMS_FETCH = 'EMIT_ALL_COLLECTOR_SIMS_FETCH';
 
 //====================== Reducer trigger actions
@@ -51,4 +53,14 @@ export const emitAllSimsFetch = () => ({
 // Emit all collector sims fetch
 export const emitAllCollectorSimsFetch = () => ({
     type: EMIT_ALL_COLLECTOR_SIMS_FETCH
+});
+
+// Emit all internal sims fetch
+export const emitAllInternalSimsFetch = () => ({
+    type: EMIT_INTERNAL_SIMS_FETCH
+});
+
+// Emit all external sims fetch
+export const emitAllExternalSimsFetch = () => ({
+    type: EMIT_EXTERNAL_SIMS_FETCH
 });

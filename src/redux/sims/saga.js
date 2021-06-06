@@ -8,7 +8,10 @@ import {
     EMIT_ALL_SIMS_FETCH,
     EMIT_NEXT_SIMS_FETCH,
     storeSetNextSimsData,
-    storeStopInfiniteScrollSimData, EMIT_ALL_COLLECTOR_SIMS_FETCH
+    EMIT_EXTERNAL_SIMS_FETCH,
+    EMIT_INTERNAL_SIMS_FETCH,
+    EMIT_ALL_COLLECTOR_SIMS_FETCH,
+    storeStopInfiniteScrollSimData
 } from "./actions";
 import {
     storeSimsRequestInit,
@@ -20,11 +23,16 @@ import {
     storeNextSimsRequestFailed,
     storeAllSimsRequestSucceed,
     storeNextSimsRequestSucceed,
+    storeAllExternalSimsRequestInit,
+    storeAllInternalSimsRequestInit,
     storeAllCollectorSimsRequestInit,
-    storeAllCollectorSimsRequestSucceed,
-    storeAllCollectorSimsRequestFailed
+    storeAllInternalSimsRequestFailed,
+    storeAllExternalSimsRequestFailed,
+    storeAllCollectorSimsRequestFailed,
+    storeAllInternalSimsRequestSucceed,
+    storeAllExternalSimsRequestSucceed,
+    storeAllCollectorSimsRequestSucceed
 } from "../requests/sims/actions";
-import {ALL_COLLECTOR_SIMS_API_PATH} from "../../constants/apiConstants";
 
 // Fetch all sims from API
 export function* emitAllSimsFetch() {
@@ -32,7 +40,7 @@ export function* emitAllSimsFetch() {
         try {
             // Fire event for request
             yield put(storeAllSimsRequestInit());
-            const apiResponse = yield call(apiGetRequest, api.All_SIMS_API_PATH);
+            const apiResponse = yield call(apiGetRequest, api.ALL_SIMS_API_PATH);
             // Extract data
             const sims = extractSimsData(apiResponse.data.puces);
             // Fire event to redux
@@ -42,6 +50,46 @@ export function* emitAllSimsFetch() {
         } catch (message) {
             // Fire event for request
             yield put(storeAllSimsRequestFailed({message}));
+        }
+    });
+}
+
+// Fetch internal sims from API
+export function* emitAllInternalSimsFetch() {
+    yield takeLatest(EMIT_INTERNAL_SIMS_FETCH, function*() {
+        try {
+            // Fire event for request
+            yield put(storeAllInternalSimsRequestInit());
+            const apiResponse = yield call(apiGetRequest, `${api.ALL_INTERNAL_SIMS_API_PATH}?page=1`);
+            // Extract data
+            const sims = extractSimsData(apiResponse.data.puces);
+            // Fire event to redux
+            yield put(storeSetSimsData({sims, hasMoreData: apiResponse.data.hasMoreData, page: 2}));
+            // Fire event for request
+            yield put(storeAllInternalSimsRequestSucceed({message: apiResponse.message}));
+        } catch (message) {
+            // Fire event for request
+            yield put(storeAllInternalSimsRequestFailed({message}));
+        }
+    });
+}
+
+// Fetch external sims from API
+export function* emitAllExternalSimsFetch() {
+    yield takeLatest(EMIT_EXTERNAL_SIMS_FETCH, function*() {
+        try {
+            // Fire event for request
+            yield put(storeAllExternalSimsRequestInit());
+            const apiResponse = yield call(apiGetRequest, `${api.ALL_EXTERNAL_SIMS_API_PATH}?page=1`);
+            // Extract data
+            const sims = extractSimsData(apiResponse.data.puces);
+            // Fire event to redux
+            yield put(storeSetSimsData({sims, hasMoreData: apiResponse.data.hasMoreData, page: 2}));
+            // Fire event for request
+            yield put(storeAllExternalSimsRequestSucceed({message: apiResponse.message}));
+        } catch (message) {
+            // Fire event for request
+            yield put(storeAllExternalSimsRequestFailed({message}));
         }
     });
 }
@@ -184,6 +232,8 @@ export default function* sagaSims() {
         fork(emitSimsFetch),
         fork(emitAllSimsFetch),
         fork(emitNextSimsFetch),
+        fork(emitAllInternalSimsFetch),
+        fork(emitAllExternalSimsFetch),
         fork(emitAllCollectorSimsFetch),
     ]);
 }
