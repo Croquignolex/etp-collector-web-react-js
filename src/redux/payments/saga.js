@@ -1,12 +1,15 @@
 import {all, call, fork, put, takeLatest} from 'redux-saga/effects'
 
 import * as api from "../../constants/apiConstants";
-import {apiGetRequest, getFileFromServer} from "../../functions/axiosFunctions";
+import {apiGetRequest, apiPostRequest} from "../../functions/axiosFunctions";
 import {
     EMIT_PAYMENTS_FETCH,
     storeSetPaymentsData,
-    EMIT_NEXT_PAYMENTS_FETCH,
+    EMIT_CONFIRM_PAYMENT,
+    storeUpdatePaymentData,
     storeSetNextPaymentsData,
+    EMIT_NEXT_PAYMENTS_FETCH,
+    storeSetPaymentActionData,
     storeStopInfiniteScrollPaymentData
 } from "./actions";
 import {
@@ -15,7 +18,10 @@ import {
     storePaymentsRequestSucceed,
     storeNextPaymentsRequestInit,
     storeNextPaymentsRequestFailed,
-    storeNextPaymentsRequestSucceed
+    storeConfirmPaymentRequestInit,
+    storeNextPaymentsRequestSucceed,
+    storeConfirmPaymentRequestFailed,
+    storeConfirmPaymentRequestSucceed
 } from "../requests/payments/actions";
 
 // Fetch payments from API
@@ -59,10 +65,33 @@ export function* emitNextPaymentsFetch() {
     });
 }
 
+// Confirm payment from API
+export function* emitConfirmPayment() {
+    yield takeLatest(EMIT_CONFIRM_PAYMENT, function*({id}) {
+        try {
+            // Fire event at redux to toggle action loader
+            yield put(storeSetPaymentActionData({id}));
+            // Fire event for request
+            yield put(storeConfirmPaymentRequestInit());
+            const apiResponse = yield call(apiPostRequest, `${api.CONFIRM_PAYMENT_API_PATH}/${id}`);
+            // Fire event to redux
+            yield put(storeUpdatePaymentData({id}));
+            // Fire event at redux to toggle action loader
+            yield put(storeSetPaymentActionData({id}));
+            // Fire event for request
+            yield put(storeConfirmPaymentRequestSucceed({message: apiResponse.message}));
+        } catch (message) {
+            // Fire event for request
+            yield put(storeSetPaymentActionData({id}));
+            yield put(storeConfirmPaymentRequestFailed({message}));
+        }
+    });
+}
+
 // Extract payment data
 function extractPaymentData(apiManager, apiCollector, apiPayment) {
     let payment = {
-        id: '',  amount: '', creation: '', receipt: '',
+        id: '',  amount: '', creation: '', status: '',
 
         manager: {id: '', name: ''},
         collector: {id: '', name: ''},
@@ -80,10 +109,11 @@ function extractPaymentData(apiManager, apiCollector, apiPayment) {
         };
     }
     if(apiPayment) {
+        payment.actionLoader = false;
+        payment.status = apiPayment.statut;
         payment.amount = apiPayment.montant;
         payment.id = apiPayment.id.toString();
         payment.creation = apiPayment.created_at;
-        payment.receipt = getFileFromServer(apiPayment.recu);
     }
     return payment;
 }
@@ -105,6 +135,7 @@ export function extractPaymentsData(apiPayments) {
 export default function* sagaPayments() {
     yield all([
         fork(emitPaymentsFetch),
+        fork(emitConfirmPayment),
         fork(emitNextPaymentsFetch),
     ]);
 }

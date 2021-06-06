@@ -1,20 +1,25 @@
 import {all, call, fork, put, takeLatest} from 'redux-saga/effects'
 
 import * as api from "../../constants/apiConstants";
-import {apiGetRequest, getFileFromServer} from "../../functions/axiosFunctions";
+import {apiGetRequest, apiPostRequest} from "../../functions/axiosFunctions";
 import {
     storeOutlaysRequestInit,
     storeOutlaysRequestFailed,
+    storeAddOutlayRequestInit,
     storeOutlaysRequestSucceed,
+    storeAddOutlayRequestFailed,
     storeNextOutlaysRequestInit,
+    storeAddOutlayRequestSucceed,
     storeNextOutlaysRequestFailed,
     storeNextOutlaysRequestSucceed
 } from "../requests/outlays/actions";
 import {
+    EMIT_ADD_OUTLAY,
     EMIT_OUTLAYS_FETCH,
     storeSetOutlaysData,
-    EMIT_NEXT_OUTLAYS_FETCH,
+    storeSetNewOutlayData,
     storeSetNextOutlaysData,
+    EMIT_NEXT_OUTLAYS_FETCH,
     storeStopInfiniteScrollOutlayData
 } from "./actions";
 
@@ -59,10 +64,35 @@ export function* emitNextOutlaysFetch() {
     });
 }
 
+// Fleets new payment from API
+export function* emitAddOutlay() {
+    yield takeLatest(EMIT_ADD_OUTLAY, function*({amount, collector}) {
+        try {
+            // Fire event for request
+            yield put(storeAddOutlayRequestInit());
+            const data = {id_receveur: collector, montant: amount}
+            const apiResponse = yield call(apiPostRequest, api.NEW_OUTLAY_API_PATH, data);
+            // Extract data
+            const outlay = extractOutlayData(
+                apiResponse.data.gestionnaire,
+                apiResponse.data.recouvreur,
+                apiResponse.data.versement
+            );
+            // Fire event to redux
+            yield put(storeSetNewOutlayData({outlay}))
+            // Fire event for request
+            yield put(storeAddOutlayRequestSucceed({message: apiResponse.message}));
+        } catch (message) {
+            // Fire event for request
+            yield put(storeAddOutlayRequestFailed({message}));
+        }
+    });
+}
+
 // Extract payment data
 function extractOutlayData(apiManager, apiCollector, apiOutlay) {
     let outlay = {
-        id: '', amount: '', creation: '', receipt: '',
+        id: '', amount: '', creation: '', status: '',
 
         manager: {id: '', name: ''},
         collector: {id: '', name: ''},
@@ -80,10 +110,10 @@ function extractOutlayData(apiManager, apiCollector, apiOutlay) {
         };
     }
     if(apiOutlay) {
+        outlay.status = apiOutlay.statut;
         outlay.amount = apiOutlay.montant;
         outlay.id = apiOutlay.id.toString();
         outlay.creation = apiOutlay.created_at;
-        outlay.receipt = getFileFromServer(apiOutlay.recu);
     }
     return outlay;
 }
@@ -104,6 +134,7 @@ export function extractOutlaysData(apiOutlays) {
 // Combine to export all functions at once
 export default function* sagaOutlays() {
     yield all([
+        fork(emitAddOutlay),
         fork(emitOutlaysFetch),
         fork(emitNextOutlaysFetch),
     ]);

@@ -23,6 +23,10 @@ function reduce(state = initialState, action) {
         case actions.STORE_STOP_INFINITE_SCROLL_OUTLAY_DATA:
             nextState = {...state, hasMoreData: false};
             return nextState || state;
+        // Resolve event to set new outlay data
+        case actions.STORE_SET_NEW_OUTLAY_DATA:
+            nextState = {...state, list: [action.outlay, ...state.list]}
+            return nextState || state;
         // Unknown action
         default: return state;
     }
