@@ -7,16 +7,19 @@ import LoaderComponent from "../../components/LoaderComponent";
 import AppLayoutContainer from "../../containers/AppLayoutContainer";
 import ErrorAlertComponent from "../../components/ErrorAlertComponent";
 import TableSearchComponent from "../../components/TableSearchComponent";
+import FormModalComponent from "../../components/modals/FormModalComponent";
 import {CHECKOUT_INTERNAL_OUTLAYS_PAGE} from "../../constants/pageNameConstants";
 import {emitNextOutlaysFetch, emitOutlaysFetch} from "../../redux/outlays/actions";
 import CheckoutOutlaysCardsComponent from "../../components/checkout/CheckoutOutlaysCardsComponent";
 import {dateToString, needleSearch, requestFailed, requestLoading} from "../../functions/generalFunctions";
 import {storeNextOutlaysRequestReset, storeOutlaysRequestReset} from "../../redux/requests/outlays/actions";
+import CheckoutOutlaysAddOutlayContainer from "../../containers/checkout/CheckoutOutlaysAddOutlayContainer";
 
 // Component
 function CheckoutOutlaysPage({outlays, outlaysRequests, hasMoreData, page, dispatch, location}) {
     // Local states
     const [needle, setNeedle] = useState('');
+    const [outlayModal, setOutlayModal] = useState({show: false, header: "DECAISSEMENT D'ESPECES INTERNE"});
 
     // Local effects
     useEffect(() => {
@@ -43,12 +46,22 @@ function CheckoutOutlaysPage({outlays, outlaysRequests, hasMoreData, page, dispa
         dispatch(emitNextOutlaysFetch({page}));
     }
 
+    // Show outlay modal form
+    const handleOutlayModalShow = (item) => {
+        setOutlayModal({...outlayModal, item, show: true})
+    }
+
+    // Hide outlay modal form
+    const handleOutlayModalHide = () => {
+        setOutlayModal({...outlayModal, show: false})
+    }
+
     // Render
     return (
         <>
             <AppLayoutContainer pathname={location.pathname}>
                 <div className="content-wrapper">
-                    <HeaderComponent title={CHECKOUT_INTERNAL_OUTLAYS_PAGE} icon={'fa fa-arrow-circle-down'} />
+                    <HeaderComponent title={CHECKOUT_INTERNAL_OUTLAYS_PAGE} icon={'fa fa-arrow-circle-up'} />
                     <section className="content">
                         <div className='container-fluid'>
                             <div className="row">
@@ -64,6 +77,12 @@ function CheckoutOutlaysPage({outlays, outlaysRequests, hasMoreData, page, dispa
                                             {/* Error message */}
                                             {requestFailed(outlaysRequests.list) && <ErrorAlertComponent message={outlaysRequests.list.message} />}
                                             {requestFailed(outlaysRequests.next) && <ErrorAlertComponent message={outlaysRequests.next.message} />}
+                                            <button type="button"
+                                                    className="btn btn-theme mb-2"
+                                                    onClick={handleOutlayModalShow}
+                                            >
+                                                <i className="fa fa-coins" /> Décaissement interne
+                                            </button>
                                             {/* Search result & Infinite scroll */}
                                             {(needle !== '' && needle !== undefined)
                                                 ? <CheckoutOutlaysCardsComponent outlays={searchEngine(outlays, needle)} />
@@ -86,6 +105,10 @@ function CheckoutOutlaysPage({outlays, outlaysRequests, hasMoreData, page, dispa
                     </section>
                 </div>
             </AppLayoutContainer>
+            {/* Modal */}
+            <FormModalComponent modal={outlayModal} handleClose={handleOutlayModalHide}>
+                <CheckoutOutlaysAddOutlayContainer handleClose={handleOutlayModalHide} />
+            </FormModalComponent>
         </>
     )
 }

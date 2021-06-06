@@ -7,16 +7,30 @@ import LoaderComponent from "../../components/LoaderComponent";
 import AppLayoutContainer from "../../containers/AppLayoutContainer";
 import ErrorAlertComponent from "../../components/ErrorAlertComponent";
 import TableSearchComponent from "../../components/TableSearchComponent";
+import ConfirmModalComponent from "../../components/modals/ConfirmModalComponent";
 import {CHECKOUT_INTERNAL_PAYMENTS_PAGE} from "../../constants/pageNameConstants";
-import {emitNextPaymentsFetch, emitPaymentsFetch} from "../../redux/payments/actions";
 import CheckoutPaymentsCardsComponent from "../../components/checkout/CheckoutPaymentsCardsComponent";
-import {dateToString, needleSearch, requestFailed, requestLoading} from "../../functions/generalFunctions";
-import {storeNextPaymentsRequestReset, storePaymentsRequestReset} from "../../redux/requests/payments/actions";
+import {emitConfirmPayment, emitNextPaymentsFetch, emitPaymentsFetch} from "../../redux/payments/actions";
+import {
+    storePaymentsRequestReset,
+    storeNextPaymentsRequestReset,
+    storeConfirmPaymentRequestReset
+} from "../../redux/requests/payments/actions";
+import {
+    applySuccess,
+    dateToString,
+    formatNumber,
+    needleSearch,
+    requestFailed,
+    requestLoading,
+    requestSucceeded
+} from "../../functions/generalFunctions";
 
 // Component
 function CheckoutPaymentsPage({payments, paymentsRequests, hasMoreData, page, dispatch, location}) {
     // Local states
     const [needle, setNeedle] = useState('');
+    const [confirmModal, setConfirmModal] = useState({show: false, body: '', id: 0});
 
     // Local effects
     useEffect(() => {
@@ -28,6 +42,15 @@ function CheckoutPaymentsPage({payments, paymentsRequests, hasMoreData, page, di
         // eslint-disable-next-line
     }, []);
 
+    // Local effects
+    useEffect(() => {
+        // Reset inputs while toast (well done) into current scope
+        if(requestSucceeded(paymentsRequests.apply)) {
+            applySuccess(paymentsRequests.apply.message);
+        }
+        // eslint-disable-next-line
+    }, [paymentsRequests.apply]);
+
     const handleNeedleInput = (data) => {
         setNeedle(data)
     }
@@ -36,12 +59,29 @@ function CheckoutPaymentsPage({payments, paymentsRequests, hasMoreData, page, di
     const shouldResetErrorData = () => {
         dispatch(storePaymentsRequestReset());
         dispatch(storeNextPaymentsRequestReset());
+        dispatch(storeConfirmPaymentRequestReset());
     };
 
     // Fetch next payments data to enhance infinite scroll
     const handleNextPaymentsData = () => {
         dispatch(emitNextPaymentsFetch({page}));
     }
+
+    // Show confirm modal form
+    const handleConfirmModalShow = ({id, amount, collector}) => {
+        setConfirmModal({...confirmModal, id, body: `Confirmer l'encaissement de ${collector.name} de ${formatNumber(amount)}?`, show: true})
+    }
+
+    // Hide confirm modal form
+    const handleConfirmModalHide = () => {
+        setConfirmModal({...confirmModal, show: false})
+    }
+
+    // Trigger when clearance confirm confirmed on modal
+    const handleConfirm = (id) => {
+        handleConfirmModalHide();
+        dispatch(emitConfirmPayment({id}));
+    };
 
     // Render
     return (
@@ -66,7 +106,9 @@ function CheckoutPaymentsPage({payments, paymentsRequests, hasMoreData, page, di
                                             {requestFailed(paymentsRequests.next) && <ErrorAlertComponent message={paymentsRequests.next.message} />}
                                             {/* Search result & Infinite scroll */}
                                             {(needle !== '' && needle !== undefined)
-                                                ? <CheckoutPaymentsCardsComponent payments={searchEngine(payments, needle)} />
+                                                ? <CheckoutPaymentsCardsComponent payments={searchEngine(payments, needle)}
+                                                                                  handleConfirmModalShow={handleConfirmModalShow}
+                                                />
                                                 : (requestLoading(paymentsRequests.list) ? <LoaderComponent /> :
                                                         <InfiniteScroll hasMore={hasMoreData}
                                                                         loader={<LoaderComponent />}
@@ -74,7 +116,9 @@ function CheckoutPaymentsPage({payments, paymentsRequests, hasMoreData, page, di
                                                                         next={handleNextPaymentsData}
                                                                         style={{ overflow: 'hidden' }}
                                                         >
-                                                            <CheckoutPaymentsCardsComponent payments={payments} />
+                                                            <CheckoutPaymentsCardsComponent payments={payments}
+                                                                                            handleConfirmModalShow={handleConfirmModalShow}
+                                                            />
                                                         </InfiniteScroll>
                                                 )
                                             }
@@ -86,6 +130,11 @@ function CheckoutPaymentsPage({payments, paymentsRequests, hasMoreData, page, di
                     </section>
                 </div>
             </AppLayoutContainer>
+            {/* Modal */}
+            <ConfirmModalComponent modal={confirmModal}
+                                   handleModal={handleConfirm}
+                                   handleClose={handleConfirmModalHide}
+            />
         </>
     )
 }
