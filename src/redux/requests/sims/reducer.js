@@ -6,6 +6,8 @@ const initialState = {
     all: {failed: false, loading: false, succeeded: false, message: ""},
     list: {failed: false, loading: false, succeeded: false, message: ""},
     next: {failed: false, loading: false, succeeded: false, message: ""},
+    internal: {failed: false, loading: false, succeeded: false, message: ""},
+    external: {failed: false, loading: false, succeeded: false, message: ""},
     collector: {failed: false, loading: false, succeeded: false, message: ""},
 };
 
@@ -80,6 +82,40 @@ function reduce(state = initialState, action) {
         // Resolve event to set all collector sims reset request store data
         case actions.STORE_ALL_COLLECTOR_SIMS_REQUEST_RESET:
             nextState = {...state, collector: initialState.collector};
+            return nextState || state;
+        // ======================================================== All internal sims
+        // Resolve event to set all internal sims init request store data
+        case actions.STORE_ALL_INTERNAL_SIMS_REQUEST_INIT:
+            nextState = {...state, internal: requestInitValue()};
+            return nextState || state;
+        // Resolve event to set all internal sims failed request store data
+        case actions.STORE_ALL_INTERNAL_SIMS_REQUEST_FAILED:
+            nextState = {...state, internal: requestFailedValue(action.message)};
+            return nextState || state;
+        // Resolve event to set all internal sims succeeded request store data
+        case actions.STORE_ALL_INTERNAL_SIMS_REQUEST_SUCCEEDED:
+            nextState = {...state, internal: requestSucceededValue(action.message)};
+            return nextState || state;
+        // Resolve event to set all internal sims reset request store data
+        case actions.STORE_ALL_INTERNAL_SIMS_REQUEST_RESET:
+            nextState = {...state, internal: initialState.internal};
+            return nextState || state;
+        // ======================================================== All external sims
+        // Resolve event to set all external sims init request store data
+        case actions.STORE_ALL_EXTERNAL_SIMS_REQUEST_INIT:
+            nextState = {...state, external: requestInitValue()};
+            return nextState || state;
+        // Resolve event to set all external sims failed request store data
+        case actions.STORE_ALL_EXTERNAL_SIMS_REQUEST_FAILED:
+            nextState = {...state, external: requestFailedValue(action.message)};
+            return nextState || state;
+        // Resolve event to set all external sims succeeded request store data
+        case actions.STORE_ALL_EXTERNAL_SIMS_REQUEST_SUCCEEDED:
+            nextState = {...state, external: requestSucceededValue(action.message)};
+            return nextState || state;
+        // Resolve event to set all external sims reset request store data
+        case actions.STORE_ALL_EXTERNAL_SIMS_REQUEST_RESET:
+            nextState = {...state, external: initialState.external};
             return nextState || state;
         // ========================================================
         // Unknown action

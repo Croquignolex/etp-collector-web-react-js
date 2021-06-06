@@ -150,7 +150,7 @@ function extractFleetData(apiSim, apiUser, apiAgent, apiClaimer, apiFleet, apiOp
     if(apiOperator) {
         fleet.operator = {
             name: apiOperator.nom,
-            id: apiUser.id.toString()
+            id: apiOperator.id.toString()
         };
     }
     if(apiFleet) {
