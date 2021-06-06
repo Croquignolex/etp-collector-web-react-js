@@ -6,6 +6,11 @@ import {APP_NAME} from "../constants/generalConstants";
 import * as path from "../constants/pagePathConstants";
 import * as page from "../constants/pageNameConstants";
 import {formatString} from "../functions/generalFunctions";
+import {CHECKOUT_INTERNAL_OUTLAYS_PAGE, CHECKOUT_INTERNAL_PAYMENTS_PAGE} from "../constants/pageNameConstants";
+import {
+    CHECKOUT_INTERNAL_OUTLAYS_PAGE_PATH,
+    CHECKOUT_INTERNAL_PAYMENTS_PAGE_PATH
+} from "../constants/pagePathConstants";
 
 // Component
 function SideBarComponent({user, pathname}) {
@@ -21,7 +26,7 @@ function SideBarComponent({user, pathname}) {
             // buildRequestsMenu(),
             // buildOperationsMenu(),
             buildRecoveriesMenu(),
-            // buildCheckoutMenu(),
+            buildCheckoutMenu(),
             buildAgentsMenu(),
             buildSimsMenu(),
         ];
@@ -181,8 +186,8 @@ function buildCheckoutMenu() {
         name: page.CHECKOUT,
         icon: 'fa fa-coins',
         sub: [
-            {name: page.CHECKOUT_PAYMENTS_PAGE, path: path.CHECKOUT_PAYMENTS_PAGE_PATH},
-            {name: page.CHECKOUT_OUTlAYS_PAGE, path: path.CHECKOUT_OUTLAYS_PAGE_PATH},
+            {name: page.CHECKOUT_INTERNAL_PAYMENTS_PAGE, path: path.CHECKOUT_INTERNAL_PAYMENTS_PAGE_PATH},
+            {name: page.CHECKOUT_INTERNAL_OUTLAYS_PAGE, path: path.CHECKOUT_INTERNAL_OUTLAYS_PAGE_PATH},
         ]
     }
 }

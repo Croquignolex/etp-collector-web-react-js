@@ -28,10 +28,8 @@ export const RECOVERIES_CASH_PAGE = "Recouvrements d'espèces";
 
 // Checkout
 export const CHECKOUT = 'Caisse';
-export const CHECKOUT_OUTlAYS_PAGE = 'Décaissements';
-export const CHECKOUT_PAYMENTS_PAGE = 'Encaissements';
-export const COLLECTOR_CHECKOUT_OUTlAYS_PAGE = 'Encaissements de la GF';
-export const COLLECTOR_CHECKOUT_PAYMENTS_PAGE = 'Décaissements vers la GF';
+export const CHECKOUT_INTERNAL_OUTLAYS_PAGE = 'Décaissements internes';
+export const CHECKOUT_INTERNAL_PAYMENTS_PAGE = 'Encaissements internes';
 
 // Requests
 export const REQUESTS = 'Demandes';
