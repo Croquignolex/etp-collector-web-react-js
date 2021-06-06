@@ -9,6 +9,11 @@ export const STORE_NEXT_OUTLAYS_REQUEST_RESET = 'STORE_NEXT_OUTLAYS_REQUEST_RESE
 export const STORE_NEXT_OUTLAYS_REQUEST_FAILED = 'STORE_NEXT_OUTLAYS_REQUEST_FAILED';
 export const STORE_NEXT_OUTLAYS_REQUEST_SUCCEEDED = 'STORE_NEXT_OUTLAYS_REQUEST_SUCCEEDED';
 
+export const STORE_ADD_OUTLAY_REQUEST_INIT = 'STORE_ADD_OUTLAY_REQUEST_INIT';
+export const STORE_ADD_OUTLAY_REQUEST_RESET = 'STORE_ADD_OUTLAY_REQUEST_RESET';
+export const STORE_ADD_OUTLAY_REQUEST_FAILED = 'STORE_ADD_OUTLAY_REQUEST_FAILED';
+export const STORE_ADD_OUTLAY_REQUEST_SUCCEEDED = 'STORE_ADD_OUTLAY_REQUEST_SUCCEEDED';
+
 // ======================================================== Outlays
 // Set outlays init data into store
 export const storeOutlaysRequestInit = () => ({
@@ -52,4 +57,26 @@ export const storeNextOutlaysRequestSucceed = ({message}) => ({
 // Set next outlays reset data into store
 export const storeNextOutlaysRequestReset = () => ({
     type: STORE_NEXT_OUTLAYS_REQUEST_RESET
+});
+// ======================================================== Add outlay
+// Set add outlay init data into store
+export const storeAddOutlayRequestInit = () => ({
+    type: STORE_ADD_OUTLAY_REQUEST_INIT
+});
+
+// Set add outlay failed data into store
+export const storeAddOutlayRequestFailed = ({message}) => ({
+    message,
+    type: STORE_ADD_OUTLAY_REQUEST_FAILED
+});
+
+// Set add outlay succeeded data into store
+export const storeAddOutlayRequestSucceed = ({message}) => ({
+    message,
+    type: STORE_ADD_OUTLAY_REQUEST_SUCCEEDED
+});
+
+// Set add outlay reset data into store
+export const storeAddOutlayRequestReset = () => ({
+    type: STORE_ADD_OUTLAY_REQUEST_RESET
 });
