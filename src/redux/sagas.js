@@ -10,6 +10,8 @@ import returns from './returns/saga';
 import refuels from './refuels/saga';
 import affords from './affords/saga';
 import outlays from './outlays/saga';
+import expenses from './expenses/saga';
+import revenues from './revenues/saga';
 import settings from './settings/saga';
 import managers from './managers/saga';
 import payments from './payments/saga';
@@ -33,6 +35,7 @@ export default function* sagas() {
         agents(),
         fleets(),
         returns(),
+        revenues(),
         refuels(),
         outlays(),
         vendors(),
@@ -41,6 +44,7 @@ export default function* sagas() {
         supplies(),
         managers(),
         settings(),
+        expenses(),
         transfers(),
         anonymous(),
         operators(),
