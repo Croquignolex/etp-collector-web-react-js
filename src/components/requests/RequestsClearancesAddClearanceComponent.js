@@ -5,15 +5,15 @@ import ButtonComponent from "../form/ButtonComponent";
 import AmountComponent from "../form/AmountComponent";
 import SelectComponent from "../form/SelectComponent";
 import ErrorAlertComponent from "../ErrorAlertComponent";
-import {emitAllSimsFetch} from "../../redux/sims/actions";
 import {emitAllAgentsFetch} from "../../redux/agents/actions";
 import {emitAddClearance} from "../../redux/clearances/actions";
 import {requiredChecker} from "../../functions/checkerFunctions";
+import {emitAllExternalSimsFetch} from "../../redux/sims/actions";
 import {DEFAULT_FORM_DATA} from "../../constants/defaultConstants";
 import {playWarningSound} from "../../functions/playSoundFunctions";
-import {storeAllSimsRequestReset} from "../../redux/requests/sims/actions";
 import {storeAllAgentsRequestReset} from "../../redux/requests/agents/actions";
 import {dataToArrayForSelect, mappedSims} from "../../functions/arrayFunctions";
+import {storeAllExternalSimsRequestReset} from "../../redux/requests/sims/actions";
 import {storeAddClearanceRequestReset} from "../../redux/requests/clearances/actions";
 import {applySuccess, requestFailed, requestLoading, requestSucceeded} from "../../functions/generalFunctions";
 
@@ -26,8 +26,8 @@ function RequestsClearancesAddClearanceComponent({request, sims, agents, allAgen
 
     // Local effects
     useEffect(() => {
-        dispatch(emitAllSimsFetch());
         dispatch(emitAllAgentsFetch());
+        dispatch(emitAllExternalSimsFetch());
         // Cleaner error alert while component did unmount without store dependency
         return () => {
             shouldResetErrorData();
@@ -72,9 +72,9 @@ function RequestsClearancesAddClearanceComponent({request, sims, agents, allAgen
 
     // Reset error alert
     const shouldResetErrorData = () => {
-        dispatch(storeAllSimsRequestReset());
         dispatch(storeAllAgentsRequestReset());
         dispatch(storeAddClearanceRequestReset());
+        dispatch(storeAllExternalSimsRequestReset());
     };
 
     // Trigger add supply form submit
@@ -133,7 +133,7 @@ function RequestsClearancesAddClearanceComponent({request, sims, agents, allAgen
                     <div className='col-sm-6'>
                         <AmountComponent input={amount}
                                          id='inputFleet'
-                                         label='Flotte demandé'
+                                         label='Flotte à déstocker'
                                          handleInput={handleAmountInput}
                         />
                     </div>
