@@ -28,7 +28,9 @@ export const RECOVERIES_CASH_PAGE = "Recouvrements d'espèces";
 // Checkout
 export const CHECKOUT = 'Caisse';
 export const CHECKOUT_INTERNAL_OUTLAYS_PAGE = 'Décaissements internes';
+export const CHECKOUT_EXTERNAL_OUTLAYS_PAGE = 'Décaissements externes';
 export const CHECKOUT_INTERNAL_PAYMENTS_PAGE = 'Encaissements internes';
+export const CHECKOUT_EXTERNAL_PAYMENTS_PAGE = 'Encaissements externes';
 
 // Requests
 export const REQUESTS = 'Demandes';
