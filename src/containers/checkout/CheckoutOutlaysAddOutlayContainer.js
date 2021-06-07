@@ -4,10 +4,13 @@ import CheckoutOutlaysAddOutlayComponent from "../../components/checkout/Checkou
 
 // Map state function to component props
 const mapStateToProps = (state) => ({
+    user: state.user.id,
     managers: state.managers.list,
+    collectors: state.collectors.list,
     request: state.outlaysRequests.add,
     supervisors: state.supervisors.list,
     allManagersRequests: state.managersRequests.all,
+    allCollectorsRequests: state.collectorsRequests.all,
     allSupervisorsRequests: state.supervisorsRequests.all,
 });
 

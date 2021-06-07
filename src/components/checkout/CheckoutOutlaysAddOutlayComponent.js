@@ -11,15 +11,17 @@ import {emitAllManagersFetch} from "../../redux/managers/actions";
 import {DEFAULT_FORM_DATA} from "../../constants/defaultConstants";
 import {playWarningSound} from "../../functions/playSoundFunctions";
 import {dataToArrayForSelect} from "../../functions/arrayFunctions";
+import {emitAllCollectorsFetch} from "../../redux/collectors/actions";
 import {emitAllSupervisorsFetch} from "../../redux/supervisors/actions";
 import {storeAddOutlayRequestReset} from "../../redux/requests/outlays/actions";
 import {storeAllManagersRequestReset} from "../../redux/requests/managers/actions";
+import {storeAllCollectorsRequestReset} from "../../redux/requests/collectors/actions";
 import {storeAllSupervisorsRequestReset} from "../../redux/requests/supervisors/actions";
 import {applySuccess, requestFailed, requestLoading, requestSucceeded} from "../../functions/generalFunctions";
 
 // Component
-function CheckoutOutlaysAddOutlayComponent({request, supervisors, managers, dispatch, handleClose,
-                                               allSupervisorsRequests, allManagersRequests}) {
+function CheckoutOutlaysAddOutlayComponent({request, supervisors, managers, collectors, dispatch, handleClose, user,
+                                               allCollectorsRequests, allSupervisorsRequests, allManagersRequests}) {
     // Local state
     const [amount, setAmount] = useState(DEFAULT_FORM_DATA);
     const [collector, setCollector] = useState(DEFAULT_FORM_DATA);
@@ -27,6 +29,7 @@ function CheckoutOutlaysAddOutlayComponent({request, supervisors, managers, disp
     // Local effects
     useEffect(() => {
         dispatch(emitAllManagersFetch());
+        dispatch(emitAllCollectorsFetch());
         dispatch(emitAllSupervisorsFetch());
         // Cleaner error alert while component did unmount without store dependency
         return () => {
@@ -57,13 +60,15 @@ function CheckoutOutlaysAddOutlayComponent({request, supervisors, managers, disp
 
     // Build select options
     const collectorSelectOptions = useMemo(() => {
-        return dataToArrayForSelect([...managers, ...supervisors])
-    }, [supervisors, managers]);
+        const filteredCollectors = collectors.filter(collector => collector.id !== user);
+        return dataToArrayForSelect([...managers, ...supervisors, ...filteredCollectors])
+    }, [supervisors, managers, collectors, user]);
 
     // Reset error alert
     const shouldResetErrorData = () => {
         dispatch(storeAddOutlayRequestReset());
         dispatch(storeAllManagersRequestReset());
+        dispatch(storeAllCollectorsRequestReset());
         dispatch(storeAllSupervisorsRequestReset());
     };
 
@@ -92,6 +97,7 @@ function CheckoutOutlaysAddOutlayComponent({request, supervisors, managers, disp
         <>
             {requestFailed(request) && <ErrorAlertComponent message={request.message} />}
             {requestFailed(allManagersRequests) && <ErrorAlertComponent message={allManagersRequests.message} />}
+            {requestFailed(allCollectorsRequests) && <ErrorAlertComponent message={allCollectorsRequests.message} />}
             {requestFailed(allSupervisorsRequests) && <ErrorAlertComponent message={allSupervisorsRequests.message} />}
             <form onSubmit={handleSubmit}>
                 <div className='row'>
@@ -104,7 +110,8 @@ function CheckoutOutlaysAddOutlayComponent({request, supervisors, managers, disp
                                          handleInput={handleCollectorSelect}
                                          requestProcessing={
                                              requestLoading(allSupervisorsRequests) ||
-                                             requestLoading(allManagersRequests)
+                                             requestLoading(allManagersRequests) ||
+                                             requestLoading(allCollectorsRequests)
                                          }
                         />
                     </div>
@@ -129,9 +136,11 @@ CheckoutOutlaysAddOutlayComponent.propTypes = {
     dispatch: PropTypes.func.isRequired,
     request: PropTypes.object.isRequired,
     managers: PropTypes.array.isRequired,
+    collectors: PropTypes.array.isRequired,
     handleClose: PropTypes.func.isRequired,
     supervisors: PropTypes.array.isRequired,
     allManagersRequests: PropTypes.object.isRequired,
+    allCollectorsRequests: PropTypes.object.isRequired,
     allSupervisorsRequests: PropTypes.object.isRequired,
 };
 
