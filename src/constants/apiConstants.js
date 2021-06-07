@@ -18,11 +18,12 @@ export const READ_NOTIFICATIONS_API_PATH = `${API_URL}/read_notifications`;
 export const UNREAD_NOTIFICATIONS_API_PATH = `${API_URL}/unread_notifications`;
 export const DELETE_NOTIFICATIONS_API_PATH = `${API_URL}/delete_notifications`;
 
-// Requests
+// Fleets requests
 export const NEW_FLEET_API_PATH = `${API_URL}/demande_flote_agent`;
 export const ALL_FLEETS_API_PATH = `${API_URL}/list_demandes_flote_collector_all`;
 export const FLEETS_API_PATH = `${API_URL}/list_demandes_flote_general_collector`;
 
+// Clearances requests
 export const CLEARANCES_API_PATH = `${API_URL}/list_demandes_destockage`;
 export const NEW_CLEARANCE_API_PATH = `${API_URL}/demande_destockage_agent`;
 export const ALL_CLEARANCES_API_PATH = `${API_URL}/list_demandes_destockage_all`;
