@@ -6,6 +6,7 @@ const initialState = {
     all: {failed: false, loading: false, succeeded: false, message: ""},
     list: {failed: false, loading: false, succeeded: false, message: ""},
     next: {failed: false, loading: false, succeeded: false, message: ""},
+    master: {failed: false, loading: false, succeeded: false, message: ""},
     internal: {failed: false, loading: false, succeeded: false, message: ""},
     external: {failed: false, loading: false, succeeded: false, message: ""},
     collector: {failed: false, loading: false, succeeded: false, message: ""},
@@ -116,6 +117,23 @@ function reduce(state = initialState, action) {
         // Resolve event to set all external sims reset request store data
         case actions.STORE_ALL_EXTERNAL_SIMS_REQUEST_RESET:
             nextState = {...state, external: initialState.external};
+            return nextState || state;
+        // ======================================================== All master sims
+        // Resolve event to set all master sims init request store data
+        case actions.STORE_ALL_MASTER_SIMS_REQUEST_INIT:
+            nextState = {...state, master: requestInitValue()};
+            return nextState || state;
+        // Resolve event to set all master sims failed request store data
+        case actions.STORE_ALL_MASTER_SIMS_REQUEST_FAILED:
+            nextState = {...state, master: requestFailedValue(action.message)};
+            return nextState || state;
+        // Resolve event to set all master sims succeeded request store data
+        case actions.STORE_ALL_MASTER_SIMS_REQUEST_SUCCEEDED:
+            nextState = {...state, master: requestSucceededValue(action.message)};
+            return nextState || state;
+        // Resolve event to set all master sims reset request store data
+        case actions.STORE_ALL_MASTER_SIMS_REQUEST_RESET:
+            nextState = {...state, master: initialState.master};
             return nextState || state;
         // ========================================================
         // Unknown action

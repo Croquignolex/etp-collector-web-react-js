@@ -67,17 +67,12 @@ export function* emitNextAffordsFetch() {
 
 // Fleets new afford from API
 export function* emitAddAfford() {
-    yield takeLatest(EMIT_ADD_AFFORD, function*({vendor, amount, sim, receipt}) {
+    yield takeLatest(EMIT_ADD_AFFORD, function*({vendor, amount, sim}) {
         try {
             // Fire event for request
             yield put(storeAddAffordRequestInit());
-            const data = new FormData();
-            data.append('id_puce', sim);
-            data.append('recu', receipt);
-            data.append('montant', amount);
-            data.append('id_fournisseur', vendor);
-            data.append('type', SUPPLY_BY_DIGITAL_PARTNER);
-            const apiResponse = yield call(apiPostRequest, api.NEW_REFUEL_API_PATH, data);
+            const data = {id_puce: sim, montant: amount, id_fournisseur: vendor, type: SUPPLY_BY_DIGITAL_PARTNER};
+            const apiResponse = yield call(apiPostRequest, api.NEW_AFFORD_API_PATH, data);
             // Extract dataF
             const afford = extractAffordData(apiResponse.data);
             // Fire event to redux

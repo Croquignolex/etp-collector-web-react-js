@@ -50,10 +50,9 @@ export const emitNextAffordsFetch = ({page}) => ({
 });
 
 // Emit add afford
-export const emitAddAfford = ({vendor, amount, sim, receipt}) => ({
+export const emitAddAfford = ({vendor, amount, sim}) => ({
     sim,
     vendor,
     amount,
-    receipt,
     type: EMIT_ADD_AFFORD
 });

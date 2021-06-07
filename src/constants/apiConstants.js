@@ -32,6 +32,7 @@ export const DECLARE_CLEARANCE_API_PATH = `${API_URL}/reponse_demandes_destockag
 // Sims
 export const ALL_SIMS_API_PATH = `${API_URL}/puce_list_all`;
 export const SIMS_API_PATH = `${API_URL}/puce_list_reponsable`;
+export const ALL_MASTERS_SIMS_API_PATH = `${API_URL}/puce_list_master_all`;
 export const ALL_INTERNAL_SIMS_API_PATH = `${API_URL}/puce_list_interne_all`;
 export const ALL_EXTERNAL_SIMS_API_PATH = `${API_URL}/puce_list_externe_all`;
 export const ALL_COLLECTOR_SIMS_API_PATH = `${API_URL}/puce_list_reponsable_all`;
@@ -91,6 +92,7 @@ export const NEW_REFUEL_API_PATH = `${API_URL}/approvisionnement_etp`;
 export const REFUELS_API_PATH = `${API_URL}/list_destockage_collector`;
 
 // Affords
+export const NEW_AFFORD_API_PATH = `${API_URL}/approvisionnement_etp`;
 export const AFFORDS_API_PATH = `${API_URL}/list_approvisionnement_collector`;
 
 // Vendors

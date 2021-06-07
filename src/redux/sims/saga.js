@@ -10,6 +10,7 @@ import {
     storeSetNextSimsData,
     EMIT_EXTERNAL_SIMS_FETCH,
     EMIT_INTERNAL_SIMS_FETCH,
+    EMIT_ALL_MASTER_SIMS_FETCH,
     EMIT_ALL_COLLECTOR_SIMS_FETCH,
     storeStopInfiniteScrollSimData
 } from "./actions";
@@ -23,9 +24,12 @@ import {
     storeNextSimsRequestFailed,
     storeAllSimsRequestSucceed,
     storeNextSimsRequestSucceed,
+    storeAllMasterSimsRequestInit,
     storeAllExternalSimsRequestInit,
+    storeAllMasterSimsRequestFailed,
     storeAllInternalSimsRequestInit,
     storeAllCollectorSimsRequestInit,
+    storeAllMasterSimsRequestSucceed,
     storeAllInternalSimsRequestFailed,
     storeAllExternalSimsRequestFailed,
     storeAllCollectorSimsRequestFailed,
@@ -90,6 +94,26 @@ export function* emitAllExternalSimsFetch() {
         } catch (message) {
             // Fire event for request
             yield put(storeAllExternalSimsRequestFailed({message}));
+        }
+    });
+}
+
+// Fetch all master sims from API
+export function* emitAllMasterSimsFetch() {
+    yield takeLatest(EMIT_ALL_MASTER_SIMS_FETCH, function*() {
+        try {
+            // Fire event for request
+            yield put(storeAllMasterSimsRequestInit());
+            const apiResponse = yield call(apiGetRequest, `${api.ALL_MASTERS_SIMS_API_PATH}?page=1`);
+            // Extract data
+            const sims = extractSimsData(apiResponse.data.puces);
+            // Fire event to redux
+            yield put(storeSetSimsData({sims, hasMoreData: apiResponse.data.hasMoreData, page: 2}));
+            // Fire event for request
+            yield put(storeAllMasterSimsRequestSucceed({message: apiResponse.message}));
+        } catch (message) {
+            // Fire event for request
+            yield put(storeAllMasterSimsRequestFailed({message}));
         }
     });
 }
@@ -232,6 +256,7 @@ export default function* sagaSims() {
         fork(emitSimsFetch),
         fork(emitAllSimsFetch),
         fork(emitNextSimsFetch),
+        fork(emitAllMasterSimsFetch),
         fork(emitAllInternalSimsFetch),
         fork(emitAllExternalSimsFetch),
         fork(emitAllCollectorSimsFetch),

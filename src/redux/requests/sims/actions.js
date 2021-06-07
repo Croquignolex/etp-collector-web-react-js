@@ -19,6 +19,11 @@ export const STORE_ALL_COLLECTOR_SIMS_REQUEST_RESET = 'STORE_ALL_COLLECTOR_SIMS_
 export const STORE_ALL_COLLECTOR_SIMS_REQUEST_FAILED = 'STORE_ALL_COLLECTOR_SIMS_REQUEST_FAILED';
 export const STORE_ALL_COLLECTOR_SIMS_REQUEST_SUCCEEDED = 'STORE_ALL_COLLECTOR_SIMS_REQUEST_SUCCEEDED';
 
+export const STORE_ALL_MASTER_SIMS_REQUEST_INIT = 'STORE_ALL_MASTER_SIMS_REQUEST_INIT';
+export const STORE_ALL_MASTER_SIMS_REQUEST_RESET = 'STORE_ALL_MASTER_SIMS_REQUEST_RESET';
+export const STORE_ALL_MASTER_SIMS_REQUEST_FAILED = 'STORE_ALL_MASTER_SIMS_REQUEST_FAILED';
+export const STORE_ALL_MASTER_SIMS_REQUEST_SUCCEEDED = 'STORE_ALL_MASTER_SIMS_REQUEST_SUCCEEDED';
+
 export const STORE_ALL_INTERNAL_SIMS_REQUEST_INIT = 'STORE_ALL_INTERNAL_SIMS_REQUEST_INIT';
 export const STORE_ALL_INTERNAL_SIMS_REQUEST_RESET = 'STORE_ALL_INTERNAL_SIMS_REQUEST_RESET';
 export const STORE_ALL_INTERNAL_SIMS_REQUEST_FAILED = 'STORE_ALL_INTERNAL_SIMS_REQUEST_FAILED';
@@ -160,4 +165,26 @@ export const storeAllExternalSimsRequestSucceed = ({message}) => ({
 // Set all external sims reset data into store
 export const storeAllExternalSimsRequestReset = () => ({
     type: STORE_ALL_EXTERNAL_SIMS_REQUEST_RESET
+});
+// ======================================================== All master sims
+// Set all master sims init data into store
+export const storeAllMasterSimsRequestInit = () => ({
+    type: STORE_ALL_MASTER_SIMS_REQUEST_INIT
+});
+
+// Set all master sims failed data into store
+export const storeAllMasterSimsRequestFailed = ({message}) => ({
+    message,
+    type: STORE_ALL_MASTER_SIMS_REQUEST_FAILED
+});
+
+// Set all master sims succeeded data into store
+export const storeAllMasterSimsRequestSucceed = ({message}) => ({
+    message,
+    type: STORE_ALL_MASTER_SIMS_REQUEST_SUCCEEDED
+});
+
+// Set all master sims reset data into store
+export const storeAllMasterSimsRequestReset = () => ({
+    type: STORE_ALL_MASTER_SIMS_REQUEST_RESET
 });

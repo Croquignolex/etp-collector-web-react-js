@@ -9,6 +9,7 @@ export const EMIT_ALL_SIMS_FETCH = 'EMIT_ALL_SIMS_FETCH';
 export const EMIT_NEXT_SIMS_FETCH = 'EMIT_NEXT_SIMS_FETCH';
 export const EMIT_INTERNAL_SIMS_FETCH = 'EMIT_INTERNAL_SIMS_FETCH';
 export const EMIT_EXTERNAL_SIMS_FETCH = 'EMIT_EXTERNAL_SIMS_FETCH';
+export const EMIT_ALL_MASTER_SIMS_FETCH = 'EMIT_ALL_MASTER_SIMS_FETCH';
 export const EMIT_ALL_COLLECTOR_SIMS_FETCH = 'EMIT_ALL_COLLECTOR_SIMS_FETCH';
 
 //====================== Reducer trigger actions
@@ -53,6 +54,11 @@ export const emitAllSimsFetch = () => ({
 // Emit all collector sims fetch
 export const emitAllCollectorSimsFetch = () => ({
     type: EMIT_ALL_COLLECTOR_SIMS_FETCH
+});
+
+// Emit all master sims fetch
+export const emitAllMasterSimsFetch = () => ({
+    type: EMIT_ALL_MASTER_SIMS_FETCH
 });
 
 // Emit all internal sims fetch
