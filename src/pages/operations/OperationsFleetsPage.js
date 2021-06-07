@@ -151,6 +151,7 @@ function searchEngine(data, _needle) {
                 needleSearch(item.remaining, _needle) ||
                 needleSearch(item.agent.name, _needle) ||
                 needleSearch(item.supplier.name, _needle) ||
+                needleSearch(item.operator.name, _needle) ||
                 needleSearch(item.sim_incoming.number, _needle) ||
                 needleSearch(item.sim_outgoing.number, _needle) ||
                 needleSearch(dateToString(item.creation), _needle)

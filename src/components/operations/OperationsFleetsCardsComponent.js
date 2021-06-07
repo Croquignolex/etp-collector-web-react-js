@@ -2,8 +2,10 @@ import PropTypes from "prop-types";
 import React, {useState} from 'react';
 
 import LoaderComponent from "../LoaderComponent";
-import {DONE} from "../../constants/typeConstants";
+import OperatorComponent from "../OperatorComponent";
 import FormModalComponent from "../modals/FormModalComponent";
+import {fleetTypeBadgeColor} from "../../functions/typeFunctions";
+import {DONE, PENDING, PROCESSING} from "../../constants/typeConstants";
 import {dateToString, formatNumber} from "../../functions/generalFunctions";
 import AgentDetailsContainer from "../../containers/agents/AgentDetailsContainer";
 
@@ -25,13 +27,10 @@ function OperationsFleetsCardsComponent({supplies, handleFleetRecoveryModalShow,
                     return (
                         <div className="col-lg-4 col-md-6" key={key}>
                             <div className="card">
-                                <div className={`card-header ${item.status === DONE ? 'bg-secondary' : 'bg-primary'}`}>
-                                    <h3 className="card-title text-bold">
-                                        <i className="fa fa-phone" /> {formatNumber(item.amount)}
-                                    </h3>
-                                </div>
+                                <div className={`${fleetTypeBadgeColor(item.status).background} card-header`} />
                                 <div className="card-body">
                                     <ul className="list-group list-group-unbordered">
+                                        <OperatorComponent operator={item.operator} />
                                         <li className="list-group-item">
                                             <b>Création</b>
                                             <span className="float-right">{dateToString(item.creation)}</span>
@@ -54,34 +53,47 @@ function OperationsFleetsCardsComponent({supplies, handleFleetRecoveryModalShow,
                                             <span className="float-right">{item.sim_incoming.number}</span>
                                         </li>
                                         <li className="list-group-item">
-                                            <b>Reste récouvrir</b>
-                                            <span className="float-right text-danger text-bold">{formatNumber(item.remaining)}</span>
+                                            <b>Monant flotté</b>
+                                            <span className="float-right text-success text-bold">
+                                                {formatNumber(item.amount)}
+                                            </span>
                                         </li>
                                         <li className="list-group-item">
-                                            <b>Gestionaire</b>
+                                            <b>Reste récouvrir</b>
+                                            <span className="float-right text-danger text-bold">
+                                                {formatNumber(item.remaining)}
+                                            </span>
+                                        </li>
+                                        <li className="list-group-item">
+                                            <b>Responsable</b>
                                             <span className="float-right">{item.supplier.name}</span>
                                         </li>
+                                        <li className="list-group-item">
+                                            {item.status === DONE && <b className="text-success text-bold">Recouvert totalement</b>}
+                                            {item.status === PROCESSING && <b className="text-primary text-bold">Recouvert partiellement</b>}
+                                            {item.status === PENDING && <b className="text-danger text-bold">En attente de recouvrement</b>}
+                                        </li>
                                     </ul>
-                                    {item.status !== DONE && (
-                                        <div className="mt-3 text-center">
-                                            {item.actionLoader ? <LoaderComponent little={true} /> :
+                                    <div className="mt-3 text-right">
+                                        {item.status !== DONE && (
+                                            item.actionLoader ? <LoaderComponent little={true} /> : (
                                                 <>
                                                     <button type="button"
-                                                            className="btn btn-theme mr-2 mb-2"
+                                                            className="btn btn-theme btn-sm mb-2"
                                                             onClick={() => handleFleetRecoveryModalShow(item)}
                                                     >
-                                                        <i className="fa fa-plus" /> Retour flotte
-                                                    </button>
+                                                        <i className="fa fa-redo" /> Retour flotte
+                                                    </button><br/>
                                                     <button type="button"
-                                                            className="btn btn-theme mb-2"
+                                                            className="btn btn-theme mb-2 btn-sm"
                                                             onClick={() => handleCashRecoveryModalShow(item)}
                                                     >
-                                                        <i className="fa fa-plus" /> Recouvrement espèce
+                                                        <i className="fa fa-hand-paper" /> Recouvrement espèce
                                                     </button>
                                                 </>
-                                            }
-                                        </div>
-                                    )}
+                                            )
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         </div>
