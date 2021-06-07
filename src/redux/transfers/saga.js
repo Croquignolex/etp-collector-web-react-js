@@ -84,6 +84,7 @@ export function* emitAddTransfer() {
                 apiResponse.data.puce_receptrice,
                 apiResponse.data.utilisateur,
                 apiResponse.data.flottage,
+                apiResponse.data.operateur,
             );
             // Fire event to redux
             yield put(storeSetNewTransferData({transfer}))
