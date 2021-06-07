@@ -2,28 +2,19 @@ import PropTypes from 'prop-types';
 import React, {useEffect, useState} from 'react';
 import InfiniteScroll from "react-infinite-scroll-component";
 
-import {emitAllSimsFetch} from "../../redux/sims/actions";
-import {emitAllAgentsFetch} from "../../redux/agents/actions";
 import HeaderComponent from "../../components/HeaderComponent";
 import LoaderComponent from "../../components/LoaderComponent";
 import {fleetTypeBadgeColor} from "../../functions/typeFunctions";
 import AppLayoutContainer from "../../containers/AppLayoutContainer";
 import ErrorAlertComponent from "../../components/ErrorAlertComponent";
 import TableSearchComponent from "../../components/TableSearchComponent";
-import {storeAllSimsRequestReset} from "../../redux/requests/sims/actions";
 import FormModalComponent from "../../components/modals/FormModalComponent";
-import {storeAllAgentsRequestReset} from "../../redux/requests/agents/actions";
 import {emitClearancesFetch, emitNextClearancesFetch} from "../../redux/clearances/actions";
 import RequestsClearancesCardsComponent from "../../components/requests/RequestsClearancesCardsComponent";
+import {dateToString, needleSearch, requestFailed, requestLoading} from "../../functions/generalFunctions";
 import RequestsClearancesAddDeclareContainer from "../../containers/requests/RequestsClearancesAddDeclareContainer";
 import {storeClearancesRequestReset, storeNextClearancesRequestReset} from "../../redux/requests/clearances/actions";
 import RequestsClearancesAddClearanceContainer from "../../containers/requests/RequestsClearancesAddClearanceContainer";
-import {
-    dateToString,
-    needleSearch,
-    requestFailed,
-    requestLoading,
-} from "../../functions/generalFunctions";
 
 // Component
 function RequestsClearancesPage({clearances, clearancesRequests, hasMoreData, page, dispatch, location}) {
@@ -35,8 +26,6 @@ function RequestsClearancesPage({clearances, clearancesRequests, hasMoreData, pa
     // Local effects
     useEffect(() => {
         dispatch(emitClearancesFetch());
-        dispatch(emitAllSimsFetch());
-        dispatch(emitAllAgentsFetch());
         // Cleaner error alert while component did unmount without store dependency
         return () => {
             shouldResetErrorData();
@@ -50,8 +39,6 @@ function RequestsClearancesPage({clearances, clearancesRequests, hasMoreData, pa
 
     // Reset error alert
     const shouldResetErrorData = () => {
-        dispatch(storeAllSimsRequestReset());
-        dispatch(storeAllAgentsRequestReset());
         dispatch(storeClearancesRequestReset());
         dispatch(storeNextClearancesRequestReset());
     };
@@ -106,7 +93,7 @@ function RequestsClearancesPage({clearances, clearancesRequests, hasMoreData, pa
                                                     className="btn btn-theme mb-2"
                                                     onClick={handleClearanceModalShow}
                                             >
-                                                <i className="fa fa-plus" /> Passe une demande de déstockage
+                                                <i className="fa fa-rss-square" /> Passe une demande de déstockage
                                             </button>
                                             {/* Search result & Infinite scroll */}
                                             {(needle !== '' && needle !== undefined)

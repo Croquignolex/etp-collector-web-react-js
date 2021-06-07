@@ -5,18 +5,17 @@ import ButtonComponent from "../form/ButtonComponent";
 import AmountComponent from "../form/AmountComponent";
 import SelectComponent from "../form/SelectComponent";
 import ErrorAlertComponent from "../ErrorAlertComponent";
+import {emitAllSimsFetch} from "../../redux/sims/actions";
+import {emitAllAgentsFetch} from "../../redux/agents/actions";
 import {emitAddClearance} from "../../redux/clearances/actions";
 import {requiredChecker} from "../../functions/checkerFunctions";
 import {DEFAULT_FORM_DATA} from "../../constants/defaultConstants";
 import {playWarningSound} from "../../functions/playSoundFunctions";
+import {storeAllSimsRequestReset} from "../../redux/requests/sims/actions";
+import {storeAllAgentsRequestReset} from "../../redux/requests/agents/actions";
 import {dataToArrayForSelect, mappedSims} from "../../functions/arrayFunctions";
 import {storeAddClearanceRequestReset} from "../../redux/requests/clearances/actions";
-import {
-    applySuccess,
-    requestFailed,
-    requestLoading,
-    requestSucceeded
-} from "../../functions/generalFunctions";
+import {applySuccess, requestFailed, requestLoading, requestSucceeded} from "../../functions/generalFunctions";
 
 // Component
 function RequestsClearancesAddClearanceComponent({request, sims, agents, allAgentsRequests, allSimsRequests, dispatch, handleClose}) {
@@ -27,6 +26,8 @@ function RequestsClearancesAddClearanceComponent({request, sims, agents, allAgen
 
     // Local effects
     useEffect(() => {
+        dispatch(emitAllSimsFetch());
+        dispatch(emitAllAgentsFetch());
         // Cleaner error alert while component did unmount without store dependency
         return () => {
             shouldResetErrorData();
@@ -71,6 +72,8 @@ function RequestsClearancesAddClearanceComponent({request, sims, agents, allAgen
 
     // Reset error alert
     const shouldResetErrorData = () => {
+        dispatch(storeAllSimsRequestReset());
+        dispatch(storeAllAgentsRequestReset());
         dispatch(storeAddClearanceRequestReset());
     };
 
