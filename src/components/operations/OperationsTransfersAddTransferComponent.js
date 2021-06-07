@@ -7,25 +7,26 @@ import SelectComponent from "../form/SelectComponent";
 import ErrorAlertComponent from "../ErrorAlertComponent";
 import {emitAddTransfer} from "../../redux/transfers/actions";
 import {requiredChecker} from "../../functions/checkerFunctions";
+import {emitAllInternalSimsFetch} from "../../redux/sims/actions";
 import {DEFAULT_FORM_DATA} from "../../constants/defaultConstants";
 import {playWarningSound} from "../../functions/playSoundFunctions";
 import {FLEET_MASTER_COLLECTOR_TYPE} from "../../constants/typeConstants";
 import {dataToArrayForSelect, mappedSims} from "../../functions/arrayFunctions";
+import {storeAllInternalSimsRequestReset} from "../../redux/requests/sims/actions";
 import {storeAddTransferRequestReset} from "../../redux/requests/transfers/actions";
 import {applySuccess, requestFailed, requestLoading, requestSucceeded} from "../../functions/generalFunctions";
-import {emitAllSimsFetch} from "../../redux/sims/actions";
-import {storeAllSimsRequestReset} from "../../redux/requests/sims/actions";
 
 // Component
 function OperationsTransfersAddTransferComponent({request, user, sims, allSimsRequests, dispatch, handleClose}) {
     // Local state
     const [amount, setAmount] = useState(DEFAULT_FORM_DATA);
+    const [selectedOp, setSelectedOp] = useState('');
     const [outgoingSim, setOutgoingSim] = useState(DEFAULT_FORM_DATA);
     const [incomingSim, setIncomingSim] = useState(DEFAULT_FORM_DATA);
 
     // Local effects
     useEffect(() => {
-        dispatch(emitAllSimsFetch());
+        dispatch(emitAllInternalSimsFetch());
         // Cleaner error alert while component did unmount without store dependency
         return () => {
             shouldResetErrorData();
@@ -45,7 +46,10 @@ function OperationsTransfersAddTransferComponent({request, user, sims, allSimsRe
 
     const handleOutgoingSelect = (data) => {
         shouldResetErrorData();
-        setOutgoingSim({...outgoingSim,  isValid: true, data})
+        // Extract operator
+        const foundSim = sims.find(item => item.id === data);
+        setSelectedOp(foundSim && foundSim.operator.id);
+        setOutgoingSim({...outgoingSim,  isValid: true, data});
     }
 
     const handleIncomingSelect = (data) => {
@@ -60,8 +64,14 @@ function OperationsTransfersAddTransferComponent({request, user, sims, allSimsRe
 
     // Build select options
     const incomingSelectOptions = useMemo(() => {
-        return dataToArrayForSelect(mappedSims(sims.filter(item => FLEET_MASTER_COLLECTOR_TYPE.includes(item.type.name) && item.collector.id !== user.id)))
-    }, [sims, user.id]);
+        return dataToArrayForSelect(mappedSims(sims.filter(
+            item => (
+                FLEET_MASTER_COLLECTOR_TYPE.includes(item.type.name)
+                && (item.collector.id !== user.id)
+                && (item.operator.id === selectedOp)
+            )
+        )))
+    }, [sims, user.id, selectedOp]);
 
     // Build select options
     const outgoingSelectOptions = useMemo(() => {
@@ -70,8 +80,8 @@ function OperationsTransfersAddTransferComponent({request, user, sims, allSimsRe
 
     // Reset error alert
     const shouldResetErrorData = () => {
-        dispatch(storeAllSimsRequestReset());
         dispatch(storeAddTransferRequestReset());
+        dispatch(storeAllInternalSimsRequestReset());
     };
 
     // Trigger add supply form submit
