@@ -43,9 +43,8 @@ export const emitNextRecoveriesFetch = ({page}) => ({
 });
 
 // Emit new recovery
-export const emitNewRecovery = ({supply, amount, receipt}) => ({
+export const emitNewRecovery = ({supply, amount}) => ({
     supply,
     amount,
-    receipt,
     type: EMIT_NEW_RECOVERY
 });
