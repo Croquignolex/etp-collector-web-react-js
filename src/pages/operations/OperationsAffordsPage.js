@@ -2,17 +2,13 @@ import PropTypes from 'prop-types';
 import React, {useEffect, useState} from 'react';
 import InfiniteScroll from "react-infinite-scroll-component";
 
-import {emitAllSimsFetch} from "../../redux/sims/actions";
 import HeaderComponent from "../../components/HeaderComponent";
 import LoaderComponent from "../../components/LoaderComponent";
-import {emitAllVendorsFetch} from "../../redux/vendors/actions";
 import AppLayoutContainer from "../../containers/AppLayoutContainer";
 import ErrorAlertComponent from "../../components/ErrorAlertComponent";
-import {OPERATIONS_AFFORDS_PAGE} from "../../constants/pageNameConstants";
 import TableSearchComponent from "../../components/TableSearchComponent";
-import {storeAllSimsRequestReset} from "../../redux/requests/sims/actions";
+import {OPERATIONS_AFFORDS_PAGE} from "../../constants/pageNameConstants";
 import FormModalComponent from "../../components/modals/FormModalComponent";
-import {storeAllVendorsRequestReset} from "../../redux/requests/vendors/actions";
 import {emitAffordsFetch, emitNextAffordsFetch} from "../../redux/affords/actions";
 import OperationsAffordsCardsComponent from "../../components/operations/OperationsAffordsCardsComponent";
 import {dateToString, needleSearch, requestFailed, requestLoading} from "../../functions/generalFunctions";
@@ -28,8 +24,6 @@ function OperationsAffordsPage({affords, affordsRequests, hasMoreData, page, dis
     // Local effects
     useEffect(() => {
         dispatch(emitAffordsFetch());
-        dispatch(emitAllSimsFetch());
-        dispatch(emitAllVendorsFetch());
         // Cleaner error alert while component did unmount without store dependency
         return () => {
             shouldResetErrorData();
@@ -44,8 +38,6 @@ function OperationsAffordsPage({affords, affordsRequests, hasMoreData, page, dis
     // Reset error alert
     const shouldResetErrorData = () => {
         dispatch(storeAffordsRequestReset());
-        dispatch(storeAllSimsRequestReset());
-        dispatch(storeAllVendorsRequestReset());
         dispatch(storeNextAffordsRequestReset());
     };
 
@@ -89,7 +81,7 @@ function OperationsAffordsPage({affords, affordsRequests, hasMoreData, page, dis
                                                     className="btn btn-theme mb-2"
                                                     onClick={handleAffordModalShow}
                                             >
-                                                <i className="fa fa-plus" /> Effectuer un approvisionnement
+                                                <i className="fa fa-wifi" /> Effectuer un approvisionnement
                                             </button>
                                             {/* Search result & Infinite scroll */}
                                             {(needle !== '' && needle !== undefined)
@@ -131,6 +123,7 @@ function searchEngine(data, _needle) {
                 needleSearch(item.amount, _needle) ||
                 needleSearch(item.vendor, _needle) ||
                 needleSearch(item.sim.number, _needle) ||
+                needleSearch(item.operator.name, _needle) ||
                 needleSearch(item.collector.name, _needle) ||
                 needleSearch(dateToString(item.creation), _needle)
             )

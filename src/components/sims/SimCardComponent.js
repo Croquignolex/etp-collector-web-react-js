@@ -22,7 +22,7 @@ function SimCardComponent({sim}) {
             <ul className="list-group list-group-unbordered">
                 <OperatorComponent operator={sim.operator} />
                 <li className="list-group-item">
-                    <b>Créer le</b>
+                    <b>Création</b>
                     <span className="float-right">{dateToString(sim.creation)}</span>
                 </li>
                 <li className="list-group-item">

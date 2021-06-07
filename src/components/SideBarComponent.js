@@ -19,7 +19,7 @@ function SideBarComponent({user, pathname}) {
             buildDashboardMenu(),
             // buildNetworkMenu(),
             buildRequestsMenu(),
-            // buildOperationsMenu(),
+            buildOperationsMenu(),
             buildRecoveriesMenu(),
             buildCheckoutMenu(),
             buildAgentsMenu(),
@@ -152,10 +152,10 @@ function buildOperationsMenu() {
         name: page.OPERATIONS,
         icon: 'fa fa-bars',
         sub: [
-            {name: page.OPERATIONS_TRANSFERS_PAGE, path: path.OPERATIONS_TRANSFERS_PAGE_PATH},
-            {name: page.OPERATIONS_LIQUIDATES_PAGE, path: path.OPERATIONS_LIQUIDATES_PAGE_PATH},
-            {name: page.OPERATIONS_FLEETS_PAGE, path: path.OPERATIONS_FLEETS_PAGE_PATH},
-            {name: page.OPERATIONS_CLEARANCES_PAGE, path: path.OPERATIONS_CLEARANCES_PAGE_PATH},
+            // {name: page.OPERATIONS_TRANSFERS_PAGE, path: path.OPERATIONS_TRANSFERS_PAGE_PATH},
+            // {name: page.OPERATIONS_LIQUIDATES_PAGE, path: path.OPERATIONS_LIQUIDATES_PAGE_PATH},
+            // {name: page.OPERATIONS_FLEETS_PAGE, path: path.OPERATIONS_FLEETS_PAGE_PATH},
+            // {name: page.OPERATIONS_CLEARANCES_PAGE, path: path.OPERATIONS_CLEARANCES_PAGE_PATH},
             {name: page.OPERATIONS_AFFORDS_PAGE, path: path.OPERATION_AFFORDS_PAGE_PATH},
         ]
     }

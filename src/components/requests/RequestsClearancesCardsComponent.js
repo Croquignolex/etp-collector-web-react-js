@@ -32,7 +32,7 @@ function RequestsClearancesCardsComponent({clearances, handleDeclareModalShow}) 
                                     <ul className="list-group list-group-unbordered">
                                         <OperatorComponent operator={item.operator} />
                                         <li className="list-group-item">
-                                            <b>Créer le</b>
+                                            <b>Création</b>
                                             <span className="float-right">{dateToString(item.creation)}</span>
                                         </li>
                                         <li className="list-group-item">

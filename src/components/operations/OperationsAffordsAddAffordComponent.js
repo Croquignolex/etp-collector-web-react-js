@@ -15,6 +15,10 @@ import {fileChecker, requiredChecker} from "../../functions/checkerFunctions";
 import {storeAddAffordRequestReset} from "../../redux/requests/affords/actions";
 import {dataToArrayForSelect, mappedSims} from "../../functions/arrayFunctions";
 import {applySuccess, requestFailed, requestLoading, requestSucceeded} from "../../functions/generalFunctions";
+import {emitAllSimsFetch} from "../../redux/sims/actions";
+import {emitAllVendorsFetch} from "../../redux/vendors/actions";
+import {storeAllSimsRequestReset} from "../../redux/requests/sims/actions";
+import {storeAllVendorsRequestReset} from "../../redux/requests/vendors/actions";
 
 // Component
 function OperationsAffordsAddAffordComponent({request, sims, vendors, allSimsRequests, allVendorsRequests, dispatch, handleClose}) {
@@ -26,6 +30,8 @@ function OperationsAffordsAddAffordComponent({request, sims, vendors, allSimsReq
 
     // Local effects
     useEffect(() => {
+        dispatch(emitAllSimsFetch());
+        dispatch(emitAllVendorsFetch());
         // Cleaner error alert while component did unmount without store dependency
         return () => {
             shouldResetErrorData();
@@ -75,6 +81,8 @@ function OperationsAffordsAddAffordComponent({request, sims, vendors, allSimsReq
 
     // Reset error alert
     const shouldResetErrorData = () => {
+        dispatch(storeAllSimsRequestReset());
+        dispatch(storeAllVendorsRequestReset());
         dispatch(storeAddAffordRequestReset());
     };
 
