@@ -141,12 +141,12 @@ function searchEngine(data, _needle) {
         // Filter
         data = data.filter((item) => {
             return (
-                needleSearch(item.number, _needle) ||
                 needleSearch(item.amount, _needle) ||
                 needleSearch(item.remaining, _needle) ||
                 needleSearch(item.sim.number, _needle) ||
                 needleSearch(item.agent.number, _needle) ||
                 needleSearch(item.claimant.name, _needle) ||
+                needleSearch(item.operator.name, _needle) ||
                 needleSearch(dateToString(item.creation), _needle) ||
                 needleSearch(fleetTypeBadgeColor(item.status).text, _needle)
             )

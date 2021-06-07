@@ -1,12 +1,13 @@
 import React, {useState} from 'react';
 import PropTypes from "prop-types";
 
+import LoaderComponent from "../LoaderComponent";
+import OperatorComponent from "../OperatorComponent";
 import FormModalComponent from "../modals/FormModalComponent";
 import {fleetTypeBadgeColor} from "../../functions/typeFunctions";
+import {DONE, PENDING, PROCESSING} from "../../constants/typeConstants";
 import {dateToString, formatNumber} from "../../functions/generalFunctions";
 import AgentDetailsContainer from "../../containers/agents/AgentDetailsContainer";
-import {PENDING, PROCESSING} from "../../constants/typeConstants";
-import LoaderComponent from "../LoaderComponent";
 
 // Component
 function RequestsClearancesCardsComponent({clearances, handleDeclareModalShow}) {
@@ -26,22 +27,25 @@ function RequestsClearancesCardsComponent({clearances, handleDeclareModalShow}) 
                     return (
                         <div className="col-lg-4 col-md-6" key={key}>
                             <div className="card">
-                                <div className={`${fleetTypeBadgeColor(item.status).background} card-header`}>
-                                    <h3 className="card-title">{fleetTypeBadgeColor(item.status).text}</h3>
-                                </div>
+                                <div className={`${fleetTypeBadgeColor(item.status).background} card-header`} />
                                 <div className="card-body">
                                     <ul className="list-group list-group-unbordered">
+                                        <OperatorComponent operator={item.operator} />
                                         <li className="list-group-item">
                                             <b>Créer le</b>
                                             <span className="float-right">{dateToString(item.creation)}</span>
                                         </li>
                                         <li className="list-group-item">
                                             <b>Montant demandé</b>
-                                            <span className="float-right">{formatNumber(item.amount)}</span>
+                                            <span className="float-right text-success text-bold">
+                                                {formatNumber(item.amount)}
+                                            </span>
                                         </li>
                                         <li className="list-group-item">
                                             <b>Reste à accepter</b>
-                                            <span className="float-right text-danger text-bold">{formatNumber(item.remaining)}</span>
+                                            <span className="float-right text-danger text-bold">
+                                                {formatNumber(item.remaining)}
+                                            </span>
                                         </li>
                                         <li className="list-group-item">
                                             <b>Puce à déstocker</b>
@@ -60,14 +64,19 @@ function RequestsClearancesCardsComponent({clearances, handleDeclareModalShow}) 
                                             <b>Demandeur</b>
                                             <span className="float-right">{item.claimant.name}</span>
                                         </li>
+                                        <li className="list-group-item">
+                                            {item.status === DONE && <b className="text-success text-bold">Pris en charge totalement</b>}
+                                            {item.status === PROCESSING && <b className="text-primary text-bold">Pris en charge partiellement</b>}
+                                            {item.status === PENDING && <b className="text-danger text-bold">En attente de prise en charge</b>}
+                                        </li>
                                         {[PENDING, PROCESSING].includes(item.status) &&
-                                            <div className="mt-3 text-center">
+                                            <div className="mt-3 text-right">
                                                 {item.actionLoader ? <LoaderComponent little={true} /> :
                                                     <button type="button"
-                                                            className="btn btn-theme"
+                                                            className="btn btn-sm btn-theme"
                                                             onClick={() => handleDeclareModalShow(item)}
                                                     >
-                                                        <i className="fa fa-plus" /> Prendre en charge
+                                                        <i className="fa fa-hand-holding" /> Prendre en charge
                                                     </button>
                                                 }
                                             </div>

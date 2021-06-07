@@ -174,7 +174,7 @@ function extractClearanceData(apiSim, apiUser, apiAgent, apiClaimer, apiFleet, a
     if(apiOperator) {
         fleet.operator = {
             name: apiOperator.nom,
-            id: apiUser.id.toString()
+            id: apiOperator.id.toString()
         };
     }
     if(apiFleet) {
