@@ -17,7 +17,6 @@ import supplies from './supplies/saga';
 import operators from './operators/saga';
 import anonymous from './anonymous/saga';
 import transfers from './transfers/saga';
-import liquidates from './liquidates/saga';
 import clearances from './clearances/saga';
 import collectors from './collectors/saga';
 import recoveries from './recoveries/saga';
@@ -45,7 +44,6 @@ export default function* sagas() {
         transfers(),
         anonymous(),
         operators(),
-        liquidates(),
         clearances(),
         recoveries(),
         collectors(),

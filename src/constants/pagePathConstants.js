@@ -13,7 +13,6 @@ export const RESOURCES_PAGE_PATH = "/resources";
 export const OPERATIONS_FLEETS_PAGE_PATH = "/operations/fleets";
 export const OPERATION_AFFORDS_PAGE_PATH = "/operations/affords";
 export const OPERATIONS_TRANSFERS_PAGE_PATH = "/operations/transfers";
-export const OPERATIONS_LIQUIDATES_PAGE_PATH = "/operations/liquidates";
 export const OPERATIONS_CLEARANCES_PAGE_PATH = "/operations/clearances";
 
 // Recoveries

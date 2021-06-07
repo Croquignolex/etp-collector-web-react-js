@@ -7,7 +7,6 @@ import asyncComponent from './components/asyncComponent';
 import {NotificationContainer} from "react-notifications";
 import PublicRouteContainer from "./containers/PublicRouteContainer";
 import RestrictedRouteContainer from "./containers/RestrictedRouteContainer";
-import {CHECKOUT_INTERNAL_OUTLAYS_PAGE_PATH, CHECKOUT_INTERNAL_PAYMENTS_PAGE_PATH} from "./constants/pagePathConstants";
 
 // Component
 function AppRoutes({history}) {
@@ -33,7 +32,6 @@ function AppRoutes({history}) {
                 <RestrictedRouteContainer exact path={path.OPERATIONS_FLEETS_PAGE_PATH} component={asyncComponent(() => import('./containers/operations/OperationsFleetsPageContainer'))} />
                 <RestrictedRouteContainer exact path={path.OPERATION_AFFORDS_PAGE_PATH} component={asyncComponent(() => import('./containers/operations/OperationsAffordsPageContainer'))} />
                 <RestrictedRouteContainer exact path={path.OPERATIONS_TRANSFERS_PAGE_PATH} component={asyncComponent(() => import('./containers/operations/OperationsTransfersPageContainer'))} />
-                <RestrictedRouteContainer exact path={path.OPERATIONS_LIQUIDATES_PAGE_PATH} component={asyncComponent(() => import('./containers/operations/OperationsLiquidatesPageContainer'))} />
                 <RestrictedRouteContainer exact path={path.OPERATIONS_CLEARANCES_PAGE_PATH} component={asyncComponent(() => import('./containers/operations/OperationsClearancesPageContainer'))} />
                 {/* Checkouts */}
                 <RestrictedRouteContainer exact path={path.CHECKOUT_INTERNAL_OUTLAYS_PAGE_PATH} component={asyncComponent(() => import('./containers/checkout/CheckoutOutlaysPageContainer'))} />

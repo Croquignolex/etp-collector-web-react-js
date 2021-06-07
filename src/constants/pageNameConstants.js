@@ -19,7 +19,6 @@ export const OPERATIONS_FLEETS_PAGE = 'Flottages';
 export const OPERATIONS_CLEARANCES_PAGE = 'Déstockages';
 export const OPERATIONS_AFFORDS_PAGE = 'Approvisionnements';
 export const OPERATIONS_TRANSFERS_PAGE = 'Tranferts de flottes';
-export const OPERATIONS_LIQUIDATES_PAGE = 'Tranferts de liquidités';
 
 // Recoveries
 export const RECOVERIES = 'Recouvrements';
