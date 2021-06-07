@@ -133,7 +133,7 @@ function RequestsClearancesAddClearanceComponent({request, sims, agents, allAgen
                     <div className='col-sm-6'>
                         <AmountComponent input={amount}
                                          id='inputFleet'
-                                         label='Flotte à déstocker'
+                                         label='Montant à demander'
                                          handleInput={handleAmountInput}
                         />
                     </div>

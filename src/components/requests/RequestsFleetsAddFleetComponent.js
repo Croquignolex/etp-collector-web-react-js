@@ -133,7 +133,7 @@ function RequestsFleetsAddFleetComponent({request, sims, agents, allAgentsReques
                     <div className='col-sm-6'>
                         <AmountComponent input={amount}
                                          id='inputFleet'
-                                         label='Montant'
+                                         label='Montant à demander'
                                          handleInput={handleAmountInput}
                         />
                     </div>
