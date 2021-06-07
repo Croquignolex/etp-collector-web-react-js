@@ -7,7 +7,7 @@ const mapStateToProps = (state) => ({
     sims: state.sims.list,
     vendors: state.vendors.list,
     request: state.affordsRequests.add,
-    allSimsRequests: state.simsRequests.all,
+    allSimsRequests: state.simsRequests.master,
     allVendorsRequests: state.vendorsRequests.all,
 });
 
