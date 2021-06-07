@@ -123,8 +123,7 @@ export function* emitConfirmTransfer() {
 // Extract transfer data
 function extractTransferData(apiSimOutgoing, apiSimIncoming, apiUser, apiTransfer, apiOperator) {
     let transfer = {
-        id: '', reference: '', amount: '', creation: '',
-        note: '', remaining: '', status: '',
+        id: '', amount: '', creation: '', status: '', type: '',
 
         user: {id: '', name: ''},
         operator: {id: '', name: ''},
@@ -159,6 +158,8 @@ function extractTransferData(apiSimOutgoing, apiSimIncoming, apiUser, apiTransfe
     }
     if(apiTransfer) {
         transfer.actionLoader = false;
+        transfer.type = apiTransfer.type;
+        transfer.status = apiTransfer.statut;
         transfer.amount = apiTransfer.montant;
         transfer.id = apiTransfer.id.toString();
         transfer.creation = apiTransfer.created_at;
