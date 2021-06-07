@@ -5,10 +5,13 @@ import {apiGetRequest, apiPostRequest} from "../../functions/axiosFunctions";
 import {
     EMIT_ADD_TRANSFER,
     EMIT_TRANSFERS_FETCH,
+    EMIT_CONFIRM_TRANSFER,
     storeSetTransfersData,
+    storeUpdateTransferData,
     storeSetNewTransferData,
     storeSetNextTransfersData,
     EMIT_NEXT_TRANSFERS_FETCH,
+    storeSetTransferActionData,
     storeStopInfiniteScrollTransferData
 } from "./actions";
 import {
@@ -20,7 +23,10 @@ import {
     storeNextTransfersRequestInit,
     storeAddTransferRequestSucceed,
     storeNextTransfersRequestFailed,
-    storeNextTransfersRequestSucceed
+    storeConfirmTransferRequestInit,
+    storeNextTransfersRequestSucceed,
+    storeConfirmTransferRequestFailed,
+    storeConfirmTransferRequestSucceed
 } from "../requests/transfers/actions";
 
 // Fetch transfers from API
@@ -90,13 +96,38 @@ export function* emitAddTransfer() {
     });
 }
 
+// Confirm transfer from API
+export function* emitConfirmTransfer() {
+    yield takeLatest(EMIT_CONFIRM_TRANSFER, function*({id}) {
+        try {
+            // Fire event at redux to toggle action loader
+            yield put(storeSetTransferActionData({id}));
+            // Fire event for request
+            yield put(storeConfirmTransferRequestInit());
+            const apiResponse = yield call(apiPostRequest, `${api.CONFIRM_TRANSFER_API_PATH}/${id}`);
+            // Fire event to redux
+            yield put(storeUpdateTransferData({id}));
+            // Fire event at redux to toggle action loader
+            yield put(storeSetTransferActionData({id}));
+            // Fire event for request
+            yield put(storeConfirmTransferRequestSucceed({message: apiResponse.message}));
+        } catch (message) {
+            // Fire event for request
+            yield put(storeSetTransferActionData({id}));
+            yield put(storeConfirmTransferRequestFailed({message}));
+        }
+    });
+}
+
+
 // Extract transfer data
-function extractTransferData(apiSimOutgoing, apiSimIncoming, apiUser, apiTransfer) {
+function extractTransferData(apiSimOutgoing, apiSimIncoming, apiUser, apiTransfer, apiOperator) {
     let transfer = {
         id: '', reference: '', amount: '', creation: '',
         note: '', remaining: '', status: '',
 
         user: {id: '', name: ''},
+        operator: {id: '', name: ''},
         sim_outgoing: {id: '', name: '', number: ''},
         sim_incoming: {id: '', name: '', number: ''},
     };
@@ -120,6 +151,12 @@ function extractTransferData(apiSimOutgoing, apiSimIncoming, apiUser, apiTransfe
             id: apiUser.id.toString()
         };
     }
+    if(apiOperator) {
+        transfer.operator = {
+            name: apiOperator.nom,
+            id: apiOperator.id.toString(),
+        }
+    }
     if(apiTransfer) {
         transfer.actionLoader = false;
         transfer.amount = apiTransfer.montant;
@@ -138,6 +175,7 @@ export function extractTransfersData(apiTransfers) {
             data.puce_receptrice,
             data.utilisateur,
             data.flottage,
+            data.operateur
         ));
     });
     return transfers;
@@ -148,6 +186,7 @@ export default function* sagaTransfers() {
     yield all([
         fork(emitAddTransfer),
         fork(emitTransfersFetch),
+        fork(emitConfirmTransfer),
         fork(emitNextTransfersFetch),
     ]);
 }

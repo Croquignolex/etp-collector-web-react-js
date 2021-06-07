@@ -77,6 +77,7 @@ export const CASH_RECOVERIES_API_PATH = `${API_URL}/list_recouvrement_by_rz`;
 // Transfers
 export const TRANSFERS_API_PATH = `${API_URL}/list_all_flottage_interne`;
 export const NEW_TRANSFERS_API_PATH = `${API_URL}/flottage_interne_rz_gf`;
+export const CONFIRM_TRANSFER_API_PATH = `${API_URL}/approuve_flottage_interne`;
 
 // Supplies
 export const SUPPLIES_API_PATH = `${API_URL}/list_all_flottage`;

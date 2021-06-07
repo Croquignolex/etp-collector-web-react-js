@@ -2,31 +2,40 @@ import PropTypes from 'prop-types';
 import React, {useEffect, useState} from 'react';
 import InfiniteScroll from "react-infinite-scroll-component";
 
-import {emitAllSimsFetch} from "../../redux/sims/actions";
 import HeaderComponent from "../../components/HeaderComponent";
 import LoaderComponent from "../../components/LoaderComponent";
 import AppLayoutContainer from "../../containers/AppLayoutContainer";
 import ErrorAlertComponent from "../../components/ErrorAlertComponent";
 import TableSearchComponent from "../../components/TableSearchComponent";
 import {OPERATIONS_TRANSFERS_PAGE} from "../../constants/pageNameConstants";
-import {storeAllSimsRequestReset} from "../../redux/requests/sims/actions";
 import FormModalComponent from "../../components/modals/FormModalComponent";
-import {emitNextTransfersFetch, emitTransfersFetch} from "../../redux/transfers/actions";
-import {dateToString, needleSearch, requestFailed, requestLoading} from "../../functions/generalFunctions";
+import ConfirmModalComponent from "../../components/modals/ConfirmModalComponent";
+import {emitConfirmTransfer, emitNextTransfersFetch, emitTransfersFetch} from "../../redux/transfers/actions";
 import OperationsTransfersCardsComponent from "../../components/operations/OperationsTransfersCardsComponent";
-import {storeNextTransfersRequestReset, storeTransfersRequestReset} from "../../redux/requests/transfers/actions";
 import OperationsTransfersAddTransferContainer from "../../containers/operations/OperationsTransfersAddTransferContainer";
+import {
+    dateToString,
+    formatNumber,
+    needleSearch,
+    requestFailed,
+    requestLoading
+} from "../../functions/generalFunctions";
+import {
+    storeTransfersRequestReset,
+    storeNextTransfersRequestReset,
+    storeConfirmTransferRequestReset
+} from "../../redux/requests/transfers/actions";
 
 // Component
 function OperationsTransfersPage({transfers, transfersRequests, hasMoreData, page, dispatch, location}) {
     // Local states
     const [needle, setNeedle] = useState('');
+    const [confirmModal, setConfirmModal] = useState({show: false, body: '', id: 0});
     const [transferModal, setTransferModal] = useState({show: false, header: 'EFFECTUER UN TRANSFERT DE FLOTTE'});
 
     // Local effects
     useEffect(() => {
         dispatch(emitTransfersFetch());
-        dispatch(emitAllSimsFetch());
         // Cleaner error alert while component did unmount without store dependency
         return () => {
             shouldResetErrorData();
@@ -40,9 +49,9 @@ function OperationsTransfersPage({transfers, transfersRequests, hasMoreData, pag
 
     // Reset error alert
     const shouldResetErrorData = () => {
-        dispatch(storeAllSimsRequestReset());
         dispatch(storeTransfersRequestReset());
         dispatch(storeNextTransfersRequestReset());
+        dispatch(storeConfirmTransferRequestReset());
     };
 
     // Fetch next transfers data to enhance infinite scroll
@@ -59,6 +68,22 @@ function OperationsTransfersPage({transfers, transfersRequests, hasMoreData, pag
     const handleTransferModalHide = () => {
         setTransferModal({...transferModal, show: false})
     }
+
+    // Show confirm modal form
+    const handleConfirmModalShow = ({id, amount, user}) => {
+        setConfirmModal({...confirmModal, id, body: `Confirmer le transfert de flotte de ${user.name} de ${formatNumber(amount)}?`, show: true})
+    }
+
+    // Hide confirm modal form
+    const handleConfirmModalHide = () => {
+        setConfirmModal({...confirmModal, show: false})
+    }
+
+    // Trigger when clearance confirm confirmed on modal
+    const handleConfirm = (id) => {
+        handleConfirmModalHide();
+        dispatch(emitConfirmTransfer({id}));
+    };
 
     // Render
     return (
@@ -81,15 +106,18 @@ function OperationsTransfersPage({transfers, transfersRequests, hasMoreData, pag
                                             {/* Error message */}
                                             {requestFailed(transfersRequests.list) && <ErrorAlertComponent message={transfersRequests.list.message} />}
                                             {requestFailed(transfersRequests.next) && <ErrorAlertComponent message={transfersRequests.next.message} />}
+                                            {requestFailed(transfersRequests.apply) && <ErrorAlertComponent message={transfersRequests.apply.message} />}
                                             <button type="button"
                                                     className="btn btn-theme mb-2"
                                                     onClick={handleTransferModalShow}
                                             >
-                                                <i className="fa fa-plus" /> Effectuer un transfert
+                                                <i className="fa fa-exchange" /> Effectuer un transfert
                                             </button>
                                             {/* Search result & Infinite scroll */}
                                             {(needle !== '' && needle !== undefined)
-                                                ? <OperationsTransfersCardsComponent transfers={searchEngine(transfers, needle)} />
+                                                ? <OperationsTransfersCardsComponent transfers={searchEngine(transfers, needle)}
+                                                                                     handleConfirmModalShow={handleConfirmModalShow}
+                                                />
                                                 : (requestLoading(transfersRequests.list) ? <LoaderComponent /> :
                                                         <InfiniteScroll hasMore={hasMoreData}
                                                                         loader={<LoaderComponent />}
@@ -97,7 +125,9 @@ function OperationsTransfersPage({transfers, transfersRequests, hasMoreData, pag
                                                                         next={handleNextTransfersData}
                                                                         style={{ overflow: 'hidden' }}
                                                         >
-                                                            <OperationsTransfersCardsComponent transfers={transfers} />
+                                                            <OperationsTransfersCardsComponent transfers={transfers}
+                                                                                               handleConfirmModalShow={handleConfirmModalShow}
+                                                            />
                                                         </InfiniteScroll>
                                                 )
                                             }
@@ -110,6 +140,10 @@ function OperationsTransfersPage({transfers, transfersRequests, hasMoreData, pag
                 </div>
             </AppLayoutContainer>
             {/* Modal */}
+            <ConfirmModalComponent modal={confirmModal}
+                                   handleModal={handleConfirm}
+                                   handleClose={handleConfirmModalHide}
+            />
             <FormModalComponent modal={transferModal} handleClose={handleTransferModalHide}>
                 <OperationsTransfersAddTransferContainer handleClose={handleTransferModalHide} />
             </FormModalComponent>
@@ -126,6 +160,7 @@ function searchEngine(data, _needle) {
             return (
                 needleSearch(item.amount, _needle) ||
                 needleSearch(item.user.name, _needle) ||
+                needleSearch(item.operator.name, _needle) ||
                 needleSearch(item.sim_incoming.number, _needle) ||
                 needleSearch(item.sim_outgoing.number, _needle) ||
                 needleSearch(dateToString(item.creation), _needle)

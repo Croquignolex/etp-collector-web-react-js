@@ -13,6 +13,8 @@ import {FLEET_MASTER_COLLECTOR_TYPE} from "../../constants/typeConstants";
 import {dataToArrayForSelect, mappedSims} from "../../functions/arrayFunctions";
 import {storeAddTransferRequestReset} from "../../redux/requests/transfers/actions";
 import {applySuccess, requestFailed, requestLoading, requestSucceeded} from "../../functions/generalFunctions";
+import {emitAllSimsFetch} from "../../redux/sims/actions";
+import {storeAllSimsRequestReset} from "../../redux/requests/sims/actions";
 
 // Component
 function OperationsTransfersAddTransferComponent({request, user, sims, allSimsRequests, dispatch, handleClose}) {
@@ -23,6 +25,7 @@ function OperationsTransfersAddTransferComponent({request, user, sims, allSimsRe
 
     // Local effects
     useEffect(() => {
+        dispatch(emitAllSimsFetch());
         // Cleaner error alert while component did unmount without store dependency
         return () => {
             shouldResetErrorData();
@@ -67,6 +70,7 @@ function OperationsTransfersAddTransferComponent({request, user, sims, allSimsRe
 
     // Reset error alert
     const shouldResetErrorData = () => {
+        dispatch(storeAllSimsRequestReset());
         dispatch(storeAddTransferRequestReset());
     };
 
