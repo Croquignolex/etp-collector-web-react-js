@@ -2,7 +2,7 @@ import {all, call, fork, put, takeLatest} from 'redux-saga/effects'
 
 import * as api from "../../constants/apiConstants";
 import {SUPPLY_BY_AGENT} from "../../constants/typeConstants";
-import {apiGetRequest, apiPostRequest, getFileFromServer} from "../../functions/axiosFunctions";
+import {apiGetRequest, apiPostRequest} from "../../functions/axiosFunctions";
 import {
     EMIT_ADD_REFUEL,
     EMIT_REFUELS_FETCH,
@@ -10,6 +10,7 @@ import {
     storeSetNewRefuelData,
     storeSetNextRefuelsData,
     EMIT_NEXT_REFUELS_FETCH,
+    EMIT_ADD_ANONYMOUS_REFUEL,
     storeStopInfiniteScrollRefuelData
 } from "./actions";
 import {
@@ -22,6 +23,9 @@ import {
     storeAddRefuelRequestSucceed,
     storeNextRefuelsRequestFailed,
     storeNextRefuelsRequestSucceed,
+    storeAddAnonymousRefuelRequestInit,
+    storeAddAnonymousRefuelRequestFailed,
+    storeAddAnonymousRefuelRequestSucceed,
 } from "../requests/refuels/actions";
 
 // Fetch refuels from API
@@ -67,16 +71,11 @@ export function* emitNextRefuelsFetch() {
 
 // Fleets new refuel from API
 export function* emitAddRefuel() {
-    yield takeLatest(EMIT_ADD_REFUEL, function*({agent, amount, sim, receipt}) {
+    yield takeLatest(EMIT_ADD_REFUEL, function*({agent, amount, sim}) {
         try {
             // Fire event for request
             yield put(storeAddRefuelRequestInit());
-            const data = new FormData();
-            data.append('id_puce', sim);
-            data.append('recu', receipt);
-            data.append('id_agent', agent);
-            data.append('montant', amount);
-            data.append('type', SUPPLY_BY_AGENT);
+            const data = {id_puce: sim, id_agent: agent, montant: amount, type: SUPPLY_BY_AGENT};
             const apiResponse = yield call(apiPostRequest, api.NEW_REFUEL_API_PATH, data);
             // Extract dataF
             const refuel = extractRefuelData(apiResponse.data);
@@ -91,12 +90,34 @@ export function* emitAddRefuel() {
     });
 }
 
+// Fleets new anonymous refuel from API
+export function* emitAddAnonymousRefuel() {
+    yield takeLatest(EMIT_ADD_ANONYMOUS_REFUEL, function*({sim, amount, sender, senderSim}) {
+        try {
+            // Fire event for request
+            yield put(storeAddAnonymousRefuelRequestInit());
+            const data = {montant: amount, id_puce_to: sim, nom_agent: sender, nro_puce_from: senderSim};
+            const apiResponse = yield call(apiPostRequest, api.NEW_ANONYMOUS_REFUEL_API_PATH, data);
+            // Extract data
+            const refuel = extractRefuelData(apiResponse.data);
+            // Fire event to redux
+            yield put(storeSetNewRefuelData({refuel}))
+            // Fire event for request
+            yield put(storeAddAnonymousRefuelRequestSucceed({message: apiResponse.message}));
+        } catch (message) {
+            // Fire event for request
+            yield put(storeAddAnonymousRefuelRequestFailed({message}));
+        }
+    });
+}
+
 // Extract refuel data
 function extractRefuelData(apiRefuel) {
     let refuel = {
-        id: '', amount: '', creation: '', vendor: '', receipt: '', status: '',
+        id: '', amount: '', creation: '', vendor: '', status: '',
 
         agent: {id: '', name: ''},
+        operator: {id: '', name: ''},
         collector: {id: '', name: ''},
         sim: {id: '', name: '', number: ''},
     };
@@ -104,6 +125,7 @@ function extractRefuelData(apiRefuel) {
     const apiSim = apiRefuel.puce;
     const apiUser = apiRefuel.user;
     const apiAgent = apiRefuel.agent;
+    const apiOperator = apiRefuel.operateur;
     const apiCollector = apiRefuel.recouvreur;
 
     if(apiAgent && apiUser) {
@@ -125,6 +147,12 @@ function extractRefuelData(apiRefuel) {
             id: apiCollector.id.toString()
         };
     }
+    if(apiOperator) {
+        refuel.operator = {
+            name: apiOperator.nom,
+            id: apiOperator.id.toString(),
+        }
+    }
     if(apiRefuel) {
         refuel.actionLoader = false;
         refuel.status = apiRefuel.statut;
@@ -132,7 +160,6 @@ function extractRefuelData(apiRefuel) {
         refuel.id = apiRefuel.id.toString();
         refuel.vendor = apiRefuel.fournisseur;
         refuel.creation = apiRefuel.created_at;
-        refuel.receipt = getFileFromServer(apiRefuel.recu);
     }
     return refuel;
 }
@@ -152,5 +179,6 @@ export default function* sagaRefuels() {
         fork(emitAddRefuel),
         fork(emitRefuelsFetch),
         fork(emitNextRefuelsFetch),
+        fork(emitAddAnonymousRefuel),
     ]);
 }

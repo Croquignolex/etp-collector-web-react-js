@@ -6,6 +6,7 @@ const initialState = {
     add: {failed: false, loading: false, succeeded: false, message: ""},
     list: {failed: false, loading: false, succeeded: false, message: ""},
     next: {failed: false, loading: false, succeeded: false, message: ""},
+    anonymous: {failed: false, loading: false, succeeded: false, message: ""},
 };
 
 // Reduce
@@ -62,6 +63,23 @@ function reduce(state = initialState, action) {
         // Resolve event to set add refuel reset request store data
         case actions.STORE_ADD_REFUEL_REQUEST_RESET:
             nextState = {...state, add: initialState.add};
+            return nextState || state;
+        // ======================================================== Add anonymous refuel
+        // Resolve event to set add anonymous refuel init request store data
+        case actions.STORE_ADD_ANONYMOUS_REFUEL_REQUEST_INIT:
+            nextState = {...state, anonymous: requestInitValue()};
+            return nextState || state;
+        // Resolve event to set add anonymous refuel failed request store data
+        case actions.STORE_ADD_ANONYMOUS_REFUEL_REQUEST_FAILED:
+            nextState = {...state, anonymous: requestFailedValue(action.message)};
+            return nextState || state;
+        // Resolve event to set add anonymous refuel succeeded request store data
+        case actions.STORE_ADD_ANONYMOUS_REFUEL_REQUEST_SUCCEEDED:
+            nextState = {...state, anonymous: requestSucceededValue(action.message)};
+            return nextState || state;
+        // Resolve event to set add anonymous refuel reset request store data
+        case actions.STORE_ADD_ANONYMOUS_REFUEL_REQUEST_RESET:
+            nextState = {...state, anonymous: initialState.anonymous};
             return nextState || state;
         // ========================================================
         // Unknown action

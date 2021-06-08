@@ -8,6 +8,7 @@ export const STORE_STOP_INFINITE_SCROLL_REFUEL_DATA = 'STORE_STOP_INFINITE_SCROL
 export const EMIT_ADD_REFUEL = 'EMIT_ADD_REFUEL';
 export const EMIT_REFUELS_FETCH = 'EMIT_REFUELS_FETCH';
 export const EMIT_NEXT_REFUELS_FETCH = 'EMIT_NEXT_REFUELS_FETCH';
+export const EMIT_ADD_ANONYMOUS_REFUEL = 'EMIT_ADD_ANONYMOUS_REFUEL';
 
 //====================== Reducer trigger actions
 // Set refuels data in store
@@ -56,4 +57,13 @@ export const emitAddRefuel = ({agent, amount, sim, receipt}) => ({
     amount,
     receipt,
     type: EMIT_ADD_REFUEL
+});
+
+// Emit add anonymous refuel
+export const emitAddAnonymousRefuel = ({sim, amount, sender, senderSim}) => ({
+    sim,
+    amount,
+    sender,
+    senderSim,
+    type: EMIT_ADD_ANONYMOUS_REFUEL
 });

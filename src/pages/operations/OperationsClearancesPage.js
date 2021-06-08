@@ -145,6 +145,7 @@ function searchEngine(data, _needle) {
                 needleSearch(item.amount, _needle) ||
                 needleSearch(item.sim.number, _needle) ||
                 needleSearch(item.agent.name, _needle) ||
+                needleSearch(item.operator.name, _needle) ||
                 needleSearch(dateToString(item.creation), _needle)
             )
         });
