@@ -23,10 +23,6 @@ export const RECOVERIES_FLEETS_PAGE_PATH = "/recoveries/fleets";
 export const REQUESTS_FLEETS_PAGE_PATH = "/requests/fleets";
 export const REQUESTS_CLEARANCES_PAGE_PATH = "/requests/clearances";
 
-// Network
-export const NETWORK_FLEETS_PAGE_PATH = `/network/fleets`;
-export const NETWORK_ANONYMOUS_FLEETS_PAGE_PATH = "/network/anonymous-fleets";
-
 // Checkout
 export const CHECKOUT_INTERNAL_OUTLAYS_PAGE_PATH = "/checkout/internal-outlays";
 export const CHECKOUT_EXTERNAL_OUTLAYS_PAGE_PATH = "/checkout/external-outlays";

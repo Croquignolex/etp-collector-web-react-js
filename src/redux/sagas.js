@@ -17,14 +17,12 @@ import managers from './managers/saga';
 import payments from './payments/saga';
 import supplies from './supplies/saga';
 import operators from './operators/saga';
-import anonymous from './anonymous/saga';
 import transfers from './transfers/saga';
 import clearances from './clearances/saga';
 import collectors from './collectors/saga';
 import recoveries from './recoveries/saga';
 import supervisors from './supervisors/saga';
 import notifications from './notifications/saga';
-import networkSupplies from './networkSupplies/saga';
 
 // Combine all saga middleware
 export default function* sagas() {
@@ -46,13 +44,11 @@ export default function* sagas() {
         settings(),
         expenses(),
         transfers(),
-        anonymous(),
         operators(),
         clearances(),
         recoveries(),
         collectors(),
         supervisors(),
         notifications(),
-        networkSupplies(),
     ]);
 }

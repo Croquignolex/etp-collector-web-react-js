@@ -17,7 +17,6 @@ function SideBarComponent({user, pathname}) {
     const authorisedMenu = useMemo(() => {
         return [
             buildDashboardMenu(),
-            // buildNetworkMenu(),
             buildRequestsMenu(),
             buildOperationsMenu(),
             buildRecoveriesMenu(),
@@ -122,18 +121,6 @@ function buildDashboardMenu() {
     };
 }
 
-// Build :network menu
-function buildNetworkMenu() {
-    return {
-        name: page.MY_NETWORK,
-        icon: 'fa fa-network-wired',
-        sub: [
-            {name: page.MY_NETWORK_FLEET, path: path.NETWORK_FLEETS_PAGE_PATH},
-            {name: page.MY_NETWORK_ANONYMOUS_FLEETS_PAGE, path: path.NETWORK_ANONYMOUS_FLEETS_PAGE_PATH},
-        ]
-    };
-}
-
 // Build requests menu
 function buildRequestsMenu() {
     return {
@@ -154,7 +141,7 @@ function buildOperationsMenu() {
         sub: [
             {name: page.OPERATIONS_TRANSFERS_PAGE, path: path.OPERATIONS_TRANSFERS_PAGE_PATH},
             {name: page.OPERATIONS_FLEETS_PAGE, path: path.OPERATIONS_FLEETS_PAGE_PATH},
-            // {name: page.OPERATIONS_CLEARANCES_PAGE, path: path.OPERATIONS_CLEARANCES_PAGE_PATH},
+            {name: page.OPERATIONS_CLEARANCES_PAGE, path: path.OPERATIONS_CLEARANCES_PAGE_PATH},
             {name: page.OPERATIONS_AFFORDS_PAGE, path: path.OPERATION_AFFORDS_PAGE_PATH},
         ]
     }

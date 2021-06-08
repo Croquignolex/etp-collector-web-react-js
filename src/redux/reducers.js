@@ -14,7 +14,6 @@ import payments from './payments/reducer';
 import settings from './settings/reducer';
 import managers from './managers/reducer';
 import supplies from './supplies/reducer';
-import anonymous from './anonymous/reducer';
 import operators from './operators/reducer';
 import transfers from './transfers/reducer';
 import recoveries from './recoveries/reducer';
@@ -27,7 +26,6 @@ import notifications from './notifications/reducer';
 import zonesRequests from './requests/zones/reducer';
 import agentsRequests from './requests/agents/reducer';
 import fleetsRequests from './requests/fleets/reducer';
-import networkSupplies from './networkSupplies/reducer';
 import vendorsRequests from './requests/vendors/reducer';
 import refuelsRequests from './requests/refuels/reducer';
 import returnsRequests from './requests/returns/reducer';
@@ -41,13 +39,11 @@ import paymentsRequests from './requests/payments/reducer';
 import suppliesRequests from './requests/supplies/reducer';
 import operatorsRequests from './requests/operators/reducer';
 import transfersRequests from './requests/transfers/reducer';
-import anonymousRequests from './requests/anonymous/reducer';
 import collectorsRequests from './requests/collectors/reducer';
 import clearancesRequests from './requests/clearances/reducer';
 import recoveriesRequests from './requests/recoveries/reducer';
 import supervisorsRequests from './requests/supervisors/reducer';
 import notificationsRequests from './requests/notifications/reducer';
-import networkSuppliesRequests from './requests/networkSupplies/reducer';
 
 // Combine all reducers
 export default {
@@ -66,7 +62,6 @@ export default {
     settings,
     managers,
     supplies,
-    anonymous,
     expenses,
     operators,
     transfers,
@@ -81,7 +76,6 @@ export default {
     fleetsRequests,
     agentsRequests,
     vendorsRequests,
-    networkSupplies,
     returnsRequests,
     refuelsRequests,
     outlaysRequests,
@@ -92,7 +86,6 @@ export default {
     expensesRequests,
     managersRequests,
     settingsRequests,
-    anonymousRequests,
     transfersRequests,
     operatorsRequests,
     recoveriesRequests,
@@ -100,5 +93,4 @@ export default {
     collectorsRequests,
     supervisorsRequests,
     notificationsRequests,
-    networkSuppliesRequests,
 };
