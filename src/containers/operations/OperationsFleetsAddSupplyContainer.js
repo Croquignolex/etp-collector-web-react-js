@@ -4,6 +4,7 @@ import OperationsFleetsAddSupplyComponent from "../../components/operations/Oper
 
 // Map state function to component props
 const mapStateToProps = (state) => ({
+    user: state.user.id,
     sims: state.sims.list,
     agents: state.agents.list,
     request: state.suppliesRequests.add,

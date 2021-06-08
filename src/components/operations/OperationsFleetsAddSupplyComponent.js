@@ -5,9 +5,9 @@ import ButtonComponent from "../form/ButtonComponent";
 import AmountComponent from "../form/AmountComponent";
 import SelectComponent from "../form/SelectComponent";
 import ErrorAlertComponent from "../ErrorAlertComponent";
-import {FLEET_TYPE} from "../../constants/typeConstants";
 import {emitAllSimsFetch} from "../../redux/sims/actions";
 import {emitAddSupply} from "../../redux/supplies/actions";
+import {COLLECTOR_TYPE} from "../../constants/typeConstants";
 import {emitAllAgentsFetch} from "../../redux/agents/actions";
 import {requiredChecker} from "../../functions/checkerFunctions";
 import {DEFAULT_FORM_DATA} from "../../constants/defaultConstants";
@@ -19,7 +19,8 @@ import {storeAddSupplyRequestReset} from "../../redux/requests/supplies/actions"
 import {applySuccess, requestFailed, requestLoading, requestSucceeded} from "../../functions/generalFunctions";
 
 // Component
-function OperationsFleetsAddSupplyComponent({request, sims, agents, allAgentsRequests, allSimsRequests, dispatch, handleClose}) {
+function OperationsFleetsAddSupplyComponent({request, sims, agents, user, allAgentsRequests,
+                                                allSimsRequests, dispatch, handleClose}) {
     // Local state
     const [amount, setAmount] = useState(DEFAULT_FORM_DATA);
     const [selectedOp, setSelectedOp] = useState('');
@@ -79,8 +80,13 @@ function OperationsFleetsAddSupplyComponent({request, sims, agents, allAgentsReq
 
     // Build select options
     const outgoingSelectOptions = useMemo(() => {
-        return dataToArrayForSelect(mappedSims(sims.filter(item => FLEET_TYPE === item.type.name)))
-    }, [sims]);
+        return dataToArrayForSelect(mappedSims(sims.filter(
+            item => (
+                (COLLECTOR_TYPE === item.type.name)
+                && (user === item.collector.id)
+            )
+        )))
+    }, [sims, user]);
 
     // Build select options
     const agentSelectOptions = useMemo(() => {
@@ -181,6 +187,7 @@ function OperationsFleetsAddSupplyComponent({request, sims, agents, allAgentsReq
 // Prop types to ensure destroyed props data type
 OperationsFleetsAddSupplyComponent.propTypes = {
     sims: PropTypes.array.isRequired,
+    user: PropTypes.string.isRequired,
     agents: PropTypes.array.isRequired,
     dispatch: PropTypes.func.isRequired,
     request: PropTypes.object.isRequired,

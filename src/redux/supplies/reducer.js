@@ -26,6 +26,10 @@ function reduce(state = initialState, action) {
         case actions.STORE_STOP_INFINITE_SCROLL_SUPPLY_DATA:
             nextState = {...state, hasMoreData: false};
             return nextState || state;
+        // Resolve event to set new supply data
+        case actions.STORE_SET_NEW_SUPPLY_DATA:
+            nextState = {...state, list: [action.supply, ...state.list]}
+            return nextState || state;
         // Resolve event to update supply data
         case actions.STORE_UPDATE_SUPPLY_DATA:
             nextState = {

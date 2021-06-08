@@ -81,6 +81,8 @@ export const CONFIRM_TRANSFER_API_PATH = `${API_URL}/approuve_flottage_interne`;
 
 // Supplies
 export const SUPPLIES_API_PATH = `${API_URL}/list_all_flottage`;
+export const NEW_SUPPLY_API_PATH = `${API_URL}/flottage_express`;
+export const NEW_ANONYMOUS_SUPPLY_API_PATH = `${API_URL}/flottage_anonyme`;
 
 // Refuels
 export const NEW_REFUEL_API_PATH = `${API_URL}/approvisionnement_etp`;

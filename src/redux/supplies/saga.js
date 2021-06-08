@@ -1,21 +1,30 @@
 import {all, call, fork, put, takeLatest} from 'redux-saga/effects'
 
 import * as api from "../../constants/apiConstants";
-import {apiGetRequest} from "../../functions/axiosFunctions";
+import {apiGetRequest, apiPostRequest} from "../../functions/axiosFunctions";
 import {
+    EMIT_ADD_SUPPLY,
     EMIT_SUPPLIES_FETCH,
     storeSetSuppliesData,
+    storeSetNewSupplyData,
     storeSetNextSuppliesData,
     EMIT_NEXT_SUPPLIES_FETCH,
+    EMIT_ADD_ANONYMOUS_SUPPLY,
     storeStopInfiniteScrollSupplyData
 } from "./actions";
 import {
     storeSuppliesRequestInit,
+    storeAddSupplyRequestInit,
     storeSuppliesRequestFailed,
     storeSuppliesRequestSucceed,
+    storeAddSupplyRequestFailed,
+    storeAddSupplyRequestSucceed,
     storeNextSuppliesRequestInit,
     storeNextSuppliesRequestFailed,
-    storeNextSuppliesRequestSucceed
+    storeNextSuppliesRequestSucceed,
+    storeAddAnonymousSupplyRequestInit,
+    storeAddAnonymousSupplyRequestFailed,
+    storeAddAnonymousSupplyRequestSucceed
 } from "../requests/supplies/actions";
 
 // Fetch supplies from API
@@ -55,6 +64,64 @@ export function* emitNextSuppliesFetch() {
             // Fire event for request
             yield put(storeNextSuppliesRequestFailed({message}));
             yield put(storeStopInfiniteScrollSupplyData());
+        }
+    });
+}
+
+// Fleets new supply from API
+export function* emitAddSupply() {
+    yield takeLatest(EMIT_ADD_SUPPLY, function*({amount, managerSim, agentSim, agent}) {
+        try {
+            // Fire event for request
+            yield put(storeAddSupplyRequestInit());
+            const data = {montant: amount, id_puce_flottage: managerSim, id_puce_agent: agentSim, id_agent: agent};
+            const apiResponse = yield call(apiPostRequest, api.NEW_SUPPLY_API_PATH, data);
+            // Extract data
+            const supply = extractSupplyData(
+                apiResponse.data.puce_emetrice,
+                apiResponse.data.puce_receptrice,
+                apiResponse.data.user,
+                apiResponse.data.agent,
+                apiResponse.data.gestionnaire,
+                apiResponse.data.approvisionnement,
+                apiResponse.data.operateur,
+            );
+            // Fire event to redux
+            yield put(storeSetNewSupplyData({supply}))
+            // Fire event for request
+            yield put(storeAddSupplyRequestSucceed({message: apiResponse.message}));
+        } catch (message) {
+            // Fire event for request
+            yield put(storeAddSupplyRequestFailed({message}));
+        }
+    });
+}
+
+// Fleets new anonymous supply from API
+export function* emitAddAnonymousSupply() {
+    yield takeLatest(EMIT_ADD_ANONYMOUS_SUPPLY, function*({sim, amount, receiver, receiverSim}) {
+        try {
+            // Fire event for request
+            yield put(storeAddAnonymousSupplyRequestInit());
+            const data = {montant: amount, id_puce_from: sim, nom_agent: receiver, nro_puce_to: receiverSim};
+            const apiResponse = yield call(apiPostRequest, api.NEW_ANONYMOUS_SUPPLY_API_PATH, data);
+            // Extract data
+            const supply = extractSupplyData(
+                apiResponse.data.puce_emetrice,
+                apiResponse.data.puce_receptrice,
+                apiResponse.data.user,
+                apiResponse.data.agent,
+                apiResponse.data.gestionnaire,
+                apiResponse.data.approvisionnement,
+                apiResponse.data.operateur,
+            );
+            // Fire event to redux
+            yield put(storeSetNewSupplyData({supply}))
+            // Fire event for request
+            yield put(storeAddAnonymousSupplyRequestSucceed({message: apiResponse.message}));
+        } catch (message) {
+            // Fire event for request
+            yield put(storeAddAnonymousSupplyRequestFailed({message}));
         }
     });
 }
@@ -134,7 +201,9 @@ export function extractSuppliesData(apiSupplies) {
 // Combine to export all functions at once
 export default function* sagaSupplies() {
     yield all([
+        fork(emitAddSupply),
         fork(emitSuppliesFetch),
         fork(emitNextSuppliesFetch),
+        fork(emitAddAnonymousSupply),
     ]);
 }
