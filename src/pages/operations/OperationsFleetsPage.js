@@ -16,7 +16,7 @@ import OperationsCashRecoveryContainer from "../../containers/operations/Operati
 import {dateToString, needleSearch, requestFailed, requestLoading} from "../../functions/generalFunctions";
 import {storeNextSuppliesRequestReset, storeSuppliesRequestReset} from "../../redux/requests/supplies/actions";
 import OperationsFleetsAddSupplyContainer from "../../containers/operations/OperationsFleetsAddSupplyContainer";
-// import OperationsFleetsAddAnonymousSupplyContainer from "../../containers/operations/OperationsFleetsAddAnonymousSupplyContainer";
+import OperationsFleetsAddAnonymousSupplyContainer from "../../containers/operations/OperationsFleetsAddAnonymousSupplyContainer";
 
 // Component
 function OperationsFleetsPage({supplies, suppliesRequests, hasMoreData, page, dispatch, location}) {
@@ -158,7 +158,7 @@ function OperationsFleetsPage({supplies, suppliesRequests, hasMoreData, page, di
                 <OperationsFleetsAddSupplyContainer handleClose={handleSupplyModalHide} />
             </FormModalComponent>
             <FormModalComponent modal={anonymousSupplyModal} handleClose={handleAnonymousSupplyModalHide}>
-                {/*<OperationsFleetsAddAnonymousSupplyContainer handleClose={handleAnonymousSupplyModalHide} />*/}
+                <OperationsFleetsAddAnonymousSupplyContainer handleClose={handleAnonymousSupplyModalHide} />
             </FormModalComponent>
             <FormModalComponent modal={returnModal} handleClose={handleReturnModalHide}>
                 <OperationsFleetsReturnContainer supply={returnModal.item}
