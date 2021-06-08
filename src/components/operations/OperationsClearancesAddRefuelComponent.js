@@ -9,12 +9,10 @@ import {FLEET_TYPE} from "../../constants/typeConstants";
 import {emitAddRefuel} from "../../redux/refuels/actions";
 import {emitAllSimsFetch} from "../../redux/sims/actions";
 import {emitAllAgentsFetch} from "../../redux/agents/actions";
-import * as constants from "../../constants/defaultConstants";
-import FileDocumentComponent from "../form/FileDocumentComponent";
+import {requiredChecker} from "../../functions/checkerFunctions";
 import {DEFAULT_FORM_DATA} from "../../constants/defaultConstants";
 import {playWarningSound} from "../../functions/playSoundFunctions";
 import {storeAllSimsRequestReset} from "../../redux/requests/sims/actions";
-import {fileChecker, requiredChecker} from "../../functions/checkerFunctions";
 import {storeAllAgentsRequestReset} from "../../redux/requests/agents/actions";
 import {dataToArrayForSelect, mappedSims} from "../../functions/arrayFunctions";
 import {storeAddRefuelRequestReset} from "../../redux/requests/refuels/actions";
@@ -24,7 +22,6 @@ import {applySuccess, requestFailed, requestLoading, requestSucceeded} from "../
 function OperationsClearancesAddRefuelComponent({user, request, sims, agents, allAgentsRequests, allSimsRequests, dispatch, handleClose}) {
     // Local state
     const [amount, setAmount] = useState(DEFAULT_FORM_DATA);
-    const [doc, setDoc] = useState(constants.DEFAULT_FORM_DATA);
     const [incomingSim, setIncomingSim] = useState(DEFAULT_FORM_DATA);
     const [agent, setAgent] = useState({...DEFAULT_FORM_DATA, data: 0});
 
@@ -64,14 +61,14 @@ function OperationsClearancesAddRefuelComponent({user, request, sims, agents, al
         setAmount({...amount, isValid: true, data})
     }
 
-    const handleFileInput = (data) => {
-        shouldResetErrorData();
-        setDoc({...doc, isValid: true, data})
-    }
-
     // Build select options
     const incomingSelectOptions = useMemo(() => {
-        return dataToArrayForSelect(mappedSims(sims.filter(item => ((FLEET_TYPE === item.type.name) || (item.collector.id === user.id)))))
+        return dataToArrayForSelect(mappedSims(sims.filter(
+            item => (
+                (FLEET_TYPE === item.type.name)
+                || (item.collector.id === user.id)
+            )
+        )))
     }, [sims, user.id]);
 
     // Build select options
@@ -92,24 +89,18 @@ function OperationsClearancesAddRefuelComponent({user, request, sims, agents, al
         shouldResetErrorData();
         const _agent = requiredChecker(agent);
         const _amount = requiredChecker(amount);
-        const _document = fileChecker(doc);
         const _incomingSim = requiredChecker(incomingSim);
         // Set value
         setAgent(_agent);
-        setDoc(_document);
         setAmount(_amount);
         setIncomingSim(_incomingSim);
-        const validationOK = (
-            _amount.isValid && _incomingSim.isValid &&
-            _agent.isValid && _document.isValid
-        );
+        const validationOK = (_amount.isValid && _incomingSim.isValid && _agent.isValid);
         // Check
         if(validationOK) {
             dispatch(emitAddRefuel({
                 agent: _agent.data,
                 amount: _amount.data,
                 sim: _incomingSim.data,
-                receipt: _document.data,
             }));
         }
         else playWarningSound();
@@ -150,15 +141,6 @@ function OperationsClearancesAddRefuelComponent({user, request, sims, agents, al
                                          options={incomingSelectOptions}
                                          handleInput={handleIncomingSelect}
                                          requestProcessing={requestLoading(allSimsRequests)}
-                        />
-                    </div>
-                </div>
-                <div className='row'>
-                    <div className='col'>
-                        <FileDocumentComponent id='file'
-                                               input={doc}
-                                               label='Reçus (facultatif)'
-                                               handleInput={handleFileInput}
                         />
                     </div>
                 </div>

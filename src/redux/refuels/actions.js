@@ -51,11 +51,10 @@ export const emitNextRefuelsFetch = ({page}) => ({
 });
 
 // Emit add refuel
-export const emitAddRefuel = ({agent, amount, sim, receipt}) => ({
+export const emitAddRefuel = ({agent, amount, sim}) => ({
     sim,
     agent,
     amount,
-    receipt,
     type: EMIT_ADD_REFUEL
 });
 
