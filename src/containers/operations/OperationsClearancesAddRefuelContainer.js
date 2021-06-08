@@ -8,8 +8,8 @@ const mapStateToProps = (state) => ({
     sims: state.sims.list,
     agents: state.agents.list,
     request: state.refuelsRequests.add,
-    allSimsRequests: state.simsRequests.all,
     allAgentsRequests: state.agentsRequests.all,
+    allSimsRequests: state.simsRequests.internal,
 });
 
 // Map dispatch function to component props
