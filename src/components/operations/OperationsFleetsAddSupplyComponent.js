@@ -6,6 +6,7 @@ import AmountComponent from "../form/AmountComponent";
 import SelectComponent from "../form/SelectComponent";
 import ErrorAlertComponent from "../ErrorAlertComponent";
 import {emitAllSimsFetch} from "../../redux/sims/actions";
+import CheckBoxComponent from "../form/CheckBoxComponent";
 import {emitAddSupply} from "../../redux/supplies/actions";
 import {COLLECTOR_TYPE} from "../../constants/typeConstants";
 import {emitAllAgentsFetch} from "../../redux/agents/actions";
@@ -24,6 +25,7 @@ function OperationsFleetsAddSupplyComponent({request, sims, agents, user, allAge
     // Local state
     const [amount, setAmount] = useState(DEFAULT_FORM_DATA);
     const [selectedOp, setSelectedOp] = useState('');
+    const [directPay, setDirectPay] = useState(true);
     const [outgoingSim, setOutgoingSim] = useState(DEFAULT_FORM_DATA);
     const [incomingSim, setIncomingSim] = useState(DEFAULT_FORM_DATA);
     const [agent, setAgent] = useState({...DEFAULT_FORM_DATA, data: 0});
@@ -59,6 +61,11 @@ function OperationsFleetsAddSupplyComponent({request, sims, agents, user, allAge
     const handleIncomingSelect = (data) => {
         shouldResetErrorData();
         setIncomingSim({...incomingSim,  isValid: true, data})
+    }
+
+    const handleDirectPaySelect = (data) => {
+        shouldResetErrorData();
+        setDirectPay(!data)
     }
 
     const handleAgentSelect = (data) => {
@@ -120,6 +127,7 @@ function OperationsFleetsAddSupplyComponent({request, sims, agents, user, allAge
         // Check
         if(validationOK) {
             dispatch(emitAddSupply({
+                pay: directPay,
                 agent: _agent.data,
                 amount: _amount.data,
                 agentSim: _incomingSim.data,
@@ -173,6 +181,15 @@ function OperationsFleetsAddSupplyComponent({request, sims, agents, user, allAge
                                          options={incomingSelectOptions}
                                          handleInput={handleIncomingSelect}
                                          requestProcessing={requestLoading(allSimsRequests)}
+                        />
+                    </div>
+                </div>
+                <div className='row'>
+                    <div className='col-sm-6'>
+                        <label htmlFor="inputAutoPay">Paiement immédiat?</label>
+                        <CheckBoxComponent input={directPay}
+                                           id='inputAutoPay'
+                                           handleInput={handleDirectPaySelect}
                         />
                     </div>
                 </div>

@@ -59,7 +59,8 @@ export const emitNextSuppliesFetch = ({page}) => ({
 });
 
 // Emit add supply
-export const emitAddSupply = ({amount, managerSim, agentSim, agent}) => ({
+export const emitAddSupply = ({amount, managerSim, agentSim, agent, pay}) => ({
+    pay,
     agent,
     amount,
     agentSim,
@@ -68,7 +69,8 @@ export const emitAddSupply = ({amount, managerSim, agentSim, agent}) => ({
 });
 
 // Emit add anonymous supply
-export const emitAddAnonymousSupply = ({sim, amount, receiver, receiverSim}) => ({
+export const emitAddAnonymousSupply = ({sim, amount, receiver, receiverSim, pay}) => ({
+    pay,
     sim,
     amount,
     receiver,
