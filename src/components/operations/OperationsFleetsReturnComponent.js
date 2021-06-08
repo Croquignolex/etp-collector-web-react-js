@@ -22,6 +22,7 @@ import {applySuccess, requestFailed, requestLoading, requestSucceeded} from "../
 // Component
 function OperationsFleetsReturnComponent({supply, request, sims, allSimsRequests, dispatch, handleClose}) {
     // Local state
+    const [selectedOp, setSelectedOp] = useState('');
     const [outgoingSim, setOutgoingSim] = useState(DEFAULT_FORM_DATA);
     const [incomingSim, setIncomingSim] = useState(DEFAULT_FORM_DATA);
     const [amount, setAmount] = useState({...DEFAULT_FORM_DATA, data: supply.remaining});
@@ -49,23 +50,30 @@ function OperationsFleetsReturnComponent({supply, request, sims, allSimsRequests
 
     const handleOutgoingSelect = (data) => {
         shouldResetErrorData();
-        setOutgoingSim({...outgoingSim,  isValid: true, data})
+        const foundSim = sims.find(item => item.id === data);
+        setSelectedOp(foundSim && foundSim.operator.id);
+        setOutgoingSim({...outgoingSim,  isValid: true, data});
     }
 
     const handleIncomingSelect = (data) => {
         shouldResetErrorData();
-        setIncomingSim({...incomingSim,  isValid: true, data})
+        setIncomingSim({...incomingSim,  isValid: true, data});
     }
 
     const handleAmountInput = (data) => {
         shouldResetErrorData();
-        setAmount({...amount, isValid: true, data})
+        setAmount({...amount, isValid: true, data});
     }
 
     // Build select options
     const incomingSelectOptions = useMemo(() => {
-        return dataToArrayForSelect(mappedSims(sims.filter(item => FLEET_COLLECTOR_TYPE.includes(item.type.name))))
-    }, [sims]);
+        return dataToArrayForSelect(mappedSims(sims.filter(
+            item => (
+                FLEET_COLLECTOR_TYPE.includes(item.type.name)
+                && (item.operator.id === selectedOp)
+            )
+        )))
+    }, [sims, selectedOp]);
 
     // Build select options
     const outgoingSelectOptions = useMemo(() => {
