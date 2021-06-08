@@ -70,10 +70,10 @@ function OperationsFleetsAddAnonymousRefuelComponent({request, sims, user, simsR
         return dataToArrayForSelect(mappedSims(sims.filter(
             item => (
                 (FLEET_TYPE === item.type.name)
-                || (item.collector.id === user.id)
+                || (item.collector.id === user)
             )
         )))
-    }, [sims]);
+    }, [sims, user]);
 
     // Reset error alert
     const shouldResetErrorData = () => {
