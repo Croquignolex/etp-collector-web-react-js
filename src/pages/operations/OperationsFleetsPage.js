@@ -15,12 +15,16 @@ import OperationsFleetsReturnContainer from "../../containers/operations/Operati
 import OperationsCashRecoveryContainer from "../../containers/operations/OperationsCashRecoveryContainer";
 import {dateToString, needleSearch, requestFailed, requestLoading} from "../../functions/generalFunctions";
 import {storeNextSuppliesRequestReset, storeSuppliesRequestReset} from "../../redux/requests/supplies/actions";
+import OperationsFleetsAddSupplyContainer from "../../containers/operations/OperationsFleetsAddSupplyContainer";
+import OperationsFleetsAddAnonymousSupplyContainer from "../../containers/operations/OperationsFleetsAddAnonymousSupplyContainer";
 
 // Component
 function OperationsFleetsPage({supplies, suppliesRequests, hasMoreData, page, dispatch, location}) {
     // Local states
     const [needle, setNeedle] = useState('');
+    const [supplyModal, setSupplyModal] = useState({show: false, header: 'EFFECTUER UN FLOTTAGE'});
     const [returnModal, setReturnModal] = useState({show: false, header: 'EFFECTUER UN RETOUR FLOTTE', item: {}});
+    const [anonymousSupplyModal, setAnonymousSupplyModal] = useState({show: false, header: 'EFFECTUER UN FLOTTAGE ANONYME'});
     const [recoveryModal, setRecoveryModal] = useState({show: false, header: "EFFECTUER UN RECOUVREMENT D'ESPECE", item: {}});
 
     // Local effects
@@ -46,6 +50,26 @@ function OperationsFleetsPage({supplies, suppliesRequests, hasMoreData, page, di
     // Fetch next supplies data to enhance infinite scroll
     const handleNextSuppliesData = () => {
         dispatch(emitNextSuppliesFetch({page}));
+    }
+
+    // Show supply modal form
+    const handleSupplyModalShow = (item) => {
+        setSupplyModal({...supplyModal, item, show: true})
+    }
+
+    // Hide supply modal form
+    const handleSupplyModalHide = () => {
+        setSupplyModal({...supplyModal, show: false})
+    }
+
+    // Show anonymous supply modal form
+    const handleAnonymousSupplyModalShow = (item) => {
+        setAnonymousSupplyModal({...anonymousSupplyModal, item, show: true})
+    }
+
+    // Hide anonymous supply modal form
+    const handleAnonymousSupplyModalHide = () => {
+        setAnonymousSupplyModal({...anonymousSupplyModal, show: false})
     }
 
     // Show return modal form
@@ -89,6 +113,18 @@ function OperationsFleetsPage({supplies, suppliesRequests, hasMoreData, page, di
                                             {/* Error message */}
                                             {requestFailed(suppliesRequests.list) && <ErrorAlertComponent message={suppliesRequests.list.message} />}
                                             {requestFailed(suppliesRequests.next) && <ErrorAlertComponent message={suppliesRequests.next.message} />}
+                                            <button type="button"
+                                                    className="btn btn-theme mb-2"
+                                                    onClick={handleSupplyModalShow}
+                                            >
+                                                <i className="fa fa-rss" /> Effectuer un flottage
+                                            </button>
+                                            <button type="button"
+                                                    className="btn btn-theme mb-2 ml-2"
+                                                    onClick={handleAnonymousSupplyModalShow}
+                                            >
+                                                <i className="fa fa-user-slash" /> Effectuer un flottage anonyme
+                                            </button>
                                             {/* Search result & Infinite scroll */}
                                             {(needle !== '' && needle !== undefined)
                                                 ? <OperationsFleetsCardsComponent supplies={searchEngine(supplies, needle)}
@@ -118,6 +154,12 @@ function OperationsFleetsPage({supplies, suppliesRequests, hasMoreData, page, di
                 </div>
             </AppLayoutContainer>
             {/* Modal */}
+            <FormModalComponent modal={supplyModal} handleClose={handleSupplyModalHide}>
+                <OperationsFleetsAddSupplyContainer handleClose={handleSupplyModalHide} />
+            </FormModalComponent>
+            <FormModalComponent modal={anonymousSupplyModal} handleClose={handleAnonymousSupplyModalHide}>
+                <OperationsFleetsAddAnonymousSupplyContainer handleClose={handleAnonymousSupplyModalHide} />
+            </FormModalComponent>
             <FormModalComponent modal={returnModal} handleClose={handleReturnModalHide}>
                 <OperationsFleetsReturnContainer supply={returnModal.item}
                                                  handleClose={handleReturnModalHide}
@@ -128,6 +170,7 @@ function OperationsFleetsPage({supplies, suppliesRequests, hasMoreData, page, di
                                                  handleClose={handleRecoveryModalHide}
                 />
             </FormModalComponent>
+
         </>
     )
 }
