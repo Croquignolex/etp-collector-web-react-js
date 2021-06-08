@@ -66,14 +66,11 @@ export function* emitNextRecoveriesFetch() {
 
 // New recovery from API
 export function* emitNewRecovery() {
-    yield takeLatest(EMIT_NEW_RECOVERY, function*({supply, amount, receipt}) {
+    yield takeLatest(EMIT_NEW_RECOVERY, function*({supply, amount}) {
         try {
             // Fire event for request
             yield put(storeRecoverRequestInit());
-            const data = new FormData();
-            data.append('recu', receipt);
-            data.append('montant', amount);
-            data.append('id_flottage', supply);
+            const data = {montant: amount, id_flottage: supply};
             const apiResponse = yield call(apiPostRequest, api.NEW_CASH_RECOVERIES_API_PATH, data);
             // Fire event to redux
             yield put(storeUpdateSupplyData({id: supply, amount}));
