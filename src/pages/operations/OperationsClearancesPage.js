@@ -14,12 +14,15 @@ import {dateToString, needleSearch, requestFailed, requestLoading} from "../../f
 import {storeRefuelsRequestReset, storeNextRefuelsRequestReset} from "../../redux/requests/refuels/actions";
 import OperationsClearancesCardsComponent from "../../components/operations/OperationsClearancesCardsComponent";
 import OperationsClearancesAddRefuelContainer from "../../containers/operations/OperationsClearancesAddRefuelContainer";
+import OperationsFleetsAddAnonymousRefuelContainer
+    from "../../containers/operations/OperationsFleetsAddAnonymousRefuelContainer";
 
 // Component
 function OperationsClearancesPage({refuels, refuelsRequests, hasMoreData, page, dispatch, location}) {
     // Local states
     const [needle, setNeedle] = useState('');
     const [refuelModal, setRefuelModal] = useState({show: false, header: 'EFFECTUER UN DESTOCKAGE'});
+    const [anonymousRefuelModal, setAnonymousRefuelModal] = useState({show: false, header: 'EFFECTUER UN DESTOCKAGE ANONYME'});
 
     // Local effects
     useEffect(() => {
@@ -56,6 +59,16 @@ function OperationsClearancesPage({refuels, refuelsRequests, hasMoreData, page, 
         setRefuelModal({...refuelModal, show: false})
     }
 
+    // Show anonymous refuel modal form
+    const handleAnonymousRefuelModalShow = (item) => {
+        setAnonymousRefuelModal({...anonymousRefuelModal, item, show: true})
+    }
+
+    // Hide anonymous refuel modal form
+    const handleAnonymousRefuelModalHide = () => {
+        setAnonymousRefuelModal({...anonymousRefuelModal, show: false})
+    }
+
     // Render
     return (
         <>
@@ -81,7 +94,13 @@ function OperationsClearancesPage({refuels, refuelsRequests, hasMoreData, page, 
                                                     className="btn btn-theme mb-2"
                                                     onClick={handleRefuelModalShow}
                                             >
-                                                <i className="fa fa-plus" /> Effectuer un déstockage
+                                                <i className="fa fa-rss-square" /> Effectuer un déstockage
+                                            </button>
+                                            <button type="button"
+                                                    className="btn btn-theme mb-2 ml-2"
+                                                    onClick={handleAnonymousRefuelModalShow}
+                                            >
+                                                <i className="fa fa-user-slash" /> Effectuer un déstockage anonyme
                                             </button>
                                             {/* Search result & Infinite scroll */}
                                             {(needle !== '' && needle !== undefined)
@@ -108,6 +127,9 @@ function OperationsClearancesPage({refuels, refuelsRequests, hasMoreData, page, 
             {/* Modal */}
             <FormModalComponent modal={refuelModal} handleClose={handleRefuelModalHide}>
                 <OperationsClearancesAddRefuelContainer handleClose={handleRefuelModalHide} />
+            </FormModalComponent>
+            <FormModalComponent modal={anonymousRefuelModal} handleClose={handleAnonymousRefuelModalHide}>
+                <OperationsFleetsAddAnonymousRefuelContainer handleClose={handleAnonymousRefuelModalHide} />
             </FormModalComponent>
         </>
     )

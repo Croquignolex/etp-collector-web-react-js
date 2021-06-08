@@ -6,14 +6,14 @@ import ButtonComponent from "../form/ButtonComponent";
 import AmountComponent from "../form/AmountComponent";
 import SelectComponent from "../form/SelectComponent";
 import ErrorAlertComponent from "../ErrorAlertComponent";
-import {emitAllFleetSimsFetch} from "../../redux/sims/actions";
+// import {emitAllFleetSimsFetch} from "../../redux/sims/actions";
 import {DEFAULT_FORM_DATA} from "../../constants/defaultConstants";
-import {emitAddAnonymousRefuel} from "../../redux/refuels/actions";
+// import {emitAddAnonymousRefuel} from "../../redux/refuels/actions";
 import {playWarningSound} from "../../functions/playSoundFunctions";
 import {phoneChecker, requiredChecker} from "../../functions/checkerFunctions";
 import {dataToArrayForSelect, mappedSims} from "../../functions/arrayFunctions";
-import {storeAllFleetSimsRequestReset} from "../../redux/requests/sims/actions";
-import {storeAddAnonymousRefuelRequestReset} from "../../redux/requests/refuels/actions";
+// import {storeAllFleetSimsRequestReset} from "../../redux/requests/sims/actions";
+// import {storeAddAnonymousRefuelRequestReset} from "../../redux/requests/refuels/actions";
 import {applySuccess, requestFailed, requestLoading, requestSucceeded} from "../../functions/generalFunctions";
 
 // Component
@@ -26,7 +26,7 @@ function OperationsFleetsAddAnonymousRefuelComponent({request, sims, simsRequest
 
     // Local effects
     useEffect(() => {
-        dispatch(emitAllFleetSimsFetch());
+        // dispatch(emitAllFleetSimsFetch());
         // Cleaner error alert while component did unmount without store dependency
         return () => {
             shouldResetErrorData();
@@ -71,8 +71,8 @@ function OperationsFleetsAddAnonymousRefuelComponent({request, sims, simsRequest
 
     // Reset error alert
     const shouldResetErrorData = () => {
-        dispatch(storeAllFleetSimsRequestReset());
-        dispatch(storeAddAnonymousRefuelRequestReset());
+        // dispatch(storeAllFleetSimsRequestReset());
+        // dispatch(storeAddAnonymousRefuelRequestReset());
     };
 
     // Trigger add supply form submit
@@ -93,12 +93,12 @@ function OperationsFleetsAddAnonymousRefuelComponent({request, sims, simsRequest
         );
         // Check
         if(validationOK) {
-            dispatch(emitAddAnonymousRefuel({
+           /* dispatch(emitAddAnonymousRefuel({
                 sender: _sender.data,
                 amount: _amount.data,
                 sim: _incomingSim.data,
                 senderSim: _senderSim.data,
-            }));
+            }));*/
         }
         else playWarningSound();
     };
