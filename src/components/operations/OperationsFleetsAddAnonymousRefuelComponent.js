@@ -6,18 +6,19 @@ import ButtonComponent from "../form/ButtonComponent";
 import AmountComponent from "../form/AmountComponent";
 import SelectComponent from "../form/SelectComponent";
 import ErrorAlertComponent from "../ErrorAlertComponent";
-// import {emitAllFleetSimsFetch} from "../../redux/sims/actions";
+import {FLEET_TYPE} from "../../constants/typeConstants";
+import {emitAllInternalSimsFetch} from "../../redux/sims/actions";
+import {emitAddAnonymousRefuel} from "../../redux/refuels/actions";
 import {DEFAULT_FORM_DATA} from "../../constants/defaultConstants";
-// import {emitAddAnonymousRefuel} from "../../redux/refuels/actions";
 import {playWarningSound} from "../../functions/playSoundFunctions";
 import {phoneChecker, requiredChecker} from "../../functions/checkerFunctions";
 import {dataToArrayForSelect, mappedSims} from "../../functions/arrayFunctions";
-// import {storeAllFleetSimsRequestReset} from "../../redux/requests/sims/actions";
-// import {storeAddAnonymousRefuelRequestReset} from "../../redux/requests/refuels/actions";
+import {storeAllInternalSimsRequestReset} from "../../redux/requests/sims/actions";
+import {storeAddAnonymousRefuelRequestReset} from "../../redux/requests/refuels/actions";
 import {applySuccess, requestFailed, requestLoading, requestSucceeded} from "../../functions/generalFunctions";
 
 // Component
-function OperationsFleetsAddAnonymousRefuelComponent({request, sims, simsRequests, dispatch, handleClose}) {
+function OperationsFleetsAddAnonymousRefuelComponent({request, sims, user, simsRequests, dispatch, handleClose}) {
     // Local state
     const [amount, setAmount] = useState(DEFAULT_FORM_DATA);
     const [sender, setSender] = useState(DEFAULT_FORM_DATA);
@@ -26,7 +27,7 @@ function OperationsFleetsAddAnonymousRefuelComponent({request, sims, simsRequest
 
     // Local effects
     useEffect(() => {
-        // dispatch(emitAllFleetSimsFetch());
+        dispatch(emitAllInternalSimsFetch());
         // Cleaner error alert while component did unmount without store dependency
         return () => {
             shouldResetErrorData();
@@ -66,13 +67,18 @@ function OperationsFleetsAddAnonymousRefuelComponent({request, sims, simsRequest
 
     // Build select options
     const incomingSelectOptions = useMemo(() => {
-        return dataToArrayForSelect(mappedSims(sims))
+        return dataToArrayForSelect(mappedSims(sims.filter(
+            item => (
+                (FLEET_TYPE === item.type.name)
+                || (item.collector.id === user.id)
+            )
+        )))
     }, [sims]);
 
     // Reset error alert
     const shouldResetErrorData = () => {
-        // dispatch(storeAllFleetSimsRequestReset());
-        // dispatch(storeAddAnonymousRefuelRequestReset());
+        dispatch(storeAllInternalSimsRequestReset());
+        dispatch(storeAddAnonymousRefuelRequestReset());
     };
 
     // Trigger add supply form submit
@@ -93,12 +99,12 @@ function OperationsFleetsAddAnonymousRefuelComponent({request, sims, simsRequest
         );
         // Check
         if(validationOK) {
-           /* dispatch(emitAddAnonymousRefuel({
+            dispatch(emitAddAnonymousRefuel({
                 sender: _sender.data,
                 amount: _amount.data,
                 sim: _incomingSim.data,
                 senderSim: _senderSim.data,
-            }));*/
+            }));
         }
         else playWarningSound();
     };
@@ -157,6 +163,7 @@ function OperationsFleetsAddAnonymousRefuelComponent({request, sims, simsRequest
 // Prop types to ensure destroyed props data type
 OperationsFleetsAddAnonymousRefuelComponent.propTypes = {
     sims: PropTypes.array.isRequired,
+    user: PropTypes.string.isRequired,
     dispatch: PropTypes.func.isRequired,
     request: PropTypes.object.isRequired,
     handleClose: PropTypes.func.isRequired,
