@@ -7,11 +7,15 @@ import SelectComponent from "../form/SelectComponent";
 import ErrorAlertComponent from "../ErrorAlertComponent";
 import {FLEET_TYPE} from "../../constants/typeConstants";
 import {emitAddRefuel} from "../../redux/refuels/actions";
+import {emitAllSimsFetch} from "../../redux/sims/actions";
+import {emitAllAgentsFetch} from "../../redux/agents/actions";
 import * as constants from "../../constants/defaultConstants";
 import FileDocumentComponent from "../form/FileDocumentComponent";
 import {DEFAULT_FORM_DATA} from "../../constants/defaultConstants";
 import {playWarningSound} from "../../functions/playSoundFunctions";
+import {storeAllSimsRequestReset} from "../../redux/requests/sims/actions";
 import {fileChecker, requiredChecker} from "../../functions/checkerFunctions";
+import {storeAllAgentsRequestReset} from "../../redux/requests/agents/actions";
 import {dataToArrayForSelect, mappedSims} from "../../functions/arrayFunctions";
 import {storeAddRefuelRequestReset} from "../../redux/requests/refuels/actions";
 import {applySuccess, requestFailed, requestLoading, requestSucceeded} from "../../functions/generalFunctions";
@@ -26,6 +30,8 @@ function OperationsClearancesAddRefuelComponent({user, request, sims, agents, al
 
     // Local effects
     useEffect(() => {
+        dispatch(emitAllSimsFetch());
+        dispatch(emitAllAgentsFetch());
         // Cleaner error alert while component did unmount without store dependency
         return () => {
             shouldResetErrorData();
@@ -75,7 +81,9 @@ function OperationsClearancesAddRefuelComponent({user, request, sims, agents, al
 
     // Reset error alert
     const shouldResetErrorData = () => {
+        dispatch(storeAllSimsRequestReset());
         dispatch(storeAddRefuelRequestReset());
+        dispatch(storeAllAgentsRequestReset());
     };
 
     // Trigger add supply form submit

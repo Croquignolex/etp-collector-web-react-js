@@ -2,17 +2,13 @@ import PropTypes from 'prop-types';
 import React, {useEffect, useState} from 'react';
 import InfiniteScroll from "react-infinite-scroll-component";
 
-import {emitAllSimsFetch} from "../../redux/sims/actions";
-import {emitAllAgentsFetch} from "../../redux/agents/actions";
 import HeaderComponent from "../../components/HeaderComponent";
 import LoaderComponent from "../../components/LoaderComponent";
 import AppLayoutContainer from "../../containers/AppLayoutContainer";
 import ErrorAlertComponent from "../../components/ErrorAlertComponent";
 import TableSearchComponent from "../../components/TableSearchComponent";
-import {storeAllSimsRequestReset} from "../../redux/requests/sims/actions";
 import FormModalComponent from "../../components/modals/FormModalComponent";
 import {OPERATIONS_CLEARANCES_PAGE} from "../../constants/pageNameConstants";
-import {storeAllAgentsRequestReset} from "../../redux/requests/agents/actions";
 import {emitNextRefuelsFetch, emitRefuelsFetch} from "../../redux/refuels/actions";
 import {dateToString, needleSearch, requestFailed, requestLoading} from "../../functions/generalFunctions";
 import {storeRefuelsRequestReset, storeNextRefuelsRequestReset} from "../../redux/requests/refuels/actions";
@@ -28,8 +24,6 @@ function OperationsClearancesPage({refuels, refuelsRequests, hasMoreData, page, 
     // Local effects
     useEffect(() => {
         dispatch(emitRefuelsFetch());
-        dispatch(emitAllSimsFetch());
-        dispatch(emitAllAgentsFetch());
         // Cleaner error alert while component did unmount without store dependency
         return () => {
             shouldResetErrorData();
@@ -44,8 +38,6 @@ function OperationsClearancesPage({refuels, refuelsRequests, hasMoreData, page, 
     // Reset error alert
     const shouldResetErrorData = () => {
         dispatch(storeRefuelsRequestReset());
-        dispatch(storeAllSimsRequestReset());
-        dispatch(storeAllAgentsRequestReset());
         dispatch(storeNextRefuelsRequestReset());
     };
 
