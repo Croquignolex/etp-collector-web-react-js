@@ -23,7 +23,7 @@ function CheckoutOutlaysCardsComponent({outlays}) {
                                             <span className="float-right">{dateToString(item.creation)}</span>
                                         </li>
                                         <li className="list-group-item">
-                                            <b>Monant</b>
+                                            <b>Montant</b>
                                             <span className="float-right text-success text-bold">
                                                 {formatNumber(item.amount)}
                                             </span>
@@ -31,6 +31,10 @@ function CheckoutOutlaysCardsComponent({outlays}) {
                                         <li className="list-group-item">
                                             <b>Receptteur</b>
                                             <span className="float-right">{item.collector.name}</span>
+                                        </li>
+                                        <li className="list-group-item">
+                                            <b>Motif</b>
+                                            <span className="float-right">{item.reason}</span>
                                         </li>
                                         <li className="list-group-item">
                                             {item.status === DONE && <b className="text-success text-bold">Confirmé</b>}
