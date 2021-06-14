@@ -7,7 +7,6 @@ import SelectComponent from "../form/SelectComponent";
 import ErrorAlertComponent from "../ErrorAlertComponent";
 import {emitAddTransfer} from "../../redux/transfers/actions";
 import {requiredChecker} from "../../functions/checkerFunctions";
-import {emitAllInternalSimsFetch} from "../../redux/sims/actions";
 import {DEFAULT_FORM_DATA} from "../../constants/defaultConstants";
 import {playWarningSound} from "../../functions/playSoundFunctions";
 import {FLEET_MASTER_COLLECTOR_TYPE} from "../../constants/typeConstants";
@@ -26,7 +25,6 @@ function OperationsTransfersAddTransferComponent({request, user, sims, allSimsRe
 
     // Local effects
     useEffect(() => {
-        dispatch(emitAllInternalSimsFetch());
         // Cleaner error alert while component did unmount without store dependency
         return () => {
             shouldResetErrorData();
@@ -111,7 +109,6 @@ function OperationsTransfersAddTransferComponent({request, user, sims, allSimsRe
     return (
         <>
             {requestFailed(request) && <ErrorAlertComponent message={request.message} />}
-            {requestFailed(allSimsRequests) && <ErrorAlertComponent message={allSimsRequests.message} />}
             <form onSubmit={handleSubmit}>
                 <div className='row'>
                     <div className='col-sm-6'>
