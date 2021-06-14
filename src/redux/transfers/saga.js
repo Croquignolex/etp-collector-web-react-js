@@ -122,12 +122,13 @@ export function* emitConfirmTransfer() {
 
 
 // Extract transfer data
-function extractTransferData(apiSimOutgoing, apiSimIncoming, apiUser, apiTransfer, apiOperator) {
+function extractTransferData(apiSimOutgoing, apiSimIncoming, apiUser, apiTransfer, apiOperator, apiCollector) {
     let transfer = {
         id: '', amount: '', creation: '', status: '', type: '',
 
         user: {id: '', name: ''},
         operator: {id: '', name: ''},
+        collector: {id: '', name: ''},
         sim_outgoing: {id: '', name: '', number: ''},
         sim_incoming: {id: '', name: '', number: ''},
     };
@@ -157,6 +158,12 @@ function extractTransferData(apiSimOutgoing, apiSimIncoming, apiUser, apiTransfe
             id: apiOperator.id.toString(),
         }
     }
+    if(apiCollector) {
+        transfer.collector = {
+            name: apiCollector.name,
+            id: apiCollector.id.toString(),
+        }
+    }
     if(apiTransfer) {
         transfer.actionLoader = false;
         transfer.type = apiTransfer.type;
@@ -177,7 +184,8 @@ export function extractTransfersData(apiTransfers) {
             data.puce_receptrice,
             data.utilisateur,
             data.flottage,
-            data.operateur
+            data.operateur,
+            data.rz
         ));
     });
     return transfers;

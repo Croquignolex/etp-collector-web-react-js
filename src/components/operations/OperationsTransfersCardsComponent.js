@@ -50,7 +50,7 @@ function OperationsTransfersCardsComponent({transfers, user, handleConfirmModalS
                                     </ul>
                                     {(
                                         (item.status === PROCESSING) &&
-                                        (item.status === PROCESSING) &&
+                                        (item.collector.id === user) &&
                                         (item.type.includes('->' + COLLECTOR_TYPE))
                                     ) && (
                                         <div className="mt-3 text-right">
