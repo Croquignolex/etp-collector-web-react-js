@@ -53,7 +53,7 @@ function OperationsFleetsCardsComponent({supplies, handleFleetRecoveryModalShow,
                                             <span className="float-right">{item.sim_incoming.number}</span>
                                         </li>
                                         <li className="list-group-item">
-                                            <b>Monant flotté</b>
+                                            <b>Montant flotté</b>
                                             <span className="float-right text-success text-bold">
                                                 {formatNumber(item.amount)}
                                             </span>
