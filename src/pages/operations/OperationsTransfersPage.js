@@ -29,7 +29,7 @@ import {
 } from "../../redux/requests/transfers/actions";
 
 // Component
-function OperationsTransfersPage({transfers, transfersRequests, hasMoreData, page, dispatch, location}) {
+function OperationsTransfersPage({transfers, transfersRequests, user, hasMoreData, page, dispatch, location}) {
     // Local states
     const [needle, setNeedle] = useState('');
     const [confirmModal, setConfirmModal] = useState({show: false, body: '', id: 0});
@@ -185,6 +185,7 @@ function searchEngine(data, _needle) {
 // Prop types to ensure destroyed props data type
 OperationsTransfersPage.propTypes = {
     page: PropTypes.number.isRequired,
+    user: PropTypes.string.isRequired,
     dispatch: PropTypes.func.isRequired,
     transfers: PropTypes.array.isRequired,
     location: PropTypes.object.isRequired,

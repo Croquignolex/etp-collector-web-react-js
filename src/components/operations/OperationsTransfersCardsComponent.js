@@ -8,7 +8,7 @@ import {dateToString, formatNumber} from "../../functions/generalFunctions";
 import {COLLECTOR_TYPE, DONE, PROCESSING} from "../../constants/typeConstants";
 
 // Component
-function OperationsTransfersCardsComponent({transfers, handleConfirmModalShow}) {
+function OperationsTransfersCardsComponent({transfers, user, handleConfirmModalShow}) {
     // Render
     return (
         <>
@@ -83,6 +83,7 @@ function OperationsTransfersCardsComponent({transfers, handleConfirmModalShow}) 
 
 // Prop types to ensure destroyed props data type
 OperationsTransfersCardsComponent.propTypes = {
+    user: PropTypes.string.isRequired,
     transfers: PropTypes.array.isRequired,
     handleConfirmModalShow: PropTypes.func.isRequired,
 };
