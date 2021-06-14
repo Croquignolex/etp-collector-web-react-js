@@ -136,7 +136,8 @@ function OperationsTransfersPage({transfers, transfersRequests, user, hasMoreDat
                                                                         next={handleNextTransfersData}
                                                                         style={{ overflow: 'hidden' }}
                                                         >
-                                                            <OperationsTransfersCardsComponent transfers={transfers}
+                                                            <OperationsTransfersCardsComponent user={user}
+                                                                                               transfers={transfers}
                                                                                                handleConfirmModalShow={handleConfirmModalShow}
                                                             />
                                                         </InfiniteScroll>
