@@ -90,7 +90,7 @@ function RequestsClearancesCardsComponent({clearances, handleDeclareModalShow}) 
                 {clearances.length === 0 &&
                     <div className="col-12">
                         <div className='alert custom-active text-center'>
-                            Pas de demandes de déstrockages
+                            Pas de demandes de déstockages
                         </div>
                     </div>
                 }

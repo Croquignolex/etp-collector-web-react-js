@@ -14,6 +14,7 @@ import {dataToArrayForSelect, mappedSims} from "../../functions/arrayFunctions";
 import {storeAllInternalSimsRequestReset} from "../../redux/requests/sims/actions";
 import {storeAddTransferRequestReset} from "../../redux/requests/transfers/actions";
 import {applySuccess, requestFailed, requestLoading, requestSucceeded} from "../../functions/generalFunctions";
+import {emitAllInternalSimsFetch} from "../../redux/sims/actions";
 
 // Component
 function OperationsTransfersAddTransferComponent({request, user, sims, allSimsRequests, dispatch, handleClose}) {
@@ -25,6 +26,7 @@ function OperationsTransfersAddTransferComponent({request, user, sims, allSimsRe
 
     // Local effects
     useEffect(() => {
+        dispatch(emitAllInternalSimsFetch());
         // Cleaner error alert while component did unmount without store dependency
         return () => {
             shouldResetErrorData();
