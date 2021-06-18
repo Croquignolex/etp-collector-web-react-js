@@ -136,7 +136,7 @@ function OperationsClearancesAddRefuelComponent({user, request, sims, agents, al
                     <div className='col-sm-6'>
                         <SelectComponent input={incomingSim}
                                          id='inputSimManger'
-                                         label='Puce réceptrice'
+                                         label='Compte récepteur'
                                          title='Choisir une puce'
                                          options={incomingSelectOptions}
                                          handleInput={handleIncomingSelect}

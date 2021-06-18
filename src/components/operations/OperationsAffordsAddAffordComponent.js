@@ -130,7 +130,7 @@ function OperationsAffordsAddAffordComponent({request, sims, vendors, allSimsReq
                     <div className='col-sm-6'>
                         <SelectComponent input={incomingSim}
                                          id='inputSimManger'
-                                         label='Puce réceptrice'
+                                         label='Compte récepteur'
                                          title='Choisir une puce'
                                          options={incomingSelectOptions}
                                          handleInput={handleIncomingSelect}
