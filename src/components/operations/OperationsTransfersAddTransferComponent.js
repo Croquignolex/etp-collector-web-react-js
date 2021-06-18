@@ -115,7 +115,7 @@ function OperationsTransfersAddTransferComponent({request, user, sims, allSimsRe
                 <div className='row'>
                     <div className='col-sm-6'>
                         <SelectComponent input={outgoingSim}
-                                         label='Puce émetrice'
+                                         label='Compte émetteur'
                                          id='inputSimCollector'
                                          title='Choisir une puce'
                                          options={outgoingSelectOptions}
@@ -126,7 +126,7 @@ function OperationsTransfersAddTransferComponent({request, user, sims, allSimsRe
                     <div className='col-sm-6'>
                         <SelectComponent input={incomingSim}
                                          id='inputSimManager'
-                                         label='Puce receptrice'
+                                         label='Compte recepteur'
                                          title='Choisir une puce'
                                          options={incomingSelectOptions}
                                          handleInput={handleIncomingSelect}
