@@ -147,7 +147,7 @@ function OperationsFleetsAddAnonymousFleetsComponent({request, sims, simsRequest
                         <InputComponent type='text'
                                         input={receiverSim}
                                         id='inputAnonymousSim'
-                                        label="Puce de l'agent anonyme"
+                                        label="Compte de l'agent anonyme"
                                         handleInput={handleReceiverSimInput}
                         />
                     </div>
