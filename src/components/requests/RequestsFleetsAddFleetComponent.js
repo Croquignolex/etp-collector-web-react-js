@@ -123,7 +123,7 @@ function RequestsFleetsAddFleetComponent({request, sims, agents, allAgentsReques
                                          id='inputSimAgent'
                                          title='Choisir une puce'
                                          options={incomingSelectOptions}
-                                         label="Puce de l'agent/ressource"
+                                         label="Compte de l'agent/ressource"
                                          handleInput={handleIncomingSelect}
                                          requestProcessing={requestLoading(allSimsRequests)}
                         />

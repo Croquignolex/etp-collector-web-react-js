@@ -8,7 +8,7 @@ import AgentAddSimContainer from "../../containers/agents/AgentAddSimContainer";
 // Component
 function AgentSimsListComponent({agent}) {
     // Local states
-    const [addSimModal, setAddSimEditModal] = useState({show: false, header: 'AJOUTER UNE SIM CHEZ ' + agent.name});
+    const [addSimModal, setAddSimEditModal] = useState({show: false, header: 'AJOUTER UN COMPTE CHEZ ' + agent.name});
 
     // Show add sim modal form
     const handleAddSimModalShow = () => {
@@ -24,7 +24,7 @@ function AgentSimsListComponent({agent}) {
     return (
         <>
             <button type="button" className="btn btn-theme mb-1" onClick={handleAddSimModalShow}>
-                <i className="fa fa-plus" /> Ajouter une sim
+                <i className="fa fa-plus" /> Ajouter un compte
             </button>
             <div className="card">
                 <div className="table-responsive">
