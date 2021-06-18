@@ -41,11 +41,11 @@ function RecoveriesFleetsCardsComponent({returns}) {
                                             </span>
                                         </li>
                                         <li className="list-group-item">
-                                            <b>Puce agent</b>
+                                            <b>Compte agent</b>
                                             <span className="float-right">{item.sim_outgoing.number}</span>
                                         </li>
                                         <li className="list-group-item">
-                                            <b>Puce de flottage</b>
+                                            <b>Compte de flottage</b>
                                             <span className="float-right">{item.sim_incoming.number}</span>
                                         </li>
                                         <li className="list-group-item">
