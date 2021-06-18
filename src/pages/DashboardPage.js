@@ -132,6 +132,9 @@ function DashboardPage({user, fleets, sims, clearances, settings, dispatch, loca
                                     />
                                 </div>
                             }
+                        </div>
+
+                        <div className="row">
                             {cardsData.includes(setting.CARD_FLEET_SIMS_FLEETS_MTN) &&
                                 <div className="col-lg-3 col-md-4 col-sm-6">
                                     <DashboardWithOperatorCardComponent color='bg-secondary'
@@ -165,6 +168,9 @@ function DashboardPage({user, fleets, sims, clearances, settings, dispatch, loca
                                     />
                                 </div>
                             }
+                        </div>
+
+                        <div className="row">
                             {cardsData.includes(setting.CARD_FLEETS_REQUESTS_MTN) &&
                                 <div className="col-lg-3 col-md-4 col-sm-6">
                                     <DashboardWithOperatorCardComponent color='bg-success'
@@ -198,6 +204,9 @@ function DashboardPage({user, fleets, sims, clearances, settings, dispatch, loca
                                     />
                                 </div>
                             }
+                        </div>
+
+                        <div className="row">
                             {cardsData.includes(setting.CARD_CLEARANCES_REQUEST_MTN) &&
                                 <div className="col-lg-3 col-md-4 col-sm-6">
                                     <DashboardWithOperatorCardComponent color='bg-primary'
