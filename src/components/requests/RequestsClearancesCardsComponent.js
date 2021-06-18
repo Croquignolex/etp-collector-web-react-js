@@ -48,7 +48,7 @@ function RequestsClearancesCardsComponent({clearances, handleDeclareModalShow}) 
                                             </span>
                                         </li>
                                         <li className="list-group-item">
-                                            <b>Puce à déstocker</b>
+                                            <b>Compte à déstocker</b>
                                             <span className="float-right">{item.sim.number}</span>
                                         </li>
                                         <li className="list-group-item">

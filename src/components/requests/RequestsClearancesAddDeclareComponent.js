@@ -83,7 +83,7 @@ function RequestsClearancesAddDeclareComponent({clearance, request, dispatch, ha
                     </div>
                     <div className='col-sm-6'>
                         <DisabledInput id='inputSim'
-                                       label='Puce à déstocker'
+                                       label='Compte à déstocker'
                                        val={clearance.sim.number}
                         />
                     </div>
