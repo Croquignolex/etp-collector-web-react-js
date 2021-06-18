@@ -109,6 +109,7 @@ function DashboardPage({user, fleets, sims, clearances, settings, dispatch, loca
                 <HeaderComponent title={DASHBOARD_PAGE} icon={'fa fa-tachometer-alt'} />
                 <section className="content">
                     <div className='container-fluid'>
+                        {/* Money */}
                         <div className="row">
                             {cardsData.includes(setting.CARD_ACCOUNTS_DEBT) &&
                                 <div className="col-lg-3 col-md-4 col-sm-6">
@@ -134,6 +135,7 @@ function DashboardPage({user, fleets, sims, clearances, settings, dispatch, loca
                             }
                         </div>
 
+                        {/* Fleets into sims cards */}
                         <div className="row">
                             {cardsData.includes(setting.CARD_FLEET_SIMS_FLEETS_MTN) &&
                                 <div className="col-lg-3 col-md-4 col-sm-6">
@@ -170,6 +172,8 @@ function DashboardPage({user, fleets, sims, clearances, settings, dispatch, loca
                             }
                         </div>
 
+
+                        {/* Fleets requests */}
                         <div className="row">
                             {cardsData.includes(setting.CARD_FLEETS_REQUESTS_MTN) &&
                                 <div className="col-lg-3 col-md-4 col-sm-6">
@@ -206,6 +210,7 @@ function DashboardPage({user, fleets, sims, clearances, settings, dispatch, loca
                             }
                         </div>
 
+                        {/* Clearances requests */}
                         <div className="row">
                             {cardsData.includes(setting.CARD_CLEARANCES_REQUEST_MTN) &&
                                 <div className="col-lg-3 col-md-4 col-sm-6">
