@@ -1,6 +1,5 @@
 import {all, call, fork, put, takeLatest} from 'redux-saga/effects'
 
-import {DONE} from "../../constants/typeConstants";
 import * as api from "../../constants/apiConstants";
 import {apiGetRequest, apiPostRequest, getFileFromServer} from "../../functions/axiosFunctions";
 import {
@@ -92,7 +91,7 @@ export function* emitAddRevenue() {
 // Extract revenue data
 function extractRevenueData(apiRevenue, apiManager) {
     let revenue = {
-        id: '',  name: '', mount: '', creation: '', receipt: '', reason: '', description: ''
+        id: '',  name: '', mount: '', creation: '', receipt: '', reason: '', description: '',
 
         manager: {id: '', name: ''},
     };
