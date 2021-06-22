@@ -92,7 +92,7 @@ export function* emitAddExpense() {
 // Extract expense data
 function extractExpenseData(apiExpense, apiManager) {
     let expense = {
-        id: '',  name: '', mount: '', creation: '', receipt: '', reason: '', description: '', status: '',
+        id: '',  name: '', mount: '', creation: '', receipt: '', reason: '', description: '',
 
         manager: {id: '', name: ''},
     };
@@ -103,7 +103,6 @@ function extractExpenseData(apiExpense, apiManager) {
         };
     }
     if(apiExpense) {
-        expense.status = DONE;
         expense.name = apiExpense.name;
         expense.reason = apiExpense.reason;
         expense.amount = apiExpense.amount;

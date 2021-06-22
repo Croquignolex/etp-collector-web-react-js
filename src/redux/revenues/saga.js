@@ -92,7 +92,7 @@ export function* emitAddRevenue() {
 // Extract revenue data
 function extractRevenueData(apiRevenue, apiManager) {
     let revenue = {
-        id: '',  name: '', mount: '', creation: '', receipt: '', reason: '', description: '', status: '',
+        id: '',  name: '', mount: '', creation: '', receipt: '', reason: '', description: ''
 
         manager: {id: '', name: ''},
     };
@@ -102,8 +102,7 @@ function extractRevenueData(apiRevenue, apiManager) {
             id: apiManager.id.toString()
         };
     }
-    if(apiRevenue) {
-        revenue.status = DONE;
+    if(apiRevenue) { 
         revenue.name = apiRevenue.name;
         revenue.reason = apiRevenue.reason;
         revenue.amount = apiRevenue.amount;
