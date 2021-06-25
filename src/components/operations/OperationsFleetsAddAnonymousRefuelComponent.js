@@ -87,11 +87,12 @@ function OperationsFleetsAddAnonymousRefuelComponent({request, sims, user, simsR
         shouldResetErrorData();
         const _amount = requiredChecker(amount);
         const _sender = requiredChecker(sender);
-        const _senderSim = phoneChecker(senderSim);
+        const _senderSim = requiredChecker(senderSim);
         const _incomingSim = requiredChecker(incomingSim);
         // Set value
         setAmount(_amount);
         setSender(_sender);
+        setSenderSim(_senderSim);
         setIncomingSim(_incomingSim);
         const validationOK = (
             _amount.isValid && _sender.isValid &&
