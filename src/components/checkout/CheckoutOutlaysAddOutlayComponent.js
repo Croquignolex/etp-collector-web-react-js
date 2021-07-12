@@ -88,6 +88,7 @@ function CheckoutOutlaysAddOutlayComponent({request, supervisors, managers, coll
         const _collector = requiredChecker(collector);
         // Set value
         setAmount(_amount);
+        setReason(_reason);
         setCollector(_collector);
         const validationOK = (_amount.isValid && _collector.isValid && _reason.isValid);
         // Check
