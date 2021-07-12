@@ -18,10 +18,12 @@ import payments from './payments/saga';
 import supplies from './supplies/saga';
 import operators from './operators/saga';
 import transfers from './transfers/saga';
+import movements from './movements/saga';
 import clearances from './clearances/saga';
 import collectors from './collectors/saga';
 import recoveries from './recoveries/saga';
 import supervisors from './supervisors/saga';
+import transactions from './transactions/saga';
 import notifications from './notifications/saga';
 
 // Combine all saga middleware
@@ -33,22 +35,24 @@ export default function* sagas() {
         agents(),
         fleets(),
         returns(),
-        revenues(),
         refuels(),
         outlays(),
         vendors(),
         affords(),
         payments(),
+        revenues(),
         supplies(),
         managers(),
         settings(),
         expenses(),
         transfers(),
         operators(),
+        movements(),
         clearances(),
         recoveries(),
         collectors(),
         supervisors(),
+        transactions(),
         notifications(),
     ]);
 }

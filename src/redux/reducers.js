@@ -16,10 +16,12 @@ import managers from './managers/reducer';
 import supplies from './supplies/reducer';
 import operators from './operators/reducer';
 import transfers from './transfers/reducer';
+import movements from './movements/reducer';
 import recoveries from './recoveries/reducer';
 import clearances from './clearances/reducer';
 import collectors from './collectors/reducer';
 import supervisors from './supervisors/reducer';
+import transactions from './transactions/reducer';
 import userRequests from './requests/user/reducer';
 import simsRequests from './requests/sims/reducer';
 import notifications from './notifications/reducer';
@@ -39,10 +41,12 @@ import paymentsRequests from './requests/payments/reducer';
 import suppliesRequests from './requests/supplies/reducer';
 import operatorsRequests from './requests/operators/reducer';
 import transfersRequests from './requests/transfers/reducer';
+import movementsRequests from './requests/movements/reducer';
 import collectorsRequests from './requests/collectors/reducer';
 import clearancesRequests from './requests/clearances/reducer';
 import recoveriesRequests from './requests/recoveries/reducer';
 import supervisorsRequests from './requests/supervisors/reducer';
+import transactionsRequests from './requests/transactions/reducer';
 import notificationsRequests from './requests/notifications/reducer';
 
 // Combine all reducers
@@ -64,12 +68,14 @@ export default {
     supplies,
     expenses,
     operators,
+    movements,
     transfers,
     recoveries,
     clearances,
     collectors,
     supervisors,
     simsRequests,
+    transactions,
     userRequests,
     zonesRequests,
     notifications,
@@ -87,10 +93,12 @@ export default {
     managersRequests,
     settingsRequests,
     transfersRequests,
+    movementsRequests,
     operatorsRequests,
     recoveriesRequests,
     clearancesRequests,
     collectorsRequests,
     supervisorsRequests,
+    transactionsRequests,
     notificationsRequests,
 };
