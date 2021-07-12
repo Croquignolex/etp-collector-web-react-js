@@ -58,8 +58,13 @@ export function getCNIImageFromServer(image, scope) {
 }
 
 // Convert API date to string
-export function dateToString(date) {
-    return date && moment(date).format('DD/MM/YYYY HH:mm');
+export function dateToString(date, separator = '/') {
+    return date && moment(date).format(`DD${separator}MM${separator}YYYY HH:mm`);
+}
+
+// Convert API date to short string
+export function shortDateToString(date, separator = '/') {
+    return date && moment(date).format(`DD${separator}MM${separator}YYYY`);
 }
 
 // Format string to handle space
