@@ -8,7 +8,6 @@ import ErrorAlertComponent from "../ErrorAlertComponent";
 import {emitAllSimsFetch} from "../../redux/sims/actions";
 import CheckBoxComponent from "../form/CheckBoxComponent";
 import {emitAddSupply} from "../../redux/supplies/actions";
-import {COLLECTOR_TYPE} from "../../constants/typeConstants";
 import {emitAllAgentsFetch} from "../../redux/agents/actions";
 import {requiredChecker} from "../../functions/checkerFunctions";
 import {DEFAULT_FORM_DATA} from "../../constants/defaultConstants";
@@ -88,10 +87,7 @@ function OperationsFleetsAddSupplyComponent({request, sims, agents, user, allAge
     // Build select options
     const outgoingSelectOptions = useMemo(() => {
         return dataToArrayForSelect(mappedSims(sims.filter(
-            item => (
-                (COLLECTOR_TYPE === item.type.name)
-                && (user === item.collector.id)
-            )
+            item => (user === item.collector.id)
         )))
     }, [sims, user]);
 
