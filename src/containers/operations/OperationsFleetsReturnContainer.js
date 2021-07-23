@@ -4,6 +4,7 @@ import OperationsFleetsReturnComponent from "../../components/operations/Operati
 
 // Map state function to component props
 const mapStateToProps = (state) => ({
+    user: state.user.id,
     sims: state.sims.list,
     request: state.returnsRequests.add,
     allSimsRequests: state.simsRequests.all,

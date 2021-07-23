@@ -5,12 +5,12 @@ import DisabledInput from "../form/DisabledInput";
 import ButtonComponent from "../form/ButtonComponent";
 import AmountComponent from "../form/AmountComponent";
 import SelectComponent from "../form/SelectComponent";
+import {FLEET_TYPE} from "../../constants/typeConstants";
 import ErrorAlertComponent from "../ErrorAlertComponent";
 import {emitNewReturn} from "../../redux/returns/actions";
 import {emitAllSimsFetch} from "../../redux/sims/actions";
 import {emitAllAgentsFetch} from "../../redux/agents/actions";
 import {requiredChecker} from "../../functions/checkerFunctions";
-import {FLEET_COLLECTOR_TYPE} from "../../constants/typeConstants";
 import {DEFAULT_FORM_DATA} from "../../constants/defaultConstants";
 import {playWarningSound} from "../../functions/playSoundFunctions";
 import {storeAllSimsRequestReset} from "../../redux/requests/sims/actions";
@@ -20,7 +20,7 @@ import {dataToArrayForSelect, mappedSims} from "../../functions/arrayFunctions";
 import {applySuccess, requestFailed, requestLoading, requestSucceeded} from "../../functions/generalFunctions";
 
 // Component
-function OperationsFleetsReturnComponent({supply, request, sims, allSimsRequests, dispatch, handleClose}) {
+function OperationsFleetsReturnComponent({supply, request, sims, user, allSimsRequests, dispatch, handleClose}) {
     // Local state
     const [selectedOp, setSelectedOp] = useState('');
     const [outgoingSim, setOutgoingSim] = useState(DEFAULT_FORM_DATA);
@@ -69,11 +69,13 @@ function OperationsFleetsReturnComponent({supply, request, sims, allSimsRequests
     const incomingSelectOptions = useMemo(() => {
         return dataToArrayForSelect(mappedSims(sims.filter(
             item => (
-                FLEET_COLLECTOR_TYPE.includes(item.type.name)
-                && (item.operator.id === selectedOp)
+                (item.operator.id === selectedOp) && (
+                    (item.type.name === FLEET_TYPE) ||
+                    (user === item.collector.id)
+                )
             )
         )))
-    }, [sims, selectedOp]);
+    }, [sims, user, selectedOp]);
 
     // Build select options
     const outgoingSelectOptions = useMemo(() => {
@@ -165,6 +167,7 @@ function OperationsFleetsReturnComponent({supply, request, sims, allSimsRequests
 // Prop types to ensure destroyed props data type
 OperationsFleetsReturnComponent.propTypes = {
     sims: PropTypes.array.isRequired,
+    user: PropTypes.object.isRequired,
     supply: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
     request: PropTypes.object.isRequired,
