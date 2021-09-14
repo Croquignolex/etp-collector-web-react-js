@@ -6,16 +6,15 @@ import HeaderComponent from "../../components/HeaderComponent";
 import LoaderComponent from "../../components/LoaderComponent";
 import AppLayoutContainer from "../../containers/AppLayoutContainer";
 import ErrorAlertComponent from "../../components/ErrorAlertComponent";
-import TableSearchComponent from "../../components/TableSearchComponent";
 import FormModalComponent from "../../components/modals/FormModalComponent";
 import {OPERATIONS_CLEARANCES_PAGE} from "../../constants/pageNameConstants";
-import {emitNextRefuelsFetch, emitRefuelsFetch} from "../../redux/refuels/actions";
+import TableSearchWithButtonComponent from "../../components/TableSearchWithButtonComponent";
+import {emitNextRefuelsFetch, emitRefuelsFetch, emitSearchRefuelsFetch} from "../../redux/refuels/actions";
 import {dateToString, needleSearch, requestFailed, requestLoading} from "../../functions/generalFunctions";
 import {storeRefuelsRequestReset, storeNextRefuelsRequestReset} from "../../redux/requests/refuels/actions";
 import OperationsClearancesCardsComponent from "../../components/operations/OperationsClearancesCardsComponent";
 import OperationsClearancesAddRefuelContainer from "../../containers/operations/OperationsClearancesAddRefuelContainer";
-import OperationsFleetsAddAnonymousRefuelContainer
-    from "../../containers/operations/OperationsFleetsAddAnonymousRefuelContainer";
+import OperationsFleetsAddAnonymousRefuelContainer from "../../containers/operations/OperationsFleetsAddAnonymousRefuelContainer";
 
 // Component
 function OperationsClearancesPage({refuels, refuelsRequests, hasMoreData, page, dispatch, location}) {
@@ -36,6 +35,10 @@ function OperationsClearancesPage({refuels, refuelsRequests, hasMoreData, page, 
 
     const handleNeedleInput = (data) => {
         setNeedle(data)
+    }
+
+    const handleSearchInput = () => {
+        dispatch(emitSearchRefuelsFetch({needle}));
     }
 
     // Reset error alert
@@ -83,7 +86,10 @@ function OperationsClearancesPage({refuels, refuelsRequests, hasMoreData, page, 
                                         {/* Search input */}
                                         <div className="card-header">
                                             <div className="card-tools">
-                                                <TableSearchComponent needle={needle} handleNeedle={handleNeedleInput} />
+                                                <TableSearchWithButtonComponent needle={needle}
+                                                                                handleNeedle={handleNeedleInput}
+                                                                                handleSearch={handleSearchInput}
+                                                />
                                             </div>
                                         </div>
                                         <div className="card-body">
@@ -103,19 +109,21 @@ function OperationsClearancesPage({refuels, refuelsRequests, hasMoreData, page, 
                                                 <i className="fa fa-user-slash" /> Effectuer un déstockage anonyme
                                             </button>
                                             {/* Search result & Infinite scroll */}
-                                            {(needle !== '' && needle !== undefined)
-                                                ? <OperationsClearancesCardsComponent refuels={searchEngine(refuels, needle)} />
-                                                : (requestLoading(refuelsRequests.list) ? <LoaderComponent /> :
+                                            {requestLoading(refuelsRequests.list) ? <LoaderComponent /> : ((needle !== '' && needle !== undefined) ?
+                                                    (
+                                                        <OperationsClearancesCardsComponent refuels={searchEngine(refuels, needle)} />
+                                                    ) :
+                                                    (
                                                         <InfiniteScroll hasMore={hasMoreData}
                                                                         dataLength={refuels.length}
                                                                         loader={<LoaderComponent />}
                                                                         next={handleNextRefuelsData}
                                                                         style={{ overflow: 'hidden' }}
                                                         >
-                                                            <OperationsClearancesCardsComponent refuels={refuels} />
+                                                            <OperationsClearancesCardsComponent refuels={refuels}/>
                                                         </InfiniteScroll>
-                                                )
-                                            }
+                                                    )
+                                            )}
                                         </div>
                                     </div>
                                 </div>

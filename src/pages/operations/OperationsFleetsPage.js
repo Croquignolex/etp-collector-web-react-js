@@ -147,7 +147,7 @@ function OperationsFleetsPage({supplies, suppliesRequests, hasMoreData, page, di
                                                                         next={handleNextSuppliesData}
                                                                         style={{ overflow: 'hidden' }}
                                                         >
-                                                            <OperationsFleetsCardsComponent supplies={searchEngine(supplies, needle)}
+                                                            <OperationsFleetsCardsComponent supplies={supplies}
                                                                                             handleCashRecoveryModalShow={handleRecoveryModalShow}
                                                                                             handleFleetRecoveryModalShow={handleReturnModalShow}
                                                             />

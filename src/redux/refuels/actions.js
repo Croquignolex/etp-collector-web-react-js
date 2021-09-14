@@ -8,6 +8,7 @@ export const STORE_STOP_INFINITE_SCROLL_REFUEL_DATA = 'STORE_STOP_INFINITE_SCROL
 export const EMIT_ADD_REFUEL = 'EMIT_ADD_REFUEL';
 export const EMIT_REFUELS_FETCH = 'EMIT_REFUELS_FETCH';
 export const EMIT_NEXT_REFUELS_FETCH = 'EMIT_NEXT_REFUELS_FETCH';
+export const EMIT_SEARCH_REFUELS_FETCH = 'EMIT_SEARCH_REFUELS_FETCH';
 export const EMIT_ADD_ANONYMOUS_REFUEL = 'EMIT_ADD_ANONYMOUS_REFUEL';
 
 //====================== Reducer trigger actions
@@ -66,4 +67,11 @@ export const emitAddAnonymousRefuel = ({sim, zone, amount, sender, senderSim}) =
     sender,
     senderSim,
     type: EMIT_ADD_ANONYMOUS_REFUEL
+});
+
+
+// Emit search refuels fetch
+export const emitSearchRefuelsFetch = ({needle}) => ({
+    needle,
+    type: EMIT_SEARCH_REFUELS_FETCH
 });

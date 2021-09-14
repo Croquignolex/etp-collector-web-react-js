@@ -11,6 +11,7 @@ import {
     storeSetNextRefuelsData,
     EMIT_NEXT_REFUELS_FETCH,
     EMIT_ADD_ANONYMOUS_REFUEL,
+    EMIT_SEARCH_REFUELS_FETCH,
     storeStopInfiniteScrollRefuelData
 } from "./actions";
 import {
@@ -27,6 +28,7 @@ import {
     storeAddAnonymousRefuelRequestFailed,
     storeAddAnonymousRefuelRequestSucceed,
 } from "../requests/refuels/actions";
+
 
 // Fetch refuels from API
 export function* emitRefuelsFetch() {
@@ -111,6 +113,26 @@ export function* emitAddAnonymousRefuel() {
     });
 }
 
+// Emit search refuels fetch
+export function* emitSearchRefuelsFetch() {
+    yield takeLatest(EMIT_SEARCH_REFUELS_FETCH, function*({needle}) {
+        try {
+            // Fire event for request
+            yield put(storeRefuelsRequestInit());
+            const apiResponse = yield call(apiGetRequest, `${api.SEARCH_REFUELS_API_PATH}?needle=${needle}`);
+            // Extract data
+            const refuels = extractRefuelsData(apiResponse.data.destockages);
+            // Fire event to redux
+            yield put(storeSetRefuelsData({refuels, hasMoreData: false, page: 0}));
+            // Fire event for request
+            yield put(storeRefuelsRequestSucceed({message: apiResponse.message}));
+        } catch (message) {
+            // Fire event for request
+            yield put(storeRefuelsRequestFailed({message}));
+        }
+    });
+}
+
 // Extract refuel data
 function extractRefuelData(apiRefuel) {
     let refuel = {
@@ -180,5 +202,6 @@ export default function* sagaRefuels() {
         fork(emitRefuelsFetch),
         fork(emitNextRefuelsFetch),
         fork(emitAddAnonymousRefuel),
+        fork(emitSearchRefuelsFetch),
     ]);
 }
