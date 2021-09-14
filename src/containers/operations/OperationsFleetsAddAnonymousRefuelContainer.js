@@ -6,6 +6,8 @@ import OperationsFleetsAddAnonymousRefuelComponent from "../../components/operat
 const mapStateToProps = (state) => ({
     user: state.user.id,
     sims: state.sims.list,
+    zones: state.zones.list,
+    zonesRequests: state.zonesRequests.all,
     request: state.refuelsRequests.anonymous,
     simsRequests: state.simsRequests.internal,
 });

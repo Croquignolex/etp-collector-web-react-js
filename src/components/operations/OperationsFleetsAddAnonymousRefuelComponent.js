@@ -7,6 +7,7 @@ import AmountComponent from "../form/AmountComponent";
 import SelectComponent from "../form/SelectComponent";
 import ErrorAlertComponent from "../ErrorAlertComponent";
 import {FLEET_TYPE} from "../../constants/typeConstants";
+import {emitAllZonesFetch} from "../../redux/zones/actions";
 import {requiredChecker} from "../../functions/checkerFunctions";
 import {emitAllInternalSimsFetch} from "../../redux/sims/actions";
 import {emitAddAnonymousRefuel} from "../../redux/refuels/actions";
@@ -18,8 +19,9 @@ import {storeAddAnonymousRefuelRequestReset} from "../../redux/requests/refuels/
 import {applySuccess, requestFailed, requestLoading, requestSucceeded} from "../../functions/generalFunctions";
 
 // Component
-function OperationsFleetsAddAnonymousRefuelComponent({request, sims, user, simsRequests, dispatch, handleClose}) {
+function OperationsFleetsAddAnonymousRefuelComponent({request, sims, user, simsRequests, zones, zonesRequests, dispatch, handleClose}) {
     // Local state
+    const [zone, setZone] = useState(DEFAULT_FORM_DATA);
     const [amount, setAmount] = useState(DEFAULT_FORM_DATA);
     const [sender, setSender] = useState(DEFAULT_FORM_DATA);
     const [senderSim, setSenderSim] = useState(DEFAULT_FORM_DATA);
@@ -27,6 +29,7 @@ function OperationsFleetsAddAnonymousRefuelComponent({request, sims, user, simsR
 
     // Local effects
     useEffect(() => {
+        dispatch(emitAllZonesFetch());
         dispatch(emitAllInternalSimsFetch());
         // Cleaner error alert while component did unmount without store dependency
         return () => {
@@ -48,6 +51,11 @@ function OperationsFleetsAddAnonymousRefuelComponent({request, sims, user, simsR
     const handleIncomingSelect = (data) => {
         shouldResetErrorData();
         setIncomingSim({...incomingSim,  isValid: true, data})
+    }
+
+    const handleZoneSelect = (data) => {
+        shouldResetErrorData();
+        setZone({...zone, isValid: true, data})
     }
 
     const handleAmountInput = (data) => {
@@ -75,6 +83,11 @@ function OperationsFleetsAddAnonymousRefuelComponent({request, sims, user, simsR
         )))
     }, [sims, user]);
 
+    // Build select options
+    const zoneSelectOptions = useMemo(() => {
+        return dataToArrayForSelect(zones)
+    }, [zones]);
+
     // Reset error alert
     const shouldResetErrorData = () => {
         dispatch(storeAllInternalSimsRequestReset());
@@ -85,22 +98,25 @@ function OperationsFleetsAddAnonymousRefuelComponent({request, sims, user, simsR
     const handleSubmit = (e) => {
         e.preventDefault();
         shouldResetErrorData();
+        const _zone = requiredChecker(zone);
         const _amount = requiredChecker(amount);
         const _sender = requiredChecker(sender);
         const _senderSim = requiredChecker(senderSim);
         const _incomingSim = requiredChecker(incomingSim);
         // Set value
+        setZone(_zone);
         setAmount(_amount);
         setSender(_sender);
         setSenderSim(_senderSim);
         setIncomingSim(_incomingSim);
         const validationOK = (
-            _amount.isValid && _sender.isValid &&
+            _amount.isValid && _sender.isValid && _zone.isValid &&
             _incomingSim.isValid && _senderSim.isValid
         );
         // Check
         if(validationOK) {
             dispatch(emitAddAnonymousRefuel({
+                zone: _zone.data,
                 sender: _sender.data,
                 amount: _amount.data,
                 sim: _incomingSim.data,
@@ -115,6 +131,7 @@ function OperationsFleetsAddAnonymousRefuelComponent({request, sims, user, simsR
         <>
             {requestFailed(request) && <ErrorAlertComponent message={request.message} />}
             {requestFailed(simsRequests) && <ErrorAlertComponent message={simsRequests.message} />}
+            {requestFailed(zonesRequests) && <ErrorAlertComponent message={zonesRequests.message} />}
             <form onSubmit={handleSubmit}>
                 <div className='row'>
                     <div className='col-sm-6'>
@@ -153,6 +170,18 @@ function OperationsFleetsAddAnonymousRefuelComponent({request, sims, user, simsR
                         />
                     </div>
                 </div>
+                <div className='row'>
+                    <div className='col-sm-6'>
+                        <SelectComponent input={zone}
+                                         label='Zone'
+                                         id='inputZone'
+                                         title='Choisir une zone'
+                                         options={zoneSelectOptions}
+                                         handleInput={handleZoneSelect}
+                                         requestProcessing={requestLoading(zonesRequests)}
+                        />
+                    </div>
+                </div>
                 <div className="form-group row">
                     <ButtonComponent processing={requestLoading(request)} />
                 </div>
@@ -164,11 +193,13 @@ function OperationsFleetsAddAnonymousRefuelComponent({request, sims, user, simsR
 // Prop types to ensure destroyed props data type
 OperationsFleetsAddAnonymousRefuelComponent.propTypes = {
     sims: PropTypes.array.isRequired,
+    zones: PropTypes.array.isRequired,
     user: PropTypes.string.isRequired,
     dispatch: PropTypes.func.isRequired,
     request: PropTypes.object.isRequired,
     handleClose: PropTypes.func.isRequired,
     simsRequests: PropTypes.object.isRequired,
+    zonesRequests: PropTypes.object.isRequired,
 };
 
 export default React.memo(OperationsFleetsAddAnonymousRefuelComponent);
