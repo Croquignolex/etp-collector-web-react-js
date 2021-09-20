@@ -34,5 +34,6 @@ export const REQUESTS_CLEARANCES_PAGE = 'Déstockages';
 
 // Reports
 export const REPORTS_PAGE = 'Mes listing';
+export const DAILY_REPORTS = 'Rapport journalier';
 export const MOVEMENTS_REPORTS = 'Mouvements de caisse';
 export const TRANSACTIONS_REPORTS = 'Transactions de flotte';

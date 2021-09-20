@@ -30,5 +30,6 @@ export const CHECKOUT_INTERNAL_PAYMENTS_PAGE_PATH = "/checkout/internal-payments
 export const CHECKOUT_EXTERNAL_PAYMENTS_PAGE_PATH = "/checkout/external-payments";
 
 // Reports
+export const REPORTS_PAGE_PATH = "/reports/reports";
 export const MOVEMENTS_PAGE_PATH = "/reports/movements";
 export const TRANSACTIONS_PAGE_PATH = "/reports/transactions";
