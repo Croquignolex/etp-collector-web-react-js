@@ -3,26 +3,24 @@ import React, {useEffect, useState} from 'react';
 
 import LoaderComponent from "../../components/LoaderComponent";
 import HeaderComponent from "../../components/HeaderComponent";
-import {emitMovementsFetch} from "../../redux/movements/actions";
+import {emitReportsFetch} from "../../redux/reports/actions";
 import AppLayoutContainer from "../../containers/AppLayoutContainer";
 import ErrorAlertComponent from "../../components/ErrorAlertComponent";
 import TableSearchComponent from "../../components/TableSearchComponent";
-import {storeMovementsRequestReset} from "../../redux/requests/movements/actions";
-import MovementsReportsComponent from "../../components/reports/MovementsReportsComponent";
+import {storeReportsRequestReset} from "../../redux/requests/reports/actions";
+import DailyReportsComponent from "../../components/reports/DailyReportsComponent";
 import {dateToString, needleSearch, requestFailed, requestLoading} from "../../functions/generalFunctions";
 
 // Component
 function DailyReportsPage({reports, reportsRequests, dispatch, location}) {
     // Local states
     const [needle, setNeedle] = useState('');
-    const [selectedEndDate, setSelectedEndDate] = useState(new Date());
-    const [selectedStartDate, setSelectedStartDate] = useState(new Date());
+    const [selectedDate, setSelectedDate] = useState(new Date());
 
     // Local effects
     useEffect(() => {
-        dispatch(emitMovementsFetch({
-            selectedEndDay: new Date(),
-            selectedStartDay: new Date(),
+        dispatch(emitReportsFetch({
+            selectedDay: new Date()
         }));
         // Cleaner error alert while component did unmount without store dependency
         return () => {
@@ -37,24 +35,14 @@ function DailyReportsPage({reports, reportsRequests, dispatch, location}) {
 
     // Reset error alert
     const shouldResetErrorData = () => {
-        dispatch(storeMovementsRequestReset());
+        dispatch(storeReportsRequestReset());
     };
 
-    const handleSelectedStartDate = (selectedDay) => {
+    const handleSelectedDate = (selectedDay) => {
         shouldResetErrorData();
-        setSelectedStartDate(selectedDay)
-        dispatch(emitMovementsFetch({
-            selectedStartDay: selectedDay,
-            selectedEndDay: selectedEndDate
-        }));
-    }
-
-    const handleSelectedEndDate = (selectedDay) => {
-        shouldResetErrorData();
-        setSelectedEndDate(selectedDay)
-        dispatch(emitMovementsFetch({
-            selectedEndDay: selectedDay,
-            selectedStartDay: selectedStartDate
+        setSelectedDate(selectedDay)
+        dispatch(emitReportsFetch({
+            selectedDay: selectedDay
         }));
     }
 
@@ -63,7 +51,7 @@ function DailyReportsPage({reports, reportsRequests, dispatch, location}) {
         <>
             <AppLayoutContainer pathname={location.pathname}>
                 <div className="content-wrapper">
-                    <HeaderComponent title="Mes mouvements de caisse" icon={'fa fa-table'} />
+                    <HeaderComponent title="Mes rapports journaliers" icon={'fa fa-table'} />
                     <section className="content">
                         <div className='container-fluid'>
                             <div className="row">
@@ -80,19 +68,15 @@ function DailyReportsPage({reports, reportsRequests, dispatch, location}) {
                                             {requestFailed(reportsRequests.list) && <ErrorAlertComponent message={reportsRequests.list.message} />}
                                              {/* Search result & Infinite scroll */}
                                             {(needle !== '' && needle !== undefined)
-                                                ? <MovementsReportsComponent selectedEndDate={selectedEndDate}
-                                                                             selectedStartDate={selectedStartDate}
-                                                                             movements={searchEngine(reports, needle)}
-                                                                             handleSelectedEndDate={handleSelectedEndDate}
-                                                                             handleSelectedStartDate={handleSelectedStartDate}
+                                                ? <DailyReportsComponent selectedDate={selectedDate}
+                                                                         reports={searchEngine(reports, needle)}
+                                                                         handleSelectedDate={handleSelectedDate}
                                                 />
                                                 : (requestLoading(reportsRequests.list) ?
                                                         <LoaderComponent /> :
-                                                        <MovementsReportsComponent movements={reports}
-                                                                                   selectedEndDate={selectedEndDate}
-                                                                                   selectedStartDate={selectedStartDate}
-                                                                                   handleSelectedEndDate={handleSelectedEndDate}
-                                                                                   handleSelectedStartDate={handleSelectedStartDate}
+                                                        <DailyReportsComponent reports={reports}
+                                                                               selectedDate={selectedDate}
+                                                                               handleSelectedDate={handleSelectedDate}
                                                         />
                                                 )
                                             }
