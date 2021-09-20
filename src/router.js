@@ -6,7 +6,6 @@ import asyncComponent from './components/asyncComponent';
 import {NotificationContainer} from "react-notifications";
 import PublicRouteContainer from "./containers/PublicRouteContainer";
 import RestrictedRouteContainer from "./containers/RestrictedRouteContainer";
-import {REPORTS_PAGE_PATH} from "./constants/pagePathConstants";
 
 // Component
 function AppRoutes({history}) {
