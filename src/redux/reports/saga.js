@@ -2,45 +2,44 @@ import { all, takeLatest, put, fork, call } from 'redux-saga/effects'
 
 import * as api from "../../constants/apiConstants";
 import {apiPostRequest} from "../../functions/axiosFunctions";
-import {EMIT_MOVEMENTS_FETCH, storeSetMovementsData} from "./actions";
+import {EMIT_REPORTS_FETCH, storeSetReportsData} from "./actions";
 import {dateToString, shortDateToString} from "../../functions/generalFunctions";
 import {
-    storeMovementsRequestInit,
-    storeMovementsRequestFailed,
-    storeMovementsRequestSucceed
-} from "../requests/movements/actions";
+    storeReportsRequestInit,
+    storeReportsRequestFailed,
+    storeReportsRequestSucceed
+} from "../requests/reports/actions";
 
-// Fetch movements from API
-export function* emitMovementsFetch() {
-    yield takeLatest(EMIT_MOVEMENTS_FETCH, function*({selectedStartDay, selectedEndDay}) {
+// Fetch reports from API
+export function* emitReportsFetch() {
+    yield takeLatest(EMIT_REPORTS_FETCH, function*({selectedDay}) {
         try {
             // Fire event for request
-            yield put(storeMovementsRequestInit());
+            yield put(storeReportsRequestInit());
             const data = {
-                debut: shortDateToString(selectedStartDay),
-                fin: shortDateToString(selectedEndDay),
+                journee: shortDateToString(selectedDay)
             };
-            const apiResponse = yield call(apiPostRequest, api.PERSONAL_MOVEMENTS_API_PATH, data);
+            const apiResponse = yield call(apiPostRequest, api.PERSONAL_REPORTS_API_PATH, data);
             // Extract data
-            const movements = extractMovementsData(
-                apiResponse.data.movements
+            const reports = extractReportsData(
+                apiResponse.data.rapports
             );
             // Fire event to redux
-            yield put(storeSetMovementsData({movements}));
+            yield put(storeSetReportsData({reports}));
             // Fire event for request
-            yield put(storeMovementsRequestSucceed({message: apiResponse.message}));
+            yield put(storeReportsRequestSucceed({message: apiResponse.message}));
         } catch (message) {
             // Fire event for request
-            yield put(storeMovementsRequestFailed({message}));
+            yield put(storeReportsRequestFailed({message}));
         }
     });
 }
 
 // Extract sim movements data
-function extractMovementsData(apiMovements) {
+function extractReportsData(apiReports) {
     let movements = [];
 
-    apiMovements.forEach(movement => {
+    apiReports.forEach(movement => {
         movements.push({
             in: movement.in,
             out: movement.out,
@@ -57,6 +56,6 @@ function extractMovementsData(apiMovements) {
 // Combine to export all functions at once
 export default function* sagaSims() {
     yield all([
-        fork(emitMovementsFetch),
+        fork(emitReportsFetch),
     ]);
 }

@@ -113,5 +113,6 @@ export const NEW_REVENUE_API_PATH = `${API_URL}/treasury_in`;
 export const NEW_EXPENSE_API_PATH = `${API_URL}/treasury_out`;
 
 // Report
+export const PERSONAL_REPORTS_API_PATH = `${API_URL}/reports_personal`;
 export const PERSONAL_MOVEMENTS_API_PATH = `${API_URL}/movements_personal`;
 export const PERSONAL_TRANSACTIONS_API_PATH = `${API_URL}/transactions_personal`;
