@@ -5,10 +5,10 @@ import LoaderComponent from "../LoaderComponent";
 import OperatorComponent from "../OperatorComponent";
 import {fleetTypeBadgeColor} from "../../functions/typeFunctions";
 import {dateToString, formatNumber} from "../../functions/generalFunctions";
-import {COLLECTOR_TYPE, DONE, PROCESSING} from "../../constants/typeConstants";
+import {CANCEL, COLLECTOR_TYPE, DONE, PROCESSING} from "../../constants/typeConstants";
 
 // Component
-function OperationsTransfersCardsComponent({transfers, user, handleConfirmModalShow}) {
+function OperationsTransfersCardsComponent({transfers, user, handleCancelModalShow, handleConfirmModalShow}) {
     // Render
     return (
         <>
@@ -45,13 +45,14 @@ function OperationsTransfersCardsComponent({transfers, user, handleConfirmModalS
                                         </li>
                                         <li className="list-group-item">
                                             {item.status === DONE && <b className="text-success text-bold">Confirmé</b>}
+                                            {item.status === CANCEL && <b className="text-danger text-bold">Annulé</b>}
                                             {item.status === PROCESSING && <b className="text-danger text-bold">En attente de confirmation</b>}
                                         </li>
                                     </ul>
-                                    {(
+                                    {
                                         (item.status === PROCESSING) &&
                                         (item.collector.id === user) &&
-                                        (item.type.includes('->' + COLLECTOR_TYPE))
+                                        (item.type.includes('->' + COLLECTOR_TYPE)
                                     ) && (
                                         <div className="mt-3 text-right">
                                             {item.actionLoader ? <LoaderComponent little={true} /> : (
@@ -60,6 +61,22 @@ function OperationsTransfersCardsComponent({transfers, user, handleConfirmModalS
                                                         onClick={() => handleConfirmModalShow(item)}
                                                 >
                                                     <i className="fa fa-check" /> Confirmer
+                                                </button>
+                                            )}
+                                        </div>
+                                    )}
+                                    {
+                                        (item.status === PROCESSING) &&
+                                        (item.user.id === user) &&
+                                        (item.type.includes(COLLECTOR_TYPE + '->')
+                                    ) && (
+                                        <div className="mt-3 text-right">
+                                            {item.actionLoader ? <LoaderComponent little={true} /> : (
+                                                <button type="button"
+                                                        className="btn btn-danger btn-sm"
+                                                        onClick={() => handleCancelModalShow(item)}
+                                                >
+                                                    <i className="fa fa-times" /> Annuler
                                                 </button>
                                             )}
                                         </div>
@@ -85,6 +102,7 @@ function OperationsTransfersCardsComponent({transfers, user, handleConfirmModalS
 OperationsTransfersCardsComponent.propTypes = {
     user: PropTypes.string.isRequired,
     transfers: PropTypes.array.isRequired,
+    handleCancelModalShow: PropTypes.func.isRequired,
     handleConfirmModalShow: PropTypes.func.isRequired,
 };
 

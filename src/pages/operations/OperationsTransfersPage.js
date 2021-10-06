@@ -9,10 +9,16 @@ import ErrorAlertComponent from "../../components/ErrorAlertComponent";
 import TableSearchComponent from "../../components/TableSearchComponent";
 import {OPERATIONS_TRANSFERS_PAGE} from "../../constants/pageNameConstants";
 import FormModalComponent from "../../components/modals/FormModalComponent";
+import DeleteModelComponent from "../../components/modals/DeleteModalComponent";
 import ConfirmModalComponent from "../../components/modals/ConfirmModalComponent";
-import {emitConfirmTransfer, emitNextTransfersFetch, emitTransfersFetch} from "../../redux/transfers/actions";
 import OperationsTransfersCardsComponent from "../../components/operations/OperationsTransfersCardsComponent";
 import OperationsTransfersAddTransferContainer from "../../containers/operations/OperationsTransfersAddTransferContainer";
+import {
+    emitCancelTransfer,
+    emitTransfersFetch,
+    emitConfirmTransfer,
+    emitNextTransfersFetch
+} from "../../redux/transfers/actions";
 import {
     applySuccess,
     dateToString,
@@ -25,6 +31,7 @@ import {
 import {
     storeTransfersRequestReset,
     storeNextTransfersRequestReset,
+    storeCancelTransferRequestReset,
     storeConfirmTransferRequestReset
 } from "../../redux/requests/transfers/actions";
 
@@ -32,6 +39,7 @@ import {
 function OperationsTransfersPage({transfers, transfersRequests, user, hasMoreData, page, dispatch, location}) {
     // Local states
     const [needle, setNeedle] = useState('');
+    const [cancelModal, setCancelModal] = useState({show: false, body: '', id: 0});
     const [confirmModal, setConfirmModal] = useState({show: false, body: '', id: 0});
     const [transferModal, setTransferModal] = useState({show: false, header: 'EFFECTUER UN TRANSFERT DE FLOTTE'});
 
@@ -54,6 +62,15 @@ function OperationsTransfersPage({transfers, transfersRequests, user, hasMoreDat
         // eslint-disable-next-line
     }, [transfersRequests.apply]);
 
+    // Local effects
+    useEffect(() => {
+        // Reset inputs while toast (well done) into current scope
+        if(requestSucceeded(transfersRequests.cancel)) {
+            applySuccess(transfersRequests.cancel.message);
+        }
+        // eslint-disable-next-line
+    }, [transfersRequests.cancel]);
+
     const handleNeedleInput = (data) => {
         setNeedle(data)
     }
@@ -61,6 +78,7 @@ function OperationsTransfersPage({transfers, transfersRequests, user, hasMoreDat
     // Reset error alert
     const shouldResetErrorData = () => {
         dispatch(storeTransfersRequestReset());
+        dispatch(storeCancelTransferRequestReset());
         dispatch(storeNextTransfersRequestReset());
         dispatch(storeConfirmTransferRequestReset());
     };
@@ -80,6 +98,16 @@ function OperationsTransfersPage({transfers, transfersRequests, user, hasMoreDat
         setTransferModal({...transferModal, show: false})
     }
 
+    // Show cancel modal form
+    const handleCancelModalShow = ({id, amount, sim_outgoing}) => {
+        setCancelModal({...cancelModal, id, body: `Annuler le transfert de flotte vers ${sim_outgoing.number} de ${formatNumber(amount)}?`, show: true})
+    }
+
+    // Hide cancel modal form
+    const handleCancelModalHide = () => {
+        setCancelModal({...cancelModal, show: false})
+    }
+
     // Show confirm modal form
     const handleConfirmModalShow = ({id, amount, user}) => {
         setConfirmModal({...confirmModal, id, body: `Confirmer le transfert de flotte de ${user.name} de ${formatNumber(amount)}?`, show: true})
@@ -94,6 +122,12 @@ function OperationsTransfersPage({transfers, transfersRequests, user, hasMoreDat
     const handleConfirm = (id) => {
         handleConfirmModalHide();
         dispatch(emitConfirmTransfer({id}));
+    };
+
+    // Trigger when clearance cancel confirmed on modal
+    const handleCancel = (id) => {
+        handleCancelModalHide();
+        dispatch(emitCancelTransfer({id}));
     };
 
     // Render
@@ -118,6 +152,7 @@ function OperationsTransfersPage({transfers, transfersRequests, user, hasMoreDat
                                             {requestFailed(transfersRequests.list) && <ErrorAlertComponent message={transfersRequests.list.message} />}
                                             {requestFailed(transfersRequests.next) && <ErrorAlertComponent message={transfersRequests.next.message} />}
                                             {requestFailed(transfersRequests.apply) && <ErrorAlertComponent message={transfersRequests.apply.message} />}
+                                            {requestFailed(transfersRequests.cancel) && <ErrorAlertComponent message={transfersRequests.cancel.message} />}
                                             <button type="button"
                                                     className="btn btn-theme mb-2"
                                                     onClick={handleTransferModalShow}
@@ -126,7 +161,9 @@ function OperationsTransfersPage({transfers, transfersRequests, user, hasMoreDat
                                             </button>
                                             {/* Search result & Infinite scroll */}
                                             {(needle !== '' && needle !== undefined)
-                                                ? <OperationsTransfersCardsComponent transfers={searchEngine(transfers, needle)}
+                                                ? <OperationsTransfersCardsComponent user={user}
+                                                                                     transfers={searchEngine(transfers, needle)}
+                                                                                     handleCancelModalShow={handleCancelModalShow}
                                                                                      handleConfirmModalShow={handleConfirmModalShow}
                                                 />
                                                 : (requestLoading(transfersRequests.list) ? <LoaderComponent /> :
@@ -138,6 +175,7 @@ function OperationsTransfersPage({transfers, transfersRequests, user, hasMoreDat
                                                         >
                                                             <OperationsTransfersCardsComponent user={user}
                                                                                                transfers={transfers}
+                                                                                               handleCancelModalShow={handleCancelModalShow}
                                                                                                handleConfirmModalShow={handleConfirmModalShow}
                                                             />
                                                         </InfiniteScroll>
@@ -155,6 +193,10 @@ function OperationsTransfersPage({transfers, transfersRequests, user, hasMoreDat
             <ConfirmModalComponent modal={confirmModal}
                                    handleModal={handleConfirm}
                                    handleClose={handleConfirmModalHide}
+            />
+            <DeleteModelComponent modal={cancelModal}
+                                  handleModal={handleCancel}
+                                  handleClose={handleCancelModalHide}
             />
             <FormModalComponent modal={transferModal} handleClose={handleTransferModalHide}>
                 <OperationsTransfersAddTransferContainer handleClose={handleTransferModalHide} />

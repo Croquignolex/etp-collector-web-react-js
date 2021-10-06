@@ -4,10 +4,12 @@ import * as api from "../../constants/apiConstants";
 import {apiGetRequest, apiPostRequest} from "../../functions/axiosFunctions";
 import {
     EMIT_ADD_TRANSFER,
+    EMIT_CANCEL_TRANSFER,
     EMIT_TRANSFERS_FETCH,
     EMIT_CONFIRM_TRANSFER,
     storeSetTransfersData,
     storeUpdateTransferData,
+    storeCancelTransferData,
     storeSetNewTransferData,
     storeSetNextTransfersData,
     EMIT_NEXT_TRANSFERS_FETCH,
@@ -22,10 +24,13 @@ import {
     storeAddTransferRequestFailed,
     storeNextTransfersRequestInit,
     storeAddTransferRequestSucceed,
+    storeCancelTransferRequestInit,
     storeNextTransfersRequestFailed,
     storeConfirmTransferRequestInit,
     storeNextTransfersRequestSucceed,
+    storeCancelTransferRequestFailed,
     storeConfirmTransferRequestFailed,
+    storeCancelTransferRequestSucceed,
     storeConfirmTransferRequestSucceed
 } from "../requests/transfers/actions";
 
@@ -120,6 +125,28 @@ export function* emitConfirmTransfer() {
     });
 }
 
+// Cancel transfer from API
+export function* emitCancelTransfer() {
+    yield takeLatest(EMIT_CANCEL_TRANSFER, function*({id}) {
+        try {
+            // Fire event at redux to toggle action loader
+            yield put(storeSetTransferActionData({id}));
+            // Fire event for request
+            yield put(storeCancelTransferRequestInit());
+            const apiResponse = yield call(apiPostRequest, `${api.CANCEL_TRANSFER_API_PATH}/${id}`);
+            // Fire event to redux
+            yield put(storeCancelTransferData({id}));
+            // Fire event at redux to toggle action loader
+            yield put(storeSetTransferActionData({id}));
+            // Fire event for request
+            yield put(storeCancelTransferRequestSucceed({message: apiResponse.message}));
+        } catch (message) {
+            // Fire event for request
+            yield put(storeSetTransferActionData({id}));
+            yield put(storeCancelTransferRequestFailed({message}));
+        }
+    });
+}
 
 // Extract transfer data
 function extractTransferData(apiSimOutgoing, apiSimIncoming, apiUser, apiTransfer, apiOperator, apiCollector) {
@@ -196,6 +223,7 @@ export default function* sagaTransfers() {
     yield all([
         fork(emitAddTransfer),
         fork(emitTransfersFetch),
+        fork(emitCancelTransfer),
         fork(emitConfirmTransfer),
         fork(emitNextTransfersFetch),
     ]);
