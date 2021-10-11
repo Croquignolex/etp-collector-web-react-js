@@ -14,6 +14,10 @@ export const STORE_ADD_AFFORD_REQUEST_RESET = 'STORE_ADD_AFFORD_REQUEST_RESET';
 export const STORE_ADD_AFFORD_REQUEST_FAILED = 'STORE_ADD_AFFORD_REQUEST_FAILED';
 export const STORE_ADD_AFFORD_REQUEST_SUCCEEDED = 'STORE_ADD_AFFORD_REQUEST_SUCCEEDED';
 
+export const STORE_CANCEL_AFFORD_REQUEST_INIT = 'STORE_CANCEL_AFFORD_REQUEST_INIT';
+export const STORE_CANCEL_AFFORD_REQUEST_RESET = 'STORE_CANCEL_AFFORD_REQUEST_RESET';
+export const STORE_CANCEL_AFFORD_REQUEST_FAILED = 'STORE_CANCEL_AFFORD_REQUEST_FAILED';
+export const STORE_CANCEL_AFFORD_REQUEST_SUCCEEDED = 'STORE_CANCEL_AFFORD_REQUEST_SUCCEEDED';
 
 // ======================================================== Affords
 // Set affords init data into store
@@ -80,4 +84,26 @@ export const storeAddAffordRequestSucceed = ({message}) => ({
 // Set add afford reset data into store
 export const storeAddAffordRequestReset = () => ({
     type: STORE_ADD_AFFORD_REQUEST_RESET
+});
+// ======================================================== Cancel afford
+// Set cancel afford init data into store
+export const storeCancelAffordRequestInit = () => ({
+    type: STORE_CANCEL_AFFORD_REQUEST_INIT
+});
+
+// Set cancel afford failed data into store
+export const storeCancelAffordRequestFailed = ({message}) => ({
+    message,
+    type: STORE_CANCEL_AFFORD_REQUEST_FAILED
+});
+
+// Set cancel afford succeeded data into store
+export const storeCancelAffordRequestSucceed = ({message}) => ({
+    message,
+    type: STORE_CANCEL_AFFORD_REQUEST_SUCCEEDED
+});
+
+// Set cancel afford reset data into store
+export const storeCancelAffordRequestReset = () => ({
+    type: STORE_CANCEL_AFFORD_REQUEST_RESET
 });
