@@ -6,10 +6,13 @@ import {apiGetRequest, apiPostRequest, getFileFromServer} from "../../functions/
 import {
     EMIT_ADD_AFFORD,
     EMIT_AFFORDS_FETCH,
+    EMIT_CANCEL_AFFORD,
     storeSetAffordsData,
+    storeCancelAffordData,
     storeSetNewAffordData,
     storeSetNextAffordsData,
     EMIT_NEXT_AFFORDS_FETCH,
+    storeSetAffordActionData,
     storeStopInfiniteScrollAffordData
 } from "./actions";
 import {
@@ -19,9 +22,12 @@ import {
     storeAffordsRequestSucceed,
     storeNextAffordsRequestInit,
     storeAddAffordRequestFailed,
+    storeCancelAffordRequestInit,
     storeAddAffordRequestSucceed,
     storeNextAffordsRequestFailed,
+    storeCancelAffordRequestFailed,
     storeNextAffordsRequestSucceed,
+    storeCancelAffordRequestSucceed,
 } from "../requests/affords/actions";
 
 // Fetch affords from API
@@ -82,6 +88,29 @@ export function* emitAddAfford() {
         } catch (message) {
             // Fire event for request
             yield put(storeAddAffordRequestFailed({message}));
+        }
+    });
+}
+
+// Cancel afford from API
+export function* emitCancelAfford() {
+    yield takeLatest(EMIT_CANCEL_AFFORD, function*({id}) {
+        try {
+            // Fire event at redux to toggle action loader
+            yield put(storeSetAffordActionData({id}));
+            // Fire event for request
+            yield put(storeCancelAffordRequestInit());
+            const apiResponse = yield call(apiPostRequest, `${api.CANCEL_AFFORD_API_PATH}/${id}`);
+            // Fire event to redux
+            yield put(storeCancelAffordData({id}));
+            // Fire event at redux to toggle action loader
+            yield put(storeSetAffordActionData({id}));
+            // Fire event for request
+            yield put(storeCancelAffordRequestSucceed({message: apiResponse.message}));
+        } catch (message) {
+            // Fire event for request
+            yield put(storeSetAffordActionData({id}));
+            yield put(storeCancelAffordRequestFailed({message}));
         }
     });
 }
@@ -152,6 +181,7 @@ export default function* sagaAffords() {
     yield all([
         fork(emitAddAfford),
         fork(emitAffordsFetch),
+        fork(emitCancelAfford),
         fork(emitNextAffordsFetch),
     ]);
 }

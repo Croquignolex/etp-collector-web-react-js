@@ -95,6 +95,7 @@ export const SEARCH_REFUELS_API_PATH = `${API_URL}/search_list_destockage_collec
 
 // Affords
 export const NEW_AFFORD_API_PATH = `${API_URL}/approvisionnement_etp`;
+export const CANCEL_AFFORD_API_PATH = `${API_URL}/annuler_approvisionnement`;
 export const AFFORDS_API_PATH = `${API_URL}/list_approvisionnement_collector`;
 
 // Vendors

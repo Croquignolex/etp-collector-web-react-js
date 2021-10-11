@@ -1,11 +1,14 @@
 // Reducer action types
 export const STORE_SET_AFFORDS_DATA = 'STORE_SET_AFFORDS_DATA';
+export const STORE_CANCEL_AFFORD_DATA = 'STORE_CANCEL_AFFORD_DATA';
 export const STORE_SET_NEW_AFFORD_DATA = 'STORE_SET_NEW_AFFORD_DATA';
 export const STORE_SET_NEXT_AFFORDS_DATA = 'STORE_SET_NEXT_AFFORDS_DATA';
+export const STORE_SET_AFFORD_ACTION_DATA = 'STORE_SET_AFFORD_ACTION_DATA';
 export const STORE_STOP_INFINITE_SCROLL_AFFORD_DATA = 'STORE_STOP_INFINITE_SCROLL_AFFORD_DATA';
 
 // Middleware action types
 export const EMIT_ADD_AFFORD = 'EMIT_ADD_AFFORD';
+export const EMIT_CANCEL_AFFORD = 'EMIT_CANCEL_AFFORD';
 export const EMIT_AFFORDS_FETCH = 'EMIT_AFFORDS_FETCH';
 export const EMIT_NEXT_AFFORDS_FETCH = 'EMIT_NEXT_AFFORDS_FETCH';
 
@@ -23,7 +26,7 @@ export const storeSetNewAffordData = ({afford}) => ({
     afford,
     type: STORE_SET_NEW_AFFORD_DATA
 });
- 
+
 // Set next affords data in store
 export const storeSetNextAffordsData = ({affords, hasMoreData, page}) => ({
     page,
@@ -35,6 +38,18 @@ export const storeSetNextAffordsData = ({affords, hasMoreData, page}) => ({
 // Stop infinite scroll
 export const storeStopInfiniteScrollAffordData = () => ({
     type: STORE_STOP_INFINITE_SCROLL_AFFORD_DATA
+});
+
+// Set cancel afford data in store
+export const storeCancelAffordData = ({id}) => ({
+    id,
+    type: STORE_CANCEL_AFFORD_DATA
+});
+
+// Set afford action data in store
+export const storeSetAffordActionData = ({id}) => ({
+    id,
+    type: STORE_SET_AFFORD_ACTION_DATA
 });
 
 //====================== Middleware trigger actions
@@ -55,4 +70,10 @@ export const emitAddAfford = ({vendor, amount, sim}) => ({
     vendor,
     amount,
     type: EMIT_ADD_AFFORD
+});
+
+// Emit cancel afford
+export const emitCancelAfford = ({id}) => ({
+    id,
+    type: EMIT_CANCEL_AFFORD
 });
