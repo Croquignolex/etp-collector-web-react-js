@@ -1,4 +1,7 @@
+import Lodash from "lodash";
+
 import * as actions from "./actions";
+import {CANCEL} from "../../constants/typeConstants";
 
 // Partial global store for users data management
 const initialState = {
@@ -26,6 +29,28 @@ function reduce(state = initialState, action) {
         // Resolve event to set new refuel data
         case actions.STORE_SET_NEW_REFUEL_DATA:
             nextState = {...state, list: [action.refuel, ...state.list]}
+            return nextState || state;
+        // Resolve event to cancel refuel data
+        case actions.STORE_CANCEL_REFUEL_DATA:
+            nextState = {
+                ...state,
+                list: Lodash.map(state.list, (item) => {
+                    if(item.id === action.id) {
+                        item.status = CANCEL;
+                    }
+                    return item;
+                })
+            };
+            return nextState || state;
+        // Resolve event to set refuel action data
+        case actions.STORE_SET_REFUEL_ACTION_DATA:
+            nextState = {
+                ...state,
+                list: Lodash.map(state.list, (item) => {
+                    if(item.id === action.id) item.actionLoader = !item.actionLoader;
+                    return item;
+                })
+            };
             return nextState || state;
         // Unknown action
         default: return state;

@@ -5,11 +5,14 @@ import {SUPPLY_BY_AGENT} from "../../constants/typeConstants";
 import {apiGetRequest, apiPostRequest} from "../../functions/axiosFunctions";
 import {
     EMIT_ADD_REFUEL,
+    EMIT_CANCEL_REFUEL,
     EMIT_REFUELS_FETCH,
     storeSetRefuelsData,
+    storeCancelRefuelData,
     storeSetNewRefuelData,
     storeSetNextRefuelsData,
     EMIT_NEXT_REFUELS_FETCH,
+    storeSetRefuelActionData,
     EMIT_ADD_ANONYMOUS_REFUEL,
     EMIT_SEARCH_REFUELS_FETCH,
     storeStopInfiniteScrollRefuelData
@@ -22,8 +25,11 @@ import {
     storeAddRefuelRequestFailed,
     storeNextRefuelsRequestInit,
     storeAddRefuelRequestSucceed,
+    storeCancelRefuelRequestInit,
     storeNextRefuelsRequestFailed,
+    storeCancelRefuelRequestFailed,
     storeNextRefuelsRequestSucceed,
+    storeCancelRefuelRequestSucceed,
     storeAddAnonymousRefuelRequestInit,
     storeAddAnonymousRefuelRequestFailed,
     storeAddAnonymousRefuelRequestSucceed,
@@ -133,6 +139,29 @@ export function* emitSearchRefuelsFetch() {
     });
 }
 
+// Cancel refuel from API
+export function* emitCancelRefuel() {
+    yield takeLatest(EMIT_CANCEL_REFUEL, function*({id}) {
+        try {
+            // Fire event at redux to toggle action loader
+            yield put(storeSetRefuelActionData({id}));
+            // Fire event for request
+            yield put(storeCancelRefuelRequestInit());
+            const apiResponse = yield call(apiPostRequest, `${api.CANCEL_REFUEL_API_PATH}/${id}`);
+            // Fire event to redux
+            yield put(storeCancelRefuelData({id}));
+            // Fire event at redux to toggle action loader
+            yield put(storeSetRefuelActionData({id}));
+            // Fire event for request
+            yield put(storeCancelRefuelRequestSucceed({message: apiResponse.message}));
+        } catch (message) {
+            // Fire event for request
+            yield put(storeSetRefuelActionData({id}));
+            yield put(storeCancelRefuelRequestFailed({message}));
+        }
+    });
+}
+
 // Extract refuel data
 function extractRefuelData(apiRefuel) {
     let refuel = {
@@ -199,6 +228,7 @@ export function extractRefuelsData(apiRefuels) {
 export default function* sagaRefuels() {
     yield all([
         fork(emitAddRefuel),
+        fork(emitCancelRefuel),
         fork(emitRefuelsFetch),
         fork(emitNextRefuelsFetch),
         fork(emitAddAnonymousRefuel),

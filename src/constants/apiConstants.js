@@ -88,6 +88,7 @@ export const NEW_ANONYMOUS_SUPPLY_API_PATH = `${API_URL}/flottage_anonyme`;
 export const SEARCH_SUPPLIES_API_PATH = `${API_URL}/search_list_all_flottage`;
 
 // Refuels
+export const CANCEL_REFUEL_API_PATH = `${API_URL}/annuler_destockage`;
 export const NEW_REFUEL_API_PATH = `${API_URL}/approvisionnement_etp`;
 export const REFUELS_API_PATH = `${API_URL}/list_destockage_collector`;
 export const NEW_ANONYMOUS_REFUEL_API_PATH = `${API_URL}/destockage_anonyme`;

@@ -8,18 +8,37 @@ import AppLayoutContainer from "../../containers/AppLayoutContainer";
 import ErrorAlertComponent from "../../components/ErrorAlertComponent";
 import FormModalComponent from "../../components/modals/FormModalComponent";
 import {OPERATIONS_CLEARANCES_PAGE} from "../../constants/pageNameConstants";
+import DeleteModelComponent from "../../components/modals/DeleteModalComponent";
 import TableSearchWithButtonComponent from "../../components/TableSearchWithButtonComponent";
-import {emitNextRefuelsFetch, emitRefuelsFetch, emitSearchRefuelsFetch} from "../../redux/refuels/actions";
-import {dateToString, needleSearch, requestFailed, requestLoading} from "../../functions/generalFunctions";
-import {storeRefuelsRequestReset, storeNextRefuelsRequestReset} from "../../redux/requests/refuels/actions";
 import OperationsClearancesCardsComponent from "../../components/operations/OperationsClearancesCardsComponent";
 import OperationsClearancesAddRefuelContainer from "../../containers/operations/OperationsClearancesAddRefuelContainer";
 import OperationsFleetsAddAnonymousRefuelContainer from "../../containers/operations/OperationsFleetsAddAnonymousRefuelContainer";
+import {
+    emitRefuelsFetch,
+    emitCancelRefuel,
+    emitNextRefuelsFetch,
+    emitSearchRefuelsFetch
+} from "../../redux/refuels/actions";
+import {
+    applySuccess,
+    dateToString,
+    formatNumber,
+    needleSearch,
+    requestFailed,
+    requestLoading,
+    requestSucceeded
+} from "../../functions/generalFunctions";
+import {
+    storeRefuelsRequestReset,
+    storeNextRefuelsRequestReset,
+    storeCancelRefuelRequestReset
+} from "../../redux/requests/refuels/actions";
 
 // Component
 function OperationsClearancesPage({refuels, refuelsRequests, hasMoreData, page, dispatch, location}) {
     // Local states
     const [needle, setNeedle] = useState('');
+    const [cancelModal, setCancelModal] = useState({show: false, body: '', id: 0});
     const [refuelModal, setRefuelModal] = useState({show: false, header: 'EFFECTUER UN DESTOCKAGE'});
     const [anonymousRefuelModal, setAnonymousRefuelModal] = useState({show: false, header: 'EFFECTUER UN DESTOCKAGE ANONYME'});
 
@@ -33,6 +52,15 @@ function OperationsClearancesPage({refuels, refuelsRequests, hasMoreData, page, 
         // eslint-disable-next-line
     }, []);
 
+    // Local effects
+    useEffect(() => {
+        // Reset inputs while toast (well done) into current scope
+        if(requestSucceeded(refuelsRequests.cancel)) {
+            applySuccess(refuelsRequests.cancel.message);
+        }
+        // eslint-disable-next-line
+    }, [refuelsRequests.cancel]);
+
     const handleNeedleInput = (data) => {
         setNeedle(data)
     }
@@ -45,6 +73,7 @@ function OperationsClearancesPage({refuels, refuelsRequests, hasMoreData, page, 
     const shouldResetErrorData = () => {
         dispatch(storeRefuelsRequestReset());
         dispatch(storeNextRefuelsRequestReset());
+        dispatch(storeCancelRefuelRequestReset());
     };
 
     // Fetch next refuels data to enhance infinite scroll
@@ -72,6 +101,22 @@ function OperationsClearancesPage({refuels, refuelsRequests, hasMoreData, page, 
         setAnonymousRefuelModal({...anonymousRefuelModal, show: false})
     }
 
+    // Show cancel modal form
+    const handleCancelModalShow = ({id, amount, sim}) => {
+        setCancelModal({...cancelModal, id, body: `Annuler le déstockage vers ${sim.number} de ${formatNumber(amount)}?`, show: true})
+    }
+
+    // Hide cancel modal form
+    const handleCancelModalHide = () => {
+        setCancelModal({...cancelModal, show: false})
+    }
+
+    // Trigger when clearance cancel confirmed on modal
+    const handleCancel = (id) => {
+        handleCancelModalHide();
+        dispatch(emitCancelRefuel({id}));
+    };
+
     // Render
     return (
         <>
@@ -96,6 +141,7 @@ function OperationsClearancesPage({refuels, refuelsRequests, hasMoreData, page, 
                                             {/* Error message */}
                                             {requestFailed(refuelsRequests.list) && <ErrorAlertComponent message={refuelsRequests.list.message} />}
                                             {requestFailed(refuelsRequests.next) && <ErrorAlertComponent message={refuelsRequests.next.message} />}
+                                            {requestFailed(refuelsRequests.cancel) && <ErrorAlertComponent message={refuelsRequests.cancel.message} />}
                                             <button type="button"
                                                     className="btn btn-theme mb-2"
                                                     onClick={handleRefuelModalShow}
@@ -111,7 +157,9 @@ function OperationsClearancesPage({refuels, refuelsRequests, hasMoreData, page, 
                                             {/* Search result & Infinite scroll */}
                                             {requestLoading(refuelsRequests.list) ? <LoaderComponent /> : ((needle !== '' && needle !== undefined) ?
                                                     (
-                                                        <OperationsClearancesCardsComponent refuels={searchEngine(refuels, needle)} />
+                                                        <OperationsClearancesCardsComponent refuels={searchEngine(refuels, needle)}
+                                                                                            handleCancelModalShow={handleCancelModalShow}
+                                                        />
                                                     ) :
                                                     (
                                                         <InfiniteScroll hasMore={hasMoreData}
@@ -120,7 +168,9 @@ function OperationsClearancesPage({refuels, refuelsRequests, hasMoreData, page, 
                                                                         next={handleNextRefuelsData}
                                                                         style={{ overflow: 'hidden' }}
                                                         >
-                                                            <OperationsClearancesCardsComponent refuels={refuels}/>
+                                                            <OperationsClearancesCardsComponent refuels={refuels}
+                                                                                                handleCancelModalShow={handleCancelModalShow}
+                                                            />
                                                         </InfiniteScroll>
                                                     )
                                             )}
@@ -133,6 +183,10 @@ function OperationsClearancesPage({refuels, refuelsRequests, hasMoreData, page, 
                 </div>
             </AppLayoutContainer>
             {/* Modal */}
+            <DeleteModelComponent modal={cancelModal}
+                                  handleModal={handleCancel}
+                                  handleClose={handleCancelModalHide}
+            />
             <FormModalComponent modal={refuelModal} handleClose={handleRefuelModalHide}>
                 <OperationsClearancesAddRefuelContainer handleClose={handleRefuelModalHide} />
             </FormModalComponent>
