@@ -114,7 +114,7 @@ function DashboardPage({user, fleets, sims, clearances, settings, dispatch, loca
                             {cardsData.includes(setting.CARD_ACCOUNTS_DEBT) &&
                                 <div className="col-lg-3 col-md-4 col-sm-6">
                                     <DashboardCardComponent color='bg-dark'
-                                                            icon='fa fa-hands-usd'
+                                                            icon='fa fa-hands'
                                                             url={path.PROFILE_PAGE_PATH}
                                                             request={balanceUserRequests}
                                                             data={formatNumber(user.debt)}

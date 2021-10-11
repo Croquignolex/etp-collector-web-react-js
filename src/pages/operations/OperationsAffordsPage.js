@@ -9,16 +9,30 @@ import ErrorAlertComponent from "../../components/ErrorAlertComponent";
 import TableSearchComponent from "../../components/TableSearchComponent";
 import {OPERATIONS_AFFORDS_PAGE} from "../../constants/pageNameConstants";
 import FormModalComponent from "../../components/modals/FormModalComponent";
-import {emitAffordsFetch, emitNextAffordsFetch} from "../../redux/affords/actions";
+import DeleteModelComponent from "../../components/modals/DeleteModalComponent";
+import {emitAffordsFetch, emitCancelAfford, emitNextAffordsFetch} from "../../redux/affords/actions";
 import OperationsAffordsCardsComponent from "../../components/operations/OperationsAffordsCardsComponent";
-import {dateToString, needleSearch, requestFailed, requestLoading} from "../../functions/generalFunctions";
-import {storeAffordsRequestReset, storeNextAffordsRequestReset} from "../../redux/requests/affords/actions";
 import OperationsAffordsAddAffordContainer from "../../containers/operations/OperationsAffordsAddAffordContainer";
+import {
+    applySuccess,
+    dateToString,
+    formatNumber,
+    needleSearch,
+    requestFailed,
+    requestLoading,
+    requestSucceeded
+} from "../../functions/generalFunctions";
+import {
+    storeAffordsRequestReset,
+    storeNextAffordsRequestReset,
+    storeCancelAffordRequestReset
+} from "../../redux/requests/affords/actions";
 
 // Component
 function OperationsAffordsPage({affords, affordsRequests, hasMoreData, page, dispatch, location}) {
     // Local states
     const [needle, setNeedle] = useState('');
+    const [cancelModal, setCancelModal] = useState({show: false, body: '', id: 0});
     const [affordModal, setAffordModal] = useState({show: false, header: 'EFFECTUER UN APPROVISIONNEMENT'});
 
     // Local effects
@@ -31,6 +45,15 @@ function OperationsAffordsPage({affords, affordsRequests, hasMoreData, page, dis
         // eslint-disable-next-line
     }, []);
 
+    // Local effects
+    useEffect(() => {
+        // Reset inputs while toast (well done) into current scope
+        if(requestSucceeded(affordsRequests.cancel)) {
+            applySuccess(affordsRequests.cancel.message);
+        }
+        // eslint-disable-next-line
+    }, [affordsRequests.cancel]);
+
     const handleNeedleInput = (data) => {
         setNeedle(data)
     }
@@ -39,6 +62,7 @@ function OperationsAffordsPage({affords, affordsRequests, hasMoreData, page, dis
     const shouldResetErrorData = () => {
         dispatch(storeAffordsRequestReset());
         dispatch(storeNextAffordsRequestReset());
+        dispatch(storeCancelAffordRequestReset());
     };
 
     // Fetch next affords data to enhance infinite scroll
@@ -55,6 +79,22 @@ function OperationsAffordsPage({affords, affordsRequests, hasMoreData, page, dis
     const handleAffordModalHide = () => {
         setAffordModal({...affordModal, show: false})
     }
+
+    // Show cancel modal form
+    const handleCancelModalShow = ({id, amount, sim}) => {
+        setCancelModal({...cancelModal, id, body: `Annuler l'apporvisionnement vers ${sim.number} de ${formatNumber(amount)}?`, show: true})
+    }
+
+    // Hide cancel modal form
+    const handleCancelModalHide = () => {
+        setCancelModal({...cancelModal, show: false})
+    }
+
+    // Trigger when clearance cancel confirmed on modal
+    const handleCancel = (id) => {
+        handleCancelModalHide();
+        dispatch(emitCancelAfford({id}));
+    };
 
     // Render
     return (
@@ -77,6 +117,7 @@ function OperationsAffordsPage({affords, affordsRequests, hasMoreData, page, dis
                                             {/* Error message */}
                                             {requestFailed(affordsRequests.list) && <ErrorAlertComponent message={affordsRequests.list.message} />}
                                             {requestFailed(affordsRequests.next) && <ErrorAlertComponent message={affordsRequests.next.message} />}
+                                            {requestFailed(affordsRequests.cancel) && <ErrorAlertComponent message={affordsRequests.cancel.message} />}
                                             <button type="button"
                                                     className="btn btn-theme mb-2"
                                                     onClick={handleAffordModalShow}
@@ -85,7 +126,9 @@ function OperationsAffordsPage({affords, affordsRequests, hasMoreData, page, dis
                                             </button>
                                             {/* Search result & Infinite scroll */}
                                             {(needle !== '' && needle !== undefined)
-                                                ? <OperationsAffordsCardsComponent affords={searchEngine(affords, needle)} />
+                                                ? <OperationsAffordsCardsComponent affords={searchEngine(affords, needle)}
+                                                                                   handleCancelModalShow={handleCancelModalShow}
+                                                />
                                                 : (requestLoading(affordsRequests.list) ? <LoaderComponent /> :
                                                         <InfiniteScroll hasMore={hasMoreData}
                                                                         dataLength={affords.length}
@@ -93,7 +136,9 @@ function OperationsAffordsPage({affords, affordsRequests, hasMoreData, page, dis
                                                                         next={handleNextAffordsData}
                                                                         style={{ overflow: 'hidden' }}
                                                         >
-                                                            <OperationsAffordsCardsComponent affords={affords} />
+                                                            <OperationsAffordsCardsComponent affords={affords}
+                                                                                             handleCancelModalShow={handleCancelModalShow}
+                                                            />
                                                         </InfiniteScroll>
                                                 )
                                             }
@@ -106,6 +151,10 @@ function OperationsAffordsPage({affords, affordsRequests, hasMoreData, page, dis
                 </div>
             </AppLayoutContainer>
             {/* Modal */}
+            <DeleteModelComponent modal={cancelModal}
+                                  handleModal={handleCancel}
+                                  handleClose={handleCancelModalHide}
+            />
             <FormModalComponent modal={affordModal} handleClose={handleAffordModalHide}>
                 <OperationsAffordsAddAffordContainer handleClose={handleAffordModalHide} />
             </FormModalComponent>
