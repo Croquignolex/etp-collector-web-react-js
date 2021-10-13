@@ -8,6 +8,7 @@ setPageTitle(REQUESTS_CLEARANCES_PAGE);
 
 // Map state function to component props
 const mapStateToProps = (state) => ({
+    user: state.user,
     page: state.clearances.page,
     clearances: state.clearances.list,
     hasMoreData: state.clearances.hasMoreData,
