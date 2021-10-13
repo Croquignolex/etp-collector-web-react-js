@@ -28,6 +28,7 @@ export const FLEETS_API_PATH = `${API_URL}/list_demandes_flote_general_collector
 export const CLEARANCES_API_PATH = `${API_URL}/list_demandes_destockage`;
 export const NEW_CLEARANCE_API_PATH = `${API_URL}/demande_destockage_agent`;
 export const ALL_CLEARANCES_API_PATH = `${API_URL}/list_demandes_destockage_all`;
+export const CANCEL_CLEARANCE_API_PATH = `${API_URL}/annuler_demandes_destockage`;
 export const DECLARE_CLEARANCE_API_PATH = `${API_URL}/reponse_demandes_destockage`;
 
 // Sims

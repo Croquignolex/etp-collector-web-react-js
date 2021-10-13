@@ -4,14 +4,17 @@ import * as api from "../../constants/apiConstants";
 import {apiGetRequest, apiPostRequest} from "../../functions/axiosFunctions";
 import {
     EMIT_ADD_CLEARANCE,
+    EMIT_CANCEL_CLEARANCE,
     EMIT_CLEARANCES_FETCH,
     storeSetClearancesData,
+    storeCancelClearanceData,
     storeUpdateClearanceData,
     storeSetNewClearanceData,
     EMIT_ALL_CLEARANCES_FETCH,
     storeSetNextClearancesData,
     EMIT_CLEARANCE_ADD_DECLARE,
     EMIT_NEXT_CLEARANCES_FETCH,
+    storeSetClearanceActionData,
     storeStopInfiniteScrollClearanceData
 } from "./actions";
 import {
@@ -23,13 +26,16 @@ import {
     storeAddClearanceRequestFailed,
     storeNextClearancesRequestInit,
     storeAddClearanceRequestSucceed,
+    storeCancelClearanceRequestInit,
     storeAllClearancesRequestFailed,
     storeNextClearancesRequestFailed,
     storeClearanceDeclareRequestInit,
     storeAllClearancesRequestSucceed,
+    storeCancelClearanceRequestFailed,
     storeNextClearancesRequestSucceed,
-    storeClearanceDeclareRequestSucceed,
-    storeClearanceDeclareRequestFailed
+    storeClearanceDeclareRequestFailed,
+    storeCancelClearanceRequestSucceed,
+    storeClearanceDeclareRequestSucceed
 } from "../requests/clearances/actions";
 
 // Fetch clearances from API
@@ -140,6 +146,29 @@ export function* emitClearanceAddDeclare() {
     });
 }
 
+// Cancel clearance from API
+export function* emitCancelClearance() {
+    yield takeLatest(EMIT_CANCEL_CLEARANCE, function*({id}) {
+        try {
+            // Fire event at redux to toggle action loader
+            yield put(storeSetClearanceActionData({id}));
+            // Fire event for request
+            yield put(storeCancelClearanceRequestInit());
+            const apiResponse = yield call(apiPostRequest, `${api.CANCEL_CLEARANCE_API_PATH}/${id}`);
+            // Fire event to redux
+            yield put(storeCancelClearanceData({id}));
+            // Fire event at redux to toggle action loader
+            yield put(storeSetClearanceActionData({id}));
+            // Fire event for request
+            yield put(storeCancelClearanceRequestSucceed({message: apiResponse.message}));
+        } catch (message) {
+            // Fire event for request
+            yield put(storeSetClearanceActionData({id}));
+            yield put(storeCancelClearanceRequestFailed({message}));
+        }
+    });
+}
+
 // Extract clearance data
 function extractClearanceData(apiSim, apiUser, apiAgent, apiClaimer, apiFleet, apiOperator) {
     let fleet = {
@@ -210,6 +239,7 @@ function extractClearancesData(apiClearances) {
 export default function* sagaClearances() {
     yield all([
         fork(emitAddClearance),
+        fork(emitCancelClearance),
         fork(emitClearancesFetch),
         fork(emitAllClearancesFetch),
         fork(emitClearanceAddDeclare),

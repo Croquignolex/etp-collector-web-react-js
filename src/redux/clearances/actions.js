@@ -1,5 +1,6 @@
 // Reducer action types
 export const STORE_SET_CLEARANCES_DATA = 'STORE_SET_CLEARANCES_DATA';
+export const STORE_CANCEL_CLEARANCE_DATA = 'STORE_CANCEL_CLEARANCE_DATA';
 export const STORE_UPDATE_CLEARANCE_DATA = 'STORE_UPDATE_CLEARANCE_DATA';
 export const STORE_SET_NEW_CLEARANCE_DATA = 'STORE_SET_NEW_CLEARANCE_DATA';
 export const STORE_SET_NEXT_CLEARANCES_DATA = 'STORE_SET_NEXT_CLEARANCES_DATA';
@@ -9,6 +10,7 @@ export const STORE_STOP_INFINITE_SCROLL_CLEARANCES_DATA = 'STORE_STOP_INFINITE_S
 // Middleware action types
 export const EMIT_ADD_CLEARANCE = 'EMIT_ADD_CLEARANCE';
 export const EMIT_CLEARANCES_FETCH = 'EMIT_CLEARANCES_FETCH';
+export const EMIT_CANCEL_CLEARANCE = 'EMIT_CANCEL_CLEARANCE';
 export const EMIT_ALL_CLEARANCES_FETCH = 'EMIT_ALL_CLEARANCES_FETCH';
 export const EMIT_CLEARANCE_ADD_DECLARE = 'EMIT_CLEARANCE_ADD_DECLARE';
 export const EMIT_NEXT_CLEARANCES_FETCH = 'EMIT_NEXT_CLEARANCES_FETCH';
@@ -54,6 +56,11 @@ export const storeSetClearanceActionData = ({id}) => ({
     type: STORE_SET_CLEARANCE_ACTION_DATA
 });
 
+// Set cancel clearance data in store
+export const storeCancelClearanceData = ({id}) => ({
+    id,
+    type: STORE_CANCEL_CLEARANCE_DATA
+});
 
 //====================== Middleware trigger actions
 // Emit clearances fetch
@@ -85,4 +92,10 @@ export const emitClearanceAddDeclare = ({id, amount}) => ({
     id,
     amount,
     type: EMIT_CLEARANCE_ADD_DECLARE
+});
+
+// Emit cancel clearance
+export const emitCancelClearance = ({id}) => ({
+    id,
+    type: EMIT_CANCEL_CLEARANCE
 });

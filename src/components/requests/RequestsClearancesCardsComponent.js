@@ -5,12 +5,12 @@ import LoaderComponent from "../LoaderComponent";
 import OperatorComponent from "../OperatorComponent";
 import FormModalComponent from "../modals/FormModalComponent";
 import {fleetTypeBadgeColor} from "../../functions/typeFunctions";
-import {DONE, PENDING, PROCESSING} from "../../constants/typeConstants";
 import {dateToString, formatNumber} from "../../functions/generalFunctions";
+import {CANCEL, DONE, PENDING, PROCESSING} from "../../constants/typeConstants";
 import AgentDetailsContainer from "../../containers/agents/AgentDetailsContainer";
 
 // Component
-function RequestsClearancesCardsComponent({clearances, handleDeclareModalShow}) {
+function RequestsClearancesCardsComponent({clearances, user, handleDeclareModalShow, handleCancelModalShow}) {
     // Local states
     const [agentDetailsModal, setAgentDetailsModal] = useState({show: false, header: "DETAIL DE L'AGENT/RESSOURCE", id: ''});
 
@@ -65,6 +65,7 @@ function RequestsClearancesCardsComponent({clearances, handleDeclareModalShow}) 
                                             <span className="float-right">{item.claimant.name}</span>
                                         </li>
                                         <li className="list-group-item">
+                                            {item.status === CANCEL && <b className="text-danger text-bold">Annulé</b>}
                                             {item.status === DONE && <b className="text-success text-bold">Pris en charge totalement</b>}
                                             {item.status === PROCESSING && <b className="text-primary text-bold">Pris en charge partiellement</b>}
                                             {item.status === PENDING && <b className="text-danger text-bold">En attente de prise en charge</b>}
@@ -82,6 +83,18 @@ function RequestsClearancesCardsComponent({clearances, handleDeclareModalShow}) 
                                             </div>
                                         }
                                     </ul>
+                                    {((item.status === PENDING) && (item.supplier.id.toString() === user.id.toString())) && (
+                                        <div className="mt-3 text-right">
+                                            {item.actionLoader ? <LoaderComponent little={true} /> : (
+                                                <button type="button"
+                                                        className="btn btn-danger btn-sm"
+                                                        onClick={() => handleCancelModalShow(item)}
+                                                >
+                                                    <i className="fa fa-times" /> Annuler
+                                                </button>
+                                            )}
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -105,7 +118,9 @@ function RequestsClearancesCardsComponent({clearances, handleDeclareModalShow}) 
 
 // Prop types to ensure destroyed props data type
 RequestsClearancesCardsComponent.propTypes = {
+    user: PropTypes.object.isRequired,
     clearances: PropTypes.array.isRequired,
+    handleCancelModalShow: PropTypes.func.isRequired,
     handleDeclareModalShow: PropTypes.func.isRequired,
 };
 
