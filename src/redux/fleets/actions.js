@@ -1,12 +1,15 @@
 // Reducer action types
 export const STORE_SET_FLEETS_DATA = 'STORE_SET_FLEETS_DATA';
+export const STORE_CANCEL_FLEET_DATA = 'STORE_CANCEL_FLEET_DATA';
 export const STORE_SET_NEW_FLEET_DATA = 'STORE_SET_NEW_FLEET_DATA';
 export const STORE_SET_NEXT_FLEETS_DATA = 'STORE_SET_NEXT_FLEETS_DATA';
+export const STORE_SET_FLEET_ACTION_DATA = 'STORE_SET_FLEET_ACTION_DATA';
 export const STORE_STOP_INFINITE_SCROLL_FLEETS_DATA = 'STORE_STOP_INFINITE_SCROLL_FLEETS_DATA';
 
 // Middleware action types
 export const EMIT_ADD_FLEET = 'EMIT_ADD_FLEET';
 export const EMIT_FLEETS_FETCH = 'EMIT_FLEETS_FETCH';
+export const EMIT_CANCEL_FLEET = 'EMIT_CANCEL_FLEET';
 export const EMIT_ALL_FLEETS_FETCH = 'EMIT_ALL_FLEETS_FETCH';
 export const EMIT_NEXT_FLEETS_FETCH = 'EMIT_NEXT_FLEETS_FETCH';
 
@@ -38,6 +41,18 @@ export const storeStopInfiniteScrollFleetData = () => ({
     type: STORE_STOP_INFINITE_SCROLL_FLEETS_DATA
 });
 
+// Set cancel fleet data in store
+export const storeCancelFleetData = ({id}) => ({
+    id,
+    type: STORE_CANCEL_FLEET_DATA
+});
+
+// Set fleet action data in store
+export const storeSetFleetActionData = ({id}) => ({
+    id,
+    type: STORE_SET_FLEET_ACTION_DATA
+});
+
 //====================== Middleware trigger actions
 // Emit fleets fetch
 export const emitFleetsFetch = () => ({
@@ -61,4 +76,10 @@ export const emitAddFleet = ({sim, amount, agent}) => ({
     agent,
     amount,
     type: EMIT_ADD_FLEET
+});
+
+// Emit cancel fleet
+export const emitCancelFleet = ({id}) => ({
+    id,
+    type: EMIT_CANCEL_FLEET
 });

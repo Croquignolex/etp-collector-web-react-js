@@ -9,16 +9,30 @@ import AppLayoutContainer from "../../containers/AppLayoutContainer";
 import ErrorAlertComponent from "../../components/ErrorAlertComponent";
 import TableSearchComponent from "../../components/TableSearchComponent";
 import FormModalComponent from "../../components/modals/FormModalComponent";
-import {emitFleetsFetch, emitNextFleetsFetch} from "../../redux/fleets/actions";
+import DeleteModelComponent from "../../components/modals/DeleteModalComponent";
+import {emitCancelFleet, emitFleetsFetch, emitNextFleetsFetch} from "../../redux/fleets/actions";
 import RequestsFleetsCardsComponent from "../../components/requests/RequestsFleetsCardsComponent";
 import RequestsFleetsAddFleetContainer from "../../containers/requests/RequestsFleetsAddFleetContainer";
-import {storeFleetsRequestReset, storeNextFleetsRequestReset} from "../../redux/requests/fleets/actions";
-import {dateToString, needleSearch, requestFailed, requestLoading} from "../../functions/generalFunctions";
+import {
+    storeFleetsRequestReset,
+    storeNextFleetsRequestReset,
+    storeCancelFleetRequestReset
+} from "../../redux/requests/fleets/actions";
+import {
+    applySuccess,
+    dateToString,
+    formatNumber,
+    needleSearch,
+    requestFailed,
+    requestLoading,
+    requestSucceeded
+} from "../../functions/generalFunctions";
 
 // Component
 function RequestsFleetsPage({fleets, fleetsRequests, hasMoreData, page, dispatch, location}) {
     // Local states
     const [needle, setNeedle] = useState('');
+    const [cancelModal, setCancelModal] = useState({show: false, body: '', id: 0});
     const [fleetModal, setFleetModal] = useState({show: false, header: 'DEMANDE DE FLOTTE'});
 
     // Local effects
@@ -31,6 +45,15 @@ function RequestsFleetsPage({fleets, fleetsRequests, hasMoreData, page, dispatch
         // eslint-disable-next-line
     }, []);
 
+    // Local effects
+    useEffect(() => {
+        // Reset inputs while toast (well done) into current scope
+        if(requestSucceeded(fleetsRequests.cancel)) {
+            applySuccess(fleetsRequests.cancel.message);
+        }
+        // eslint-disable-next-line
+    }, [fleetsRequests.cancel]);
+
     const handleNeedleInput = (data) => {
         setNeedle(data)
     }
@@ -39,6 +62,7 @@ function RequestsFleetsPage({fleets, fleetsRequests, hasMoreData, page, dispatch
     const shouldResetErrorData = () => {
         dispatch(storeFleetsRequestReset());
         dispatch(storeNextFleetsRequestReset());
+        dispatch(storeCancelFleetRequestReset());
     };
 
     // Fetch next fleets data to enhance infinite scroll
@@ -55,6 +79,22 @@ function RequestsFleetsPage({fleets, fleetsRequests, hasMoreData, page, dispatch
     const handleFleetModalHide = () => {
         setFleetModal({...fleetModal, show: false})
     }
+
+    // Show cancel modal form
+    const handleCancelModalShow = ({id, amount, sim}) => {
+        setCancelModal({...cancelModal, id, body: `Annuler la demande de flotte vers ${sim.number} de ${formatNumber(amount)}?`, show: true})
+    }
+
+    // Hide cancel modal form
+    const handleCancelModalHide = () => {
+        setCancelModal({...cancelModal, show: false})
+    }
+
+    // Trigger when clearance cancel confirmed on modal
+    const handleCancel = (id) => {
+        handleCancelModalHide();
+        dispatch(emitCancelFleet({id}));
+    };
 
     // Render
     return (
@@ -77,6 +117,7 @@ function RequestsFleetsPage({fleets, fleetsRequests, hasMoreData, page, dispatch
                                             {/* Error message */}
                                             {requestFailed(fleetsRequests.list) && <ErrorAlertComponent message={fleetsRequests.list.message} />}
                                             {requestFailed(fleetsRequests.next) && <ErrorAlertComponent message={fleetsRequests.next.message} />}
+                                            {requestFailed(fleetsRequests.cancel) && <ErrorAlertComponent message={fleetsRequests.cancel.message} />}
                                             <button type="button"
                                                     className="btn btn-theme mb-2"
                                                     onClick={handleFleetModalShow}
@@ -85,7 +126,9 @@ function RequestsFleetsPage({fleets, fleetsRequests, hasMoreData, page, dispatch
                                             </button>
                                             {/* Search result & Infinite scroll */}
                                             {(needle !== '' && needle !== undefined)
-                                                ? <RequestsFleetsCardsComponent fleets={searchEngine(fleets, needle)} />
+                                                ? <RequestsFleetsCardsComponent fleets={searchEngine(fleets, needle)}
+                                                                                handleCancelModalShow={handleCancelModalShow}
+                                                />
                                                 : (requestLoading(fleetsRequests.list) ? <LoaderComponent /> :
                                                         <InfiniteScroll hasMore={hasMoreData}
                                                                         dataLength={fleets.length}
@@ -93,7 +136,9 @@ function RequestsFleetsPage({fleets, fleetsRequests, hasMoreData, page, dispatch
                                                                         loader={<LoaderComponent />}
                                                                         style={{ overflow: 'hidden' }}
                                                         >
-                                                            <RequestsFleetsCardsComponent fleets={fleets} />
+                                                            <RequestsFleetsCardsComponent fleets={fleets}
+                                                                                          handleCancelModalShow={handleCancelModalShow}
+                                                            />
                                                         </InfiniteScroll>
                                                 )
                                             }
@@ -106,6 +151,10 @@ function RequestsFleetsPage({fleets, fleetsRequests, hasMoreData, page, dispatch
                 </div>
             </AppLayoutContainer>
             {/* Modal */}
+            <DeleteModelComponent modal={cancelModal}
+                                  handleModal={handleCancel}
+                                  handleClose={handleCancelModalHide}
+            />
             <FormModalComponent modal={fleetModal} handleClose={handleFleetModalHide}>
                 <RequestsFleetsAddFleetContainer handleClose={handleFleetModalHide} />
             </FormModalComponent>

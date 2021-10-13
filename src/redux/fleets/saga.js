@@ -4,12 +4,15 @@ import * as api from "../../constants/apiConstants";
 import {apiGetRequest, apiPostRequest} from "../../functions/axiosFunctions";
 import {
     EMIT_ADD_FLEET,
+    EMIT_CANCEL_FLEET,
     EMIT_FLEETS_FETCH,
     storeSetFleetsData,
+    storeCancelFleetData,
     storeSetNewFleetData,
     EMIT_ALL_FLEETS_FETCH,
-    EMIT_NEXT_FLEETS_FETCH,
     storeSetNextFleetsData,
+    EMIT_NEXT_FLEETS_FETCH,
+    storeSetFleetActionData,
     storeStopInfiniteScrollFleetData
 } from "./actions";
 import {
@@ -22,9 +25,12 @@ import {
     storeNextFleetsRequestInit,
     storeAllFleetsRequestFailed,
     storeAddFleetRequestSucceed,
+    storeCancelFleetRequestInit,
     storeNextFleetsRequestFailed,
     storeAllFleetsRequestSucceed,
-    storeNextFleetsRequestSucceed
+    storeNextFleetsRequestSucceed,
+    storeCancelFleetRequestFailed,
+    storeCancelFleetRequestSucceed
 } from "../requests/fleets/actions";
 
 // Fetch fleets from API
@@ -116,6 +122,29 @@ export function* emitAddFleet() {
     });
 }
 
+// Cancel fleet from API
+export function* emitCancelFleet() {
+    yield takeLatest(EMIT_CANCEL_FLEET, function*({id}) {
+        try {
+            // Fire event at redux to toggle action loader
+            yield put(storeSetFleetActionData({id}));
+            // Fire event for request
+            yield put(storeCancelFleetRequestInit());
+            const apiResponse = yield call(apiPostRequest, `${api.CANCEL_FLEET_API_PATH}/${id}`);
+            // Fire event to redux
+            yield put(storeCancelFleetData({id}));
+            // Fire event at redux to toggle action loader
+            yield put(storeSetFleetActionData({id}));
+            // Fire event for request
+            yield put(storeCancelFleetRequestSucceed({message: apiResponse.message}));
+        } catch (message) {
+            // Fire event for request
+            yield put(storeSetFleetActionData({id}));
+            yield put(storeCancelFleetRequestFailed({message}));
+        }
+    });
+}
+
 // Extract fleet data
 function extractFleetData(apiSim, apiUser, apiAgent, apiClaimer, apiFleet, apiOperator) {
     let fleet = {
@@ -186,6 +215,7 @@ function extractFleetsData(apiFleets) {
 export default function* sagaFleets() {
     yield all([
         fork(emitAddFleet),
+        fork(emitCancelFleet),
         fork(emitFleetsFetch),
         fork(emitAllFleetsFetch),
         fork(emitNextFleetsFetch),
