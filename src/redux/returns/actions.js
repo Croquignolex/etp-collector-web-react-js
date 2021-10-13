@@ -1,10 +1,13 @@
 // Reducer action types
 export const STORE_SET_RETURNS_DATA = 'STORE_SET_RETURNS_DATA';
+export const STORE_CANCEL_RETURN_DATA = 'STORE_CANCEL_RETURN_DATA';
 export const STORE_SET_NEXT_RETURNS_DATA = 'STORE_SET_NEXT_RETURNS_DATA';
+export const STORE_SET_RETURN_ACTION_DATA = 'STORE_SET_RETURN_ACTION_DATA';
 export const STORE_STOP_INFINITE_SCROLL_RETURNS_DATA = 'STORE_STOP_INFINITE_SCROLL_RETURNS_DATA';
 
 // Middleware action types
 export const EMIT_NEW_RETURN = 'EMIT_NEW_RETURN';
+export const EMIT_CANCEL_RETURN = 'EMIT_CANCEL_RETURN';
 export const EMIT_RETURNS_FETCH = 'EMIT_RETURNS_FETCH';
 export const EMIT_NEXT_RETURNS_FETCH = 'EMIT_NEXT_RETURNS_FETCH';
 
@@ -30,6 +33,18 @@ export const storeStopInfiniteScrollReturnData = () => ({
     type: STORE_STOP_INFINITE_SCROLL_RETURNS_DATA
 });
 
+// Set cancel return data in store
+export const storeCancelReturnData = ({id}) => ({
+    id,
+    type: STORE_CANCEL_RETURN_DATA
+});
+
+// Set return action data in store
+export const storeSetReturnActionData = ({id}) => ({
+    id,
+    type: STORE_SET_RETURN_ACTION_DATA
+});
+
 //====================== Middleware trigger actions
 // Emit returns fetch
 export const emitReturnsFetch = () => ({
@@ -49,4 +64,10 @@ export const emitNewReturn = ({supply, amount, agentSim, managerSim}) => ({
     agentSim,
     managerSim,
     type: EMIT_NEW_RETURN
+});
+
+// Emit cancel return
+export const emitCancelReturn = ({id}) => ({
+    id,
+    type: EMIT_CANCEL_RETURN
 });

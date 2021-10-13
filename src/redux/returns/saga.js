@@ -6,9 +6,12 @@ import {apiGetRequest, apiPostRequest, getFileFromServer} from "../../functions/
 import {
     EMIT_NEW_RETURN,
     EMIT_RETURNS_FETCH,
+    EMIT_CANCEL_RETURN,
     storeSetReturnsData,
+    storeCancelReturnData,
     EMIT_NEXT_RETURNS_FETCH,
     storeSetNextReturnsData,
+    storeSetReturnActionData,
     storeStopInfiniteScrollReturnData
 } from "./actions";
 import {
@@ -19,8 +22,11 @@ import {
     storeReturnRequestSucceed,
     storeReturnsRequestSucceed,
     storeNextReturnsRequestInit,
+    storeCancelReturnRequestInit,
     storeNextReturnsRequestFailed,
     storeNextReturnsRequestSucceed,
+    storeCancelReturnRequestFailed,
+    storeCancelReturnRequestSucceed,
 } from "../requests/returns/actions";
 
 // Fetch returns from API
@@ -79,6 +85,29 @@ export function* emitNewReturn() {
         } catch (message) {
             // Fire event for request
             yield put(storeReturnRequestFailed({message}));
+        }
+    });
+}
+
+// Cancel return from API
+export function* emitCancelReturn() {
+    yield takeLatest(EMIT_CANCEL_RETURN, function*({id}) {
+        try {
+            // Fire event at redux to toggle action loader
+            yield put(storeSetReturnActionData({id}));
+            // Fire event for request
+            yield put(storeCancelReturnRequestInit());
+            const apiResponse = yield call(apiPostRequest, `${api.CANCEL_RETURN_API_PATH}/${id}`);
+            // Fire event to redux
+            yield put(storeCancelReturnData({id}));
+            // Fire event at redux to toggle action loader
+            yield put(storeSetReturnActionData({id}));
+            // Fire event for request
+            yield put(storeCancelReturnRequestSucceed({message: apiResponse.message}));
+        } catch (message) {
+            // Fire event for request
+            yield put(storeSetReturnActionData({id}));
+            yield put(storeCancelReturnRequestFailed({message}));
         }
     });
 }
@@ -161,6 +190,7 @@ export default function* sagaReturns() {
     yield all([
         fork(emitNewReturn),
         fork(emitReturnsFetch),
+        fork(emitCancelReturn),
         fork(emitNextReturnsFetch),
     ]);
 }

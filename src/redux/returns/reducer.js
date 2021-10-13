@@ -1,5 +1,7 @@
 import * as actions from "./actions";
 
+import {CANCEL} from "../../constants/typeConstants";
+
 // Partial global store for users data management
 const initialState = {
     page: 1,
@@ -22,6 +24,28 @@ function reduce(state = initialState, action) {
         // Resolve event to stop infinite scroll returns data
         case actions.STORE_STOP_INFINITE_SCROLL_RETURNS_DATA:
             nextState = {...state, hasMoreData: false};
+            return nextState || state;
+        // Resolve event to cancel return data
+        case actions.STORE_CANCEL_RETURN_DATA:
+            nextState = {
+                ...state,
+                list: Lodash.map(state.list, (item) => {
+                    if(item.id === action.id) {
+                        item.status = CANCEL;
+                    }
+                    return item;
+                })
+            };
+            return nextState || state;
+        // Resolve event to set return action data
+        case actions.STORE_SET_RETURN_ACTION_DATA:
+            nextState = {
+                ...state,
+                list: Lodash.map(state.list, (item) => {
+                    if(item.id === action.id) item.actionLoader = !item.actionLoader;
+                    return item;
+                })
+            };
             return nextState || state;
         // Unknown action
         default: return state;

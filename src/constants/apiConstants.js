@@ -70,9 +70,10 @@ export const All_OPERATORS_API_PATH = `${API_URL}/flote_list_all`;
 
 // Fleet recovery
 export const NEW_FLEET_RECOVERIES_API_PATH = `${API_URL}/retour_flotte`;
+export const CANCEL_RETURN_API_PATH = `${API_URL}/annuler_retour_flotte`;
 export const FLEET_RECOVERIES_API_PATH = `${API_URL}/list_retour_flotte_by_rz`;
 
-// cash recovery
+// Cash recovery
 export const NEW_CASH_RECOVERIES_API_PATH = `${API_URL}/recouvrement`;
 export const CASH_RECOVERIES_API_PATH = `${API_URL}/list_recouvrement_by_rz`;
 

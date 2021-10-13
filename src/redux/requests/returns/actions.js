@@ -14,6 +14,11 @@ export const STORE_RETURN_REQUEST_RESET = 'STORE_RETURN_REQUEST_RESET';
 export const STORE_RETURN_REQUEST_FAILED = 'STORE_RETURN_REQUEST_FAILED';
 export const STORE_RETURN_REQUEST_SUCCEEDED = 'STORE_RETURN_REQUEST_SUCCEEDED';
 
+export const STORE_CANCEL_RETURN_REQUEST_INIT = 'STORE_CANCEL_RETURN_REQUEST_INIT';
+export const STORE_CANCEL_RETURN_REQUEST_RESET = 'STORE_CANCEL_RETURN_REQUEST_RESET';
+export const STORE_CANCEL_RETURN_REQUEST_FAILED = 'STORE_CANCEL_RETURN_REQUEST_FAILED';
+export const STORE_CANCEL_RETURN_REQUEST_SUCCEEDED = 'STORE_CANCEL_RETURN_REQUEST_SUCCEEDED';
+
 // ======================================================== Returns
 // Set returns init data into store
 export const storeReturnsRequestInit = () => ({
@@ -79,4 +84,26 @@ export const storeReturnRequestSucceed = ({message}) => ({
 // Set return reset data into store
 export const storeReturnRequestReset = () => ({
     type: STORE_RETURN_REQUEST_RESET
+});
+// ======================================================== Cancel return
+// Set cancel return init data into store
+export const storeCancelReturnRequestInit = () => ({
+    type: STORE_CANCEL_RETURN_REQUEST_INIT
+});
+
+// Set cancel return failed data into store
+export const storeCancelReturnRequestFailed = ({message}) => ({
+    message,
+    type: STORE_CANCEL_RETURN_REQUEST_FAILED
+});
+
+// Set cancel return succeeded data into store
+export const storeCancelReturnRequestSucceed = ({message}) => ({
+    message,
+    type: STORE_CANCEL_RETURN_REQUEST_SUCCEEDED
+});
+
+// Set cancel return reset data into store
+export const storeCancelReturnRequestReset = () => ({
+    type: STORE_CANCEL_RETURN_REQUEST_RESET
 });
