@@ -70,31 +70,35 @@ function RequestsClearancesCardsComponent({clearances, user, handleDeclareModalS
                                             {item.status === PROCESSING && <b className="text-primary text-bold">Pris en charge partiellement</b>}
                                             {item.status === PENDING && <b className="text-danger text-bold">En attente de prise en charge</b>}
                                         </li>
-                                        {[PENDING, PROCESSING].includes(item.status) &&
-                                            <div className="mt-3 text-right">
-                                                {item.actionLoader ? <LoaderComponent little={true} /> :
-                                                    <button type="button"
-                                                            className="btn btn-sm btn-theme"
-                                                            onClick={() => handleDeclareModalShow(item)}
-                                                    >
-                                                        <i className="fa fa-hand-holding" /> Prendre en charge
-                                                    </button>
-                                                }
-                                            </div>
-                                        }
                                     </ul>
-                                    {((item.status === PENDING) && (item.claimant.id.toString() === user.id.toString())) && (
-                                        <div className="mt-3 text-right">
-                                            {item.actionLoader ? <LoaderComponent little={true} /> : (
-                                                <button type="button"
-                                                        className="btn btn-danger btn-sm"
-                                                        onClick={() => handleCancelModalShow(item)}
-                                                >
-                                                    <i className="fa fa-times" /> Annuler
-                                                </button>
-                                            )}
-                                        </div>
-                                    )}
+                                    <div className="mt-3 text-right">
+                                        {((item.status === PENDING) || (item.status === PROCESSING)) && (
+                                            !item.actionLoader && (
+                                                <div className="mt-3 text-right">
+                                                    {item.actionLoader ? <LoaderComponent little={true} /> :
+                                                        <button type="button"
+                                                                className="btn btn-sm btn-theme"
+                                                                onClick={() => handleDeclareModalShow(item)}
+                                                        >
+                                                            <i className="fa fa-hand-holding" /> Prendre en charge
+                                                        </button>
+                                                    }
+                                                </div>
+                                            )
+                                        )}
+                                        {((item.status === PENDING) && (item.claimant.id.toString() === user.id.toString())) && (
+                                            <div className="mt-3 text-right">
+                                                {item.actionLoader ? <LoaderComponent little={true} /> : (
+                                                    <button type="button"
+                                                            className="btn btn-danger btn-sm"
+                                                            onClick={() => handleCancelModalShow(item)}
+                                                    >
+                                                        <i className="fa fa-times" /> Annuler
+                                                    </button>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         </div>
