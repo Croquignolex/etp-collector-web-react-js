@@ -9,15 +9,29 @@ import AppLayoutContainer from "../../containers/AppLayoutContainer";
 import ErrorAlertComponent from "../../components/ErrorAlertComponent";
 import {RECOVERIES_FLEET_PAGE} from "../../constants/pageNameConstants";
 import TableSearchComponent from "../../components/TableSearchComponent";
-import {emitNextReturnsFetch, emitReturnsFetch} from "../../redux/returns/actions";
+import DeleteModelComponent from "../../components/modals/DeleteModalComponent";
+import {emitCancelReturn, emitNextReturnsFetch, emitReturnsFetch} from "../../redux/returns/actions";
 import RecoveriesFleetsCardsComponent from "../../components/recoveries/RecoveriesFleetsCardsComponent";
-import {dateToString, needleSearch, requestFailed, requestLoading} from "../../functions/generalFunctions";
-import {storeReturnsRequestReset, storeNextReturnsRequestReset} from "../../redux/requests/returns/actions";
+import {
+    applySuccess,
+    dateToString,
+    formatNumber,
+    needleSearch,
+    requestFailed,
+    requestLoading,
+    requestSucceeded
+} from "../../functions/generalFunctions";
+import {
+    storeReturnsRequestReset,
+    storeNextReturnsRequestReset,
+    storeCancelReturnRequestReset
+} from "../../redux/requests/returns/actions";
 
 // Component
 function RecoveriesFleetsPage({returns, returnsRequests, hasMoreData, page, dispatch, location}) {
     // Local states
     const [needle, setNeedle] = useState('');
+    const [cancelModal, setCancelModal] = useState({show: false, body: '', id: 0});
 
     // Local effects
     useEffect(() => {
@@ -29,6 +43,15 @@ function RecoveriesFleetsPage({returns, returnsRequests, hasMoreData, page, disp
         // eslint-disable-next-line
     }, []);
 
+    // Local effects
+    useEffect(() => {
+        // Reset inputs while toast (well done) into current scope
+        if(requestSucceeded(returnsRequests.cancel)) {
+            applySuccess(returnsRequests.cancel.message);
+        }
+        // eslint-disable-next-line
+    }, [returnsRequests.cancel]);
+
     const handleNeedleInput = (data) => {
         setNeedle(data)
     }
@@ -37,12 +60,29 @@ function RecoveriesFleetsPage({returns, returnsRequests, hasMoreData, page, disp
     const shouldResetErrorData = () => {
         dispatch(storeReturnsRequestReset());
         dispatch(storeNextReturnsRequestReset());
+        dispatch(storeCancelReturnRequestReset());
     };
 
     // Fetch next returns data to enhance infinite scroll
     const handleNextReturnsData = () => {
         dispatch(emitNextReturnsFetch({page}));
     }
+
+    // Show cancel modal form
+    const handleCancelModalShow = ({id, amount, sim_incoming}) => {
+        setCancelModal({...cancelModal, id, body: `Annuler le retour flotte vers ${sim_incoming.number} de ${formatNumber(amount)}?`, show: true})
+    }
+
+    // Hide cancel modal form
+    const handleCancelModalHide = () => {
+        setCancelModal({...cancelModal, show: false})
+    }
+
+    // Trigger when clearance cancel confirmed on modal
+    const handleCancel = (id) => {
+        handleCancelModalHide();
+        dispatch(emitCancelReturn({id}));
+    };
 
     // Render
     return (
@@ -65,9 +105,12 @@ function RecoveriesFleetsPage({returns, returnsRequests, hasMoreData, page, disp
                                             {/* Error message */}
                                             {requestFailed(returnsRequests.list) && <ErrorAlertComponent message={returnsRequests.list.message} />}
                                             {requestFailed(returnsRequests.next) && <ErrorAlertComponent message={returnsRequests.next.message} />}
+                                            {requestFailed(returnsRequests.cancel) && <ErrorAlertComponent message={returnsRequests.cancel.message} />}
                                             {/* Search result & Infinite scroll */}
                                             {(needle !== '' && needle !== undefined)
-                                                ? <RecoveriesFleetsCardsComponent returns={searchEngine(returns, needle)} />
+                                                ? <RecoveriesFleetsCardsComponent returns={searchEngine(returns, needle)}
+                                                                                  handleCancelModalShow={handleCancelModalShow}
+                                                />
                                                 : (requestLoading(returnsRequests.list) ? <LoaderComponent /> :
                                                         <InfiniteScroll hasMore={hasMoreData}
                                                                         dataLength={returns.length}
@@ -75,7 +118,9 @@ function RecoveriesFleetsPage({returns, returnsRequests, hasMoreData, page, disp
                                                                         next={handleNextReturnsData}
                                                                         style={{ overflow: 'hidden' }}
                                                         >
-                                                            <RecoveriesFleetsCardsComponent returns={returns} />
+                                                            <RecoveriesFleetsCardsComponent returns={returns}
+                                                                                            handleCancelModalShow={handleCancelModalShow}
+                                                            />
                                                         </InfiniteScroll>
                                                 )
                                             }
@@ -87,6 +132,10 @@ function RecoveriesFleetsPage({returns, returnsRequests, hasMoreData, page, disp
                     </section>
                 </div>
             </AppLayoutContainer>
+            <DeleteModelComponent modal={cancelModal}
+                                  handleModal={handleCancel}
+                                  handleClose={handleCancelModalHide}
+            />
         </>
     )
 }

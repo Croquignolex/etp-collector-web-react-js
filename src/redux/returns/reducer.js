@@ -1,5 +1,6 @@
-import * as actions from "./actions";
+import Lodash from "lodash";
 
+import * as actions from "./actions";
 import {CANCEL} from "../../constants/typeConstants";
 
 // Partial global store for users data management
