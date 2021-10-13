@@ -83,7 +83,7 @@ function RequestsClearancesCardsComponent({clearances, user, handleDeclareModalS
                                             </div>
                                         }
                                     </ul>
-                                    {((item.status === PENDING) && (item.supplier.id.toString() === user.id.toString())) && (
+                                    {((item.status === PENDING) && (item.claimant.id.toString() === user.id.toString())) && (
                                         <div className="mt-3 text-right">
                                             {item.actionLoader ? <LoaderComponent little={true} /> : (
                                                 <button type="button"
