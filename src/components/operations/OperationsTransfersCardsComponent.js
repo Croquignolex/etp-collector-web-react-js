@@ -30,11 +30,11 @@ function OperationsTransfersCardsComponent({transfers, group, user, handleCancel
                                         </li>
                                         <li className="list-group-item">
                                             <b>Compte émetteur</b>
-                                            <span className="float-right">{item.sim_outgoing.number}</span>
+                                            <span className="float-right">{item.sim_outgoing?.number}</span>
                                         </li>
                                         <li className="list-group-item">
                                             <b>Compte recepteur</b>
-                                            <span className="float-right">{item.sim_incoming.number}</span>
+                                            <span className="float-right">{item.sim_incoming?.number}</span>
                                         </li>
                                         <li className="list-group-item">
                                             <b>Flotte envoyé</b>
@@ -44,7 +44,7 @@ function OperationsTransfersCardsComponent({transfers, group, user, handleCancel
                                         </li>
                                         <li className="list-group-item">
                                             <b>Emetteur</b>
-                                            <span className="float-right">{item.user.name}</span>
+                                            <span className="float-right">{item.user?.name}</span>
                                         </li>
                                         {(!group) && (
                                             <li className="list-group-item">
@@ -58,7 +58,7 @@ function OperationsTransfersCardsComponent({transfers, group, user, handleCancel
                                         <>
                                             {
                                                 (item.status === PROCESSING) &&
-                                                (item.collector.id === user) &&
+                                                (item.collector?.id === user) &&
                                                 (item.type.includes('->' + COLLECTOR_TYPE)
                                                 ) && (
                                                     <div className="mt-3 text-right">
@@ -74,7 +74,7 @@ function OperationsTransfersCardsComponent({transfers, group, user, handleCancel
                                                 )}
                                             {
                                                 (item.status === PROCESSING) &&
-                                                (item.user.id === user) &&
+                                                (item.user?.id === user) &&
                                                 (item.type.includes(COLLECTOR_TYPE + '->')
                                                 ) && (
                                                     <div className="mt-3 text-right">
