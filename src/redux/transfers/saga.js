@@ -101,7 +101,6 @@ export function* emitGroupConfirmTransfer() {
     });
 }
 
-
 // Fetch next transfers from API
 export function* emitNextTransfersFetch() {
     yield takeLatest(EMIT_NEXT_TRANSFERS_FETCH, function*({page}) {
