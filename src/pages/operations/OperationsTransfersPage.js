@@ -12,12 +12,15 @@ import FormModalComponent from "../../components/modals/FormModalComponent";
 import DeleteModelComponent from "../../components/modals/DeleteModalComponent";
 import ConfirmModalComponent from "../../components/modals/ConfirmModalComponent";
 import OperationsTransfersCardsComponent from "../../components/operations/OperationsTransfersCardsComponent";
+import OperationsGroupTransfersCardsComponent from "../../components/operations/OperationsGroupTransfersCardsComponent";
 import OperationsTransfersAddTransferContainer from "../../containers/operations/OperationsTransfersAddTransferContainer";
 import {
     emitCancelTransfer,
     emitTransfersFetch,
     emitConfirmTransfer,
-    emitNextTransfersFetch
+    emitNextTransfersFetch,
+    emitGroupTransfersFetch,
+    emitGroupConfirmTransfer
 } from "../../redux/transfers/actions";
 import {
     applySuccess,
@@ -39,9 +42,12 @@ import {
 function OperationsTransfersPage({transfers, transfersRequests, user, hasMoreData, page, dispatch, location}) {
     // Local states
     const [needle, setNeedle] = useState('');
+    const [groupToggle, setGroupToggle] = useState(false);
     const [cancelModal, setCancelModal] = useState({show: false, body: '', id: 0});
     const [confirmModal, setConfirmModal] = useState({show: false, body: '', id: 0});
+    const [groupConfirmModal, setGroupConfirmModal] = useState({show: false, body: '', id: []});
     const [transferModal, setTransferModal] = useState({show: false, header: 'EFFECTUER UN TRANSFERT DE FLOTTE'});
+    const [groupDetailModal, setGroupDetailModal] = useState({show: false, header: 'DETAIL DU TRANSFERT DE FLOTTE GROUPE', item: {}});
 
     // Local effects
     useEffect(() => {
@@ -118,6 +124,47 @@ function OperationsTransfersPage({transfers, transfersRequests, user, hasMoreDat
         setConfirmModal({...confirmModal, show: false})
     }
 
+    // Show group supply modal form
+    const handleGroupConfirmModalShow = (item) => {
+        const ids = [];
+        item.forEach(item => {
+            ids.push(item.id);
+        });
+        const amount = item.reduce((acc, val) => acc + val.amount, 0);
+        setGroupConfirmModal({...groupConfirmModal, id: ids, body: `Confirmer le transfert de flotte groupee de ${item[0].user.name} de ${formatNumber(amount)}?`, show: true})
+    }
+
+    // Hide group supply modal form
+    const handleGroupConfirmModalHide = () => {
+        setGroupConfirmModal({...groupConfirmModal, show: false})
+    }
+
+    // Show group detail modal form
+    const handleGroupDetailsModalShow = (item) => {
+        setGroupDetailModal({...groupDetailModal, item, show: true})
+    }
+
+    // Hide group detail modal form
+    const handleGroupDetailsModalHide = () => {
+        setGroupDetailModal({...groupDetailModal, show: false})
+    }
+
+    const handleGroup = () => {
+        dispatch(emitGroupTransfersFetch());
+        setGroupToggle(true)
+    }
+
+    const handleUngroup = () => {
+        dispatch(emitTransfersFetch());
+        setGroupToggle(false);
+    }
+
+    // Trigger when group transfer confirm confirmed on modal
+    const handleGroupConfirm = (id) => {
+        handleGroupConfirmModalHide();
+        dispatch(emitGroupConfirmTransfer({ids: id}));
+    };
+
     // Trigger when clearance confirm confirmed on modal
     const handleConfirm = (id) => {
         handleConfirmModalHide();
@@ -153,32 +200,63 @@ function OperationsTransfersPage({transfers, transfersRequests, user, hasMoreDat
                                             {requestFailed(transfersRequests.next) && <ErrorAlertComponent message={transfersRequests.next.message} />}
                                             {requestFailed(transfersRequests.apply) && <ErrorAlertComponent message={transfersRequests.apply.message} />}
                                             {requestFailed(transfersRequests.cancel) && <ErrorAlertComponent message={transfersRequests.cancel.message} />}
-                                            <button type="button"
-                                                    className="btn btn-theme mb-2"
-                                                    onClick={handleTransferModalShow}
-                                            >
-                                                <i className="fa fa-exchange" /> Effectuer un transfert
-                                            </button>
-                                            {/* Search result & Infinite scroll */}
-                                            {(needle !== '' && needle !== undefined)
-                                                ? <OperationsTransfersCardsComponent user={user}
-                                                                                     transfers={searchEngine(transfers, needle)}
-                                                                                     handleCancelModalShow={handleCancelModalShow}
-                                                                                     handleConfirmModalShow={handleConfirmModalShow}
-                                                />
-                                                : (requestLoading(transfersRequests.list) ? <LoaderComponent /> :
-                                                        <InfiniteScroll hasMore={hasMoreData}
-                                                                        loader={<LoaderComponent />}
-                                                                        dataLength={transfers.length}
-                                                                        next={handleNextTransfersData}
-                                                                        style={{ overflow: 'hidden' }}
-                                                        >
-                                                            <OperationsTransfersCardsComponent user={user}
-                                                                                               transfers={transfers}
-                                                                                               handleCancelModalShow={handleCancelModalShow}
-                                                                                               handleConfirmModalShow={handleConfirmModalShow}
+                                            {(groupToggle) ?
+                                                ((requestLoading(transfersRequests.list) || requestLoading(transfersRequests.apply)) ? <LoaderComponent /> :
+                                                        <>
+                                                            <button type="button"
+                                                                    className="btn btn-secondary mb-2 ml-2"
+                                                                    onClick={handleUngroup}
+                                                            >
+                                                                <i className="fa fa-table" /> Dégrouper
+                                                            </button>
+                                                            <OperationsGroupTransfersCardsComponent transfers={transfers}
+                                                                                                    handleGroupConfirmModalShow={handleGroupConfirmModalShow}
+                                                                                                    handleGroupDetailsModalShow={handleGroupDetailsModalShow}
                                                             />
-                                                        </InfiniteScroll>
+                                                        </>
+                                                ) :
+                                                (
+                                                    <>
+
+                                                        {!requestLoading(transfersRequests.list) && (
+                                                            <>
+                                                                <button type="button"
+                                                                        className="btn btn-theme mb-2 ml-2"
+                                                                        onClick={handleTransferModalShow}
+                                                                >
+                                                                    <i className="fa fa-exchange" /> Transferer la flotte
+                                                                </button>
+                                                                <button type="button"
+                                                                        className="btn btn-danger mb-2 ml-2"
+                                                                        onClick={handleGroup}
+                                                                >
+                                                                    <i className="fa fa-table"/> Grouper
+                                                                </button>
+                                                            </>
+                                                        )}
+                                                        {/* Search result & Infinite scroll */}
+                                                        {(needle !== '' && needle !== undefined)
+                                                            ? <OperationsTransfersCardsComponent user={user}
+                                                                                                 transfers={searchEngine(transfers, needle)}
+                                                                                                 handleCancelModalShow={handleCancelModalShow}
+                                                                                                 handleConfirmModalShow={handleConfirmModalShow}
+                                                            />
+                                                            : (requestLoading(transfersRequests.list) ? <LoaderComponent /> :
+                                                                    <InfiniteScroll hasMore={hasMoreData}
+                                                                                    loader={<LoaderComponent />}
+                                                                                    dataLength={transfers.length}
+                                                                                    next={handleNextTransfersData}
+                                                                                    style={{ overflow: 'hidden' }}
+                                                                    >
+                                                                        <OperationsTransfersCardsComponent user={user}
+                                                                                                           transfers={transfers}
+                                                                                                           handleCancelModalShow={handleCancelModalShow}
+                                                                                                           handleConfirmModalShow={handleConfirmModalShow}
+                                                                        />
+                                                                    </InfiniteScroll>
+                                                            )
+                                                        }
+                                                    </>
                                                 )
                                             }
                                         </div>
@@ -194,12 +272,19 @@ function OperationsTransfersPage({transfers, transfersRequests, user, hasMoreDat
                                    handleModal={handleConfirm}
                                    handleClose={handleConfirmModalHide}
             />
+            <ConfirmModalComponent modal={groupConfirmModal}
+                                   handleModal={handleGroupConfirm}
+                                   handleClose={handleGroupConfirmModalHide}
+            />
             <DeleteModelComponent modal={cancelModal}
                                   handleModal={handleCancel}
                                   handleClose={handleCancelModalHide}
             />
             <FormModalComponent modal={transferModal} handleClose={handleTransferModalHide}>
                 <OperationsTransfersAddTransferContainer handleClose={handleTransferModalHide} />
+            </FormModalComponent>
+            <FormModalComponent modal={groupDetailModal} handleClose={handleGroupDetailsModalHide}>
+                <OperationsTransfersCardsComponent group transfers={groupDetailModal.item} />
             </FormModalComponent>
         </>
     )

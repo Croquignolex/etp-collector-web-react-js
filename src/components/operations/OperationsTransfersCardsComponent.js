@@ -8,16 +8,19 @@ import {dateToString, formatNumber} from "../../functions/generalFunctions";
 import {CANCEL, COLLECTOR_TYPE, DONE, PROCESSING} from "../../constants/typeConstants";
 
 // Component
-function OperationsTransfersCardsComponent({transfers, user, handleCancelModalShow, handleConfirmModalShow}) {
+function OperationsTransfersCardsComponent({transfers, group, user, handleCancelModalShow, handleConfirmModalShow}) {
     // Render
     return (
         <>
             <div className="row m-1">
                 {transfers.map((item, key) => {
                     return (
-                        <div className="col-lg-4 col-md-6" key={key}>
+                        <div className={`${group ? "col-lg-6" : "col-lg-4"} col-md-6`} key={key}>
                             <div className="card">
-                                <div className={`${fleetTypeBadgeColor(item.status).background} card-header`} />
+                                {group
+                                    ? <div className={`bg-secondary card-header`} />
+                                    : <div className={`${fleetTypeBadgeColor(item.status).background} card-header`} />
+                                }
                                 <div className="card-body">
                                     <ul className="list-group list-group-unbordered">
                                         <OperatorComponent operator={item.operator} />
@@ -43,43 +46,49 @@ function OperationsTransfersCardsComponent({transfers, user, handleCancelModalSh
                                             <b>Emetteur</b>
                                             <span className="float-right">{item.user.name}</span>
                                         </li>
-                                        <li className="list-group-item">
-                                            {item.status === DONE && <b className="text-success text-bold">Confirmé</b>}
-                                            {item.status === CANCEL && <b className="text-danger text-bold">Annulé</b>}
-                                            {item.status === PROCESSING && <b className="text-danger text-bold">En attente de confirmation</b>}
-                                        </li>
+                                        {(!group) && (
+                                            <li className="list-group-item">
+                                                {item.status === DONE && <b className="text-success text-bold">Confirmé</b>}
+                                                {item.status === CANCEL && <b className="text-danger text-bold">Annulé</b>}
+                                                {item.status === PROCESSING && <b className="text-danger text-bold">En attente de confirmation</b>}
+                                            </li>
+                                        )}
                                     </ul>
-                                    {
-                                        (item.status === PROCESSING) &&
-                                        (item.collector.id === user) &&
-                                        (item.type.includes('->' + COLLECTOR_TYPE)
-                                    ) && (
-                                        <div className="mt-3 text-right">
-                                            {item.actionLoader ? <LoaderComponent little={true} /> : (
-                                                <button type="button"
-                                                        className="btn btn-theme btn-sm"
-                                                        onClick={() => handleConfirmModalShow(item)}
-                                                >
-                                                    <i className="fa fa-check" /> Confirmer
-                                                </button>
-                                            )}
-                                        </div>
-                                    )}
-                                    {
-                                        (item.status === PROCESSING) &&
-                                        (item.user.id === user) &&
-                                        (item.type.includes(COLLECTOR_TYPE + '->')
-                                    ) && (
-                                        <div className="mt-3 text-right">
-                                            {item.actionLoader ? <LoaderComponent little={true} /> : (
-                                                <button type="button"
-                                                        className="btn btn-danger btn-sm"
-                                                        onClick={() => handleCancelModalShow(item)}
-                                                >
-                                                    <i className="fa fa-times" /> Annuler
-                                                </button>
-                                            )}
-                                        </div>
+                                    {(!group) && (
+                                        <>
+                                            {
+                                                (item.status === PROCESSING) &&
+                                                (item.collector.id === user) &&
+                                                (item.type.includes('->' + COLLECTOR_TYPE)
+                                                ) && (
+                                                    <div className="mt-3 text-right">
+                                                        {item.actionLoader ? <LoaderComponent little={true} /> : (
+                                                            <button type="button"
+                                                                    className="btn btn-theme btn-sm"
+                                                                    onClick={() => handleConfirmModalShow(item)}
+                                                            >
+                                                                <i className="fa fa-check" /> Confirmer
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                )}
+                                            {
+                                                (item.status === PROCESSING) &&
+                                                (item.user.id === user) &&
+                                                (item.type.includes(COLLECTOR_TYPE + '->')
+                                                ) && (
+                                                    <div className="mt-3 text-right">
+                                                        {item.actionLoader ? <LoaderComponent little={true} /> : (
+                                                            <button type="button"
+                                                                    className="btn btn-danger btn-sm"
+                                                                    onClick={() => handleCancelModalShow(item)}
+                                                            >
+                                                                <i className="fa fa-times" /> Annuler
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                )}
+                                        </>
                                     )}
                                 </div>
                             </div>
@@ -100,10 +109,15 @@ function OperationsTransfersCardsComponent({transfers, user, handleCancelModalSh
 
 // Prop types to ensure destroyed props data type
 OperationsTransfersCardsComponent.propTypes = {
-    user: PropTypes.string.isRequired,
+    group: PropTypes.bool,
     transfers: PropTypes.array.isRequired,
-    handleCancelModalShow: PropTypes.func.isRequired,
-    handleConfirmModalShow: PropTypes.func.isRequired,
+    handleCancelModalShow: PropTypes.func,
+    handleConfirmModalShow: PropTypes.func,
+};
+
+// Prop types to ensure destroyed props data type
+OperationsTransfersCardsComponent.defaultProps = {
+    group: false
 };
 
 export default React.memo(OperationsTransfersCardsComponent);
