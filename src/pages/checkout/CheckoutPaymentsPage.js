@@ -7,10 +7,18 @@ import LoaderComponent from "../../components/LoaderComponent";
 import AppLayoutContainer from "../../containers/AppLayoutContainer";
 import ErrorAlertComponent from "../../components/ErrorAlertComponent";
 import TableSearchComponent from "../../components/TableSearchComponent";
+import FormModalComponent from "../../components/modals/FormModalComponent";
 import ConfirmModalComponent from "../../components/modals/ConfirmModalComponent";
 import {CHECKOUT_INTERNAL_PAYMENTS_PAGE} from "../../constants/pageNameConstants";
 import CheckoutPaymentsCardsComponent from "../../components/checkout/CheckoutPaymentsCardsComponent";
-import {emitConfirmPayment, emitNextPaymentsFetch, emitPaymentsFetch} from "../../redux/payments/actions";
+import OperationsGroupPaymentsCardsComponent from "../../components/checkout/OperationsGroupPaymentsCardsComponent";
+import {
+    emitPaymentsFetch,
+    emitConfirmPayment,
+    emitNextPaymentsFetch,
+    emitGroupPaymentsFetch,
+    emitGroupConfirmPayment
+} from "../../redux/payments/actions";
 import {
     storePaymentsRequestReset,
     storeNextPaymentsRequestReset,
@@ -30,7 +38,10 @@ import {
 function CheckoutPaymentsPage({payments, paymentsRequests, hasMoreData, page, dispatch, location}) {
     // Local states
     const [needle, setNeedle] = useState('');
+    const [groupToggle, setGroupToggle] = useState(false);
     const [confirmModal, setConfirmModal] = useState({show: false, body: '', id: 0});
+    const [groupConfirmModal, setGroupConfirmModal] = useState({show: false, body: '', id: []});
+    const [groupDetailModal, setGroupDetailModal] = useState({show: false, header: "DETAIL DE L'ENCAISSEMENT INTERNE GROUPE", item: {}});
 
     // Local effects
     useEffect(() => {
@@ -77,6 +88,47 @@ function CheckoutPaymentsPage({payments, paymentsRequests, hasMoreData, page, di
         setConfirmModal({...confirmModal, show: false})
     }
 
+    // Show group supply modal form
+    const handleGroupConfirmModalShow = (item) => {
+        const ids = [];
+        item.forEach(item => {
+            ids.push(item.id);
+        });
+        const amount = item.reduce((acc, val) => acc + val.amount, 0);
+        setGroupConfirmModal({...groupConfirmModal, id: ids, body: `Confirmer l'encaissement groupée de ${item[0].manager.name} de ${formatNumber(amount)}?`, show: true})
+    }
+
+    // Hide group supply modal form
+    const handleGroupConfirmModalHide = () => {
+        setGroupConfirmModal({...groupConfirmModal, show: false})
+    }
+
+    // Show group detail modal form
+    const handleGroupDetailsModalShow = (item) => {
+        setGroupDetailModal({...groupDetailModal, item, show: true})
+    }
+
+    // Hide group detail modal form
+    const handleGroupDetailsModalHide = () => {
+        setGroupDetailModal({...groupDetailModal, show: false})
+    }
+
+    const handleGroup = () => {
+        dispatch(emitGroupPaymentsFetch());
+        setGroupToggle(true)
+    }
+
+    const handleUngroup = () => {
+        dispatch(emitPaymentsFetch());
+        setGroupToggle(false);
+    }
+
+    // Trigger when group transfer confirm confirmed on modal
+    const handleGroupConfirm = (id) => {
+        handleGroupConfirmModalHide();
+        dispatch(emitGroupConfirmPayment({ids: id}));
+    };
+
     // Trigger when clearance confirm confirmed on modal
     const handleConfirm = (id) => {
         handleConfirmModalHide();
@@ -88,7 +140,7 @@ function CheckoutPaymentsPage({payments, paymentsRequests, hasMoreData, page, di
         <>
             <AppLayoutContainer pathname={location.pathname}>
                 <div className="content-wrapper">
-                    <HeaderComponent title={CHECKOUT_INTERNAL_PAYMENTS_PAGE} icon={'fa fa-arrow-circle-up'} />
+                    <HeaderComponent title={CHECKOUT_INTERNAL_PAYMENTS_PAGE} icon={'fa fa-arrow-circle-down'} />
                     <section className="content">
                         <div className='container-fluid'>
                             <div className="row">
@@ -104,22 +156,54 @@ function CheckoutPaymentsPage({payments, paymentsRequests, hasMoreData, page, di
                                             {/* Error message */}
                                             {requestFailed(paymentsRequests.list) && <ErrorAlertComponent message={paymentsRequests.list.message} />}
                                             {requestFailed(paymentsRequests.next) && <ErrorAlertComponent message={paymentsRequests.next.message} />}
-                                            {/* Search result & Infinite scroll */}
-                                            {(needle !== '' && needle !== undefined)
-                                                ? <CheckoutPaymentsCardsComponent payments={searchEngine(payments, needle)}
-                                                                                  handleConfirmModalShow={handleConfirmModalShow}
-                                                />
-                                                : (requestLoading(paymentsRequests.list) ? <LoaderComponent /> :
-                                                        <InfiniteScroll hasMore={hasMoreData}
-                                                                        loader={<LoaderComponent />}
-                                                                        dataLength={payments.length}
-                                                                        next={handleNextPaymentsData}
-                                                                        style={{ overflow: 'hidden' }}
-                                                        >
-                                                            <CheckoutPaymentsCardsComponent payments={payments}
-                                                                                            handleConfirmModalShow={handleConfirmModalShow}
+                                            {requestFailed(paymentsRequests.apply) && <ErrorAlertComponent message={paymentsRequests.apply.message} />}
+                                            {(groupToggle) ?
+                                                ((requestLoading(paymentsRequests.list) || requestLoading(paymentsRequests.apply)) ? <LoaderComponent /> :
+                                                        <>
+                                                            <button type="button"
+                                                                    className="btn btn-secondary mb-2 ml-2"
+                                                                    onClick={handleUngroup}
+                                                            >
+                                                                <i className="fa fa-table" /> Dégrouper
+                                                            </button>
+                                                            <OperationsGroupPaymentsCardsComponent payments={payments}
+                                                                                                   handleGroupConfirmModalShow={handleGroupConfirmModalShow}
+                                                                                                   handleGroupDetailsModalShow={handleGroupDetailsModalShow}
                                                             />
-                                                        </InfiniteScroll>
+                                                        </>
+                                                ) :
+                                                (
+                                                    <>
+
+                                                        {!requestLoading(paymentsRequests.list) && (
+                                                            <>
+                                                                <button type="button"
+                                                                        className="btn btn-danger mb-2 ml-2"
+                                                                        onClick={handleGroup}
+                                                                >
+                                                                    <i className="fa fa-table"/> Grouper
+                                                                </button>
+                                                            </>
+                                                        )}
+                                                        {/* Search result & Infinite scroll */}
+                                                        {(needle !== '' && needle !== undefined)
+                                                            ? <CheckoutPaymentsCardsComponent payments={searchEngine(payments, needle)}
+                                                                                              handleConfirmModalShow={handleConfirmModalShow}
+                                                            />
+                                                            : (requestLoading(paymentsRequests.list) ? <LoaderComponent /> :
+                                                                    <InfiniteScroll hasMore={hasMoreData}
+                                                                                    loader={<LoaderComponent />}
+                                                                                    dataLength={payments.length}
+                                                                                    next={handleNextPaymentsData}
+                                                                                    style={{ overflow: 'hidden' }}
+                                                                    >
+                                                                        <CheckoutPaymentsCardsComponent payments={payments}
+                                                                                                        handleConfirmModalShow={handleConfirmModalShow}
+                                                                        />
+                                                                    </InfiniteScroll>
+                                                            )
+                                                        }
+                                                    </>
                                                 )
                                             }
                                         </div>
@@ -135,6 +219,13 @@ function CheckoutPaymentsPage({payments, paymentsRequests, hasMoreData, page, di
                                    handleModal={handleConfirm}
                                    handleClose={handleConfirmModalHide}
             />
+            <ConfirmModalComponent modal={groupConfirmModal}
+                                   handleModal={handleGroupConfirm}
+                                   handleClose={handleGroupConfirmModalHide}
+            />
+            <FormModalComponent modal={groupDetailModal} handleClose={handleGroupDetailsModalHide}>
+                <CheckoutPaymentsCardsComponent group payments={groupDetailModal.item} />
+            </FormModalComponent>
         </>
     )
 }
