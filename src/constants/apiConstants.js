@@ -115,6 +115,8 @@ export const CANCEL_OUTLAY_API_PATH = `${API_URL}/annuler_decaissement`;
 // Payment
 export const PAYMENTS_API_PATH = `${API_URL}/encaissement_list`;
 export const CONFIRM_PAYMENT_API_PATH = `${API_URL}/approuve_encaissement`;
+export const GROUP_PAYMENTS_API_PATH = `${API_URL}/encaissement_list_groupee`;
+export const GROUP_CONFIRM_PAYMENT_API_PATH = `${API_URL}/approuve_encaissement_groupee`;
 
 // Checkout
 export const REVENUES_API_PATH = `${API_URL}/treasuries_in`;
