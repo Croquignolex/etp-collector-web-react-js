@@ -48,6 +48,10 @@ function reduce(state = initialState, action) {
             return nextState || state;
         // ======================================================== Confirm payment
         // Resolve event to set confirm payment init request store data
+        case actions.STORE_CONFIRM_PAYMENT_REQUEST_INIT:
+            nextState = {...state, apply: requestInitValue()};
+            return nextState || state;
+        // Resolve event to set confirm payment init request store data
         case actions.STORE_CONFIRM_PAYMENT_REQUEST_FAILED:
             nextState = {...state, apply: requestFailedValue(action.message)};
             return nextState || state;
