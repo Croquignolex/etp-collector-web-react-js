@@ -23,7 +23,7 @@ function OperationsGroupSuppliesAddReturnComponent({supply, request, sims, user,
     const [outgoingSim, setOutgoingSim] = useState(DEFAULT_FORM_DATA);
     const [incomingSim, setIncomingSim] = useState(DEFAULT_FORM_DATA);
 
-    const amount = supply.reduce((acc, val) => acc + val.remaining, 0);
+    const amount = supply.reduce((acc, val) => acc + parseInt(val.remaining, 10), 0);
 
     // Local effects
     useEffect(() => {

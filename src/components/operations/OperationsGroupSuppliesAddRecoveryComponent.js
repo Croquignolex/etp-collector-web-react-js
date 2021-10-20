@@ -10,7 +10,7 @@ import {applySuccess, requestFailed, requestLoading, requestSucceeded} from "../
 
 // Component
 function OperationsGroupSuppliesAddRecoveryComponent({supply, request, dispatch, handleClose}) {
-    const amount = supply.reduce((acc, val) => acc + val.remaining, 0);
+    const amount = supply.reduce((acc, val) => acc + parseInt(val.remaining, 10), 0);
 
     // Local effects
     useEffect(() => {
