@@ -3,28 +3,27 @@ import React, {useEffect, useMemo, useState} from 'react';
 
 import DisabledInput from "../form/DisabledInput";
 import ButtonComponent from "../form/ButtonComponent";
-import AmountComponent from "../form/AmountComponent";
 import SelectComponent from "../form/SelectComponent";
-import {FLEET_TYPE} from "../../constants/typeConstants";
 import ErrorAlertComponent from "../ErrorAlertComponent";
-import {emitNewReturn} from "../../redux/returns/actions";
+import {FLEET_TYPE} from "../../constants/typeConstants";
 import {emitAllSimsFetch} from "../../redux/sims/actions";
 import {requiredChecker} from "../../functions/checkerFunctions";
 import {DEFAULT_FORM_DATA} from "../../constants/defaultConstants";
 import {playWarningSound} from "../../functions/playSoundFunctions";
+import {emitGroupSupplyAddReturn} from "../../redux/supplies/actions";
 import {storeAllSimsRequestReset} from "../../redux/requests/sims/actions";
 import {storeReturnRequestReset} from "../../redux/requests/returns/actions";
-import {storeAllAgentsRequestReset} from "../../redux/requests/agents/actions";
 import {dataToArrayForSelect, mappedSims} from "../../functions/arrayFunctions";
 import {applySuccess, requestFailed, requestLoading, requestSucceeded} from "../../functions/generalFunctions";
 
 // Component
-function OperationsFleetsReturnComponent({supply, request, sims, user, allSimsRequests, dispatch, handleClose}) {
+function OperationsGroupSuppliesAddReturnComponent({supply, request, sims, user, allSimsRequests, dispatch, handleClose}) {
     // Local state
     const [selectedOp, setSelectedOp] = useState('');
     const [outgoingSim, setOutgoingSim] = useState(DEFAULT_FORM_DATA);
     const [incomingSim, setIncomingSim] = useState(DEFAULT_FORM_DATA);
-    const [amount, setAmount] = useState({...DEFAULT_FORM_DATA, data: supply.remaining});
+
+    const amount = supply.reduce((acc, val) => acc + val.remaining, 0);
 
     // Local effects
     useEffect(() => {
@@ -50,17 +49,12 @@ function OperationsFleetsReturnComponent({supply, request, sims, user, allSimsRe
         shouldResetErrorData();
         const foundSim = sims.find(item => item.id === data);
         setSelectedOp(foundSim && foundSim.operator.id);
-        setOutgoingSim({...outgoingSim, isValid: true, data});
+        setOutgoingSim({...outgoingSim, isValid: true, data})
     }
 
     const handleIncomingSelect = (data) => {
         shouldResetErrorData();
-        setIncomingSim({...incomingSim,  isValid: true, data});
-    }
-
-    const handleAmountInput = (data) => {
-        shouldResetErrorData();
-        setAmount({...amount, isValid: true, data});
+        setIncomingSim({...incomingSim,  isValid: true, data})
     }
 
     // Build select options
@@ -77,33 +71,34 @@ function OperationsFleetsReturnComponent({supply, request, sims, user, allSimsRe
 
     // Build select options
     const outgoingSelectOptions = useMemo(() => {
-        return dataToArrayForSelect(mappedSims(sims.filter(item => supply.agent.id === item.agent.id)))
+        return dataToArrayForSelect(mappedSims(sims.filter(item => supply[0].agent.id === item.agent.id)))
     }, [sims, supply]);
 
     // Reset error alert
     const shouldResetErrorData = () => {
         dispatch(storeReturnRequestReset());
         dispatch(storeAllSimsRequestReset());
-        dispatch(storeAllAgentsRequestReset());
     };
 
     // Trigger add supply form submit
     const handleSubmit = (e) => {
         e.preventDefault();
         shouldResetErrorData();
-        const _amount = requiredChecker(amount);
         const _outgoingSim = requiredChecker(outgoingSim);
         const _incomingSim = requiredChecker(incomingSim);
         // Set value
-        setAmount(_amount);
         setOutgoingSim(_outgoingSim);
         setIncomingSim(_incomingSim);
-        const validationOK = (_amount.isValid && _incomingSim.isValid && _outgoingSim.isValid);
+        const validationOK = (_incomingSim.isValid && _outgoingSim.isValid);
+        const ids = [];
+        supply.forEach(item => {
+            ids.push(item.id);
+        });
         // Check
         if(validationOK) {
-            dispatch(emitNewReturn({
-                supply: supply.id,
-                amount: _amount.data,
+            dispatch(emitGroupSupplyAddReturn({
+                ids,
+                amount,
                 agentSim: _outgoingSim.data,
                 managerSim: _incomingSim.data
             }));
@@ -118,17 +113,22 @@ function OperationsFleetsReturnComponent({supply, request, sims, user, allSimsRe
             {requestFailed(allSimsRequests) && <ErrorAlertComponent message={allSimsRequests.message} />}
             <form onSubmit={handleSubmit}>
                 <div className='row'>
-                    <div className='col-sm-6'>
-                        <DisabledInput label='Agent'
-                                       id='inputAgent'
-                                       val={supply.agent.name}
+                    <div className='col-sm-4'>
+                        <DisabledInput id='inputAgent'
+                                       label='Agent/Ressource'
+                                       val={supply[0].agent.name}
                         />
                     </div>
-                    <div className='col-sm-6'>
-                        <AmountComponent input={amount}
-                                         id='inputFleet'
-                                         label='Flotte à retourner'
-                                         handleInput={handleAmountInput}
+                    <div className='col-sm-4'>
+                        <DisabledInput val={amount}
+                                       id='inputAmount'
+                                       label='Flotte à retourner'
+                        />
+                    </div>
+                    <div className='col-sm-4'>
+                        <DisabledInput id='inputNumber'
+                                       val={supply.length}
+                                       label='Flottages groupés'
                         />
                     </div>
                 </div>
@@ -137,7 +137,7 @@ function OperationsFleetsReturnComponent({supply, request, sims, user, allSimsRe
                         <SelectComponent input={outgoingSim}
                                          id='inputSimAgent'
                                          label='Compte émetteur'
-                                         title='Choisir une puce'
+                                         title='Choisir un compte'
                                          options={outgoingSelectOptions}
                                          handleInput={handleOutgoingSelect}
                                          requestProcessing={requestLoading(allSimsRequests)}
@@ -147,7 +147,7 @@ function OperationsFleetsReturnComponent({supply, request, sims, user, allSimsRe
                         <SelectComponent input={incomingSim}
                                          id='inputSimManager'
                                          label='Compte recepteur'
-                                         title='Choisir une puce'
+                                         title='Choisir un compte'
                                          options={incomingSelectOptions}
                                          handleInput={handleIncomingSelect}
                                          requestProcessing={requestLoading(allSimsRequests)}
@@ -163,14 +163,14 @@ function OperationsFleetsReturnComponent({supply, request, sims, user, allSimsRe
 }
 
 // Prop types to ensure destroyed props data type
-OperationsFleetsReturnComponent.propTypes = {
+OperationsGroupSuppliesAddReturnComponent.propTypes = {
     sims: PropTypes.array.isRequired,
     user: PropTypes.object.isRequired,
-    supply: PropTypes.object.isRequired,
+    supply: PropTypes.array.isRequired,
     dispatch: PropTypes.func.isRequired,
     request: PropTypes.object.isRequired,
     handleClose: PropTypes.func.isRequired,
     allSimsRequests: PropTypes.object.isRequired,
 };
 
-export default React.memo(OperationsFleetsReturnComponent);
+export default React.memo(OperationsGroupSuppliesAddReturnComponent);
