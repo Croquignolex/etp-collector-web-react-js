@@ -1,16 +1,23 @@
 import PropTypes from "prop-types";
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import DisabledInput from "../form/DisabledInput";
 import ButtonComponent from "../form/ButtonComponent";
+import AmountComponent from "../form/AmountComponent";
 import ErrorAlertComponent from "../ErrorAlertComponent";
+import {requiredChecker} from "../../functions/checkerFunctions";
+import {DEFAULT_FORM_DATA} from "../../constants/defaultConstants";
 import {emitGroupSupplyAddRecovery} from "../../redux/supplies/actions";
 import {storeRecoverRequestReset} from "../../redux/requests/recoveries/actions";
 import {applySuccess, requestFailed, requestLoading, requestSucceeded} from "../../functions/generalFunctions";
 
 // Component
 function OperationsGroupSuppliesAddRecoveryComponent({supply, request, dispatch, handleClose}) {
-    const amount = supply.reduce((acc, val) => acc + parseInt(val.remaining, 10), 0);
+    // Local state
+    const [amount, setAmount] = useState({
+        ...DEFAULT_FORM_DATA,
+        data: supply.reduce((acc, val) => acc + parseInt(val.remaining, 10), 0)
+    });
 
     // Local effects
     useEffect(() => {
@@ -31,6 +38,10 @@ function OperationsGroupSuppliesAddRecoveryComponent({supply, request, dispatch,
         // eslint-disable-next-line
     }, [request]);
 
+    const handleAmountInput = (data) => {
+        shouldResetErrorData();
+        setAmount({...amount, isValid: true, data})
+    }
 
     // Reset error alert
     const shouldResetErrorData = () => {
@@ -41,14 +52,21 @@ function OperationsGroupSuppliesAddRecoveryComponent({supply, request, dispatch,
     const handleSubmit = (e) => {
         e.preventDefault();
         shouldResetErrorData();
-        const ids = [];
-        supply.forEach(item => {
-            ids.push(item.id);
-        });
-        dispatch(emitGroupSupplyAddRecovery({
-            ids,
-            amount
-        }));
+        const _amount = requiredChecker(amount);
+        // Set value
+        setAmount(_amount);
+        const validationOK = (_amount.isValid);
+        // Check
+        if(validationOK) {
+            const ids = [];
+            supply.forEach(item => {
+                ids.push(item.id);
+            });
+            dispatch(emitGroupSupplyAddRecovery({
+                ids,
+                amount
+            }));
+        }
     };
 
     // Render
@@ -72,9 +90,10 @@ function OperationsGroupSuppliesAddRecoveryComponent({supply, request, dispatch,
                 </div>
                 <div className='row'>
                     <div className='col-sm-6'>
-                        <DisabledInput val={amount}
-                                       id='inputAmount'
-                                       label='Montant à récouvrir'
+                        <AmountComponent input={amount}
+                                         id='inputFleet'
+                                         label='Montant'
+                                         handleInput={handleAmountInput}
                         />
                     </div>
                 </div>
