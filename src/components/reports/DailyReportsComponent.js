@@ -53,7 +53,7 @@ function DailyMovementsComponent({selectedDate, reports, handleSelectedDate}) {
                     <div className="card">
                         <div className="table-responsive">
                             <table className="table table-hover text-nowrap table-bordered">
-                                <thead>
+                                <thead className="bg-secondary">
                                     <tr>
                                         <th>DATE</th>
                                         <th>TYPE</th>

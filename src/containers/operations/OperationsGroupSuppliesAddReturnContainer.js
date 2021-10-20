@@ -4,7 +4,7 @@ import OperationsGroupSuppliesAddReturnComponent from "../../components/operatio
 
 // Map state function to component props
 const mapStateToProps = (state) => ({
-    user: state.user.id,
+    user: state.user,
     sims: state.sims.list,
     request: state.returnsRequests.add,
     allSimsRequests: state.simsRequests.all,

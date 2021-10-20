@@ -63,7 +63,7 @@ function OperationsGroupSuppliesAddReturnComponent({supply, request, sims, user,
             item => (
                 (item.operator.id === selectedOp) && (
                     (item.type.name === FLEET_TYPE) ||
-                    (user === item.collector.id)
+                    (user.id === item.collector.id)
                 )
             )
         )))
