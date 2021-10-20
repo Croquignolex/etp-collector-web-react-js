@@ -72,10 +72,12 @@ export const All_OPERATORS_API_PATH = `${API_URL}/flote_list_all`;
 export const NEW_FLEET_RECOVERIES_API_PATH = `${API_URL}/retour_flotte`;
 export const CANCEL_RETURN_API_PATH = `${API_URL}/annuler_retour_flotte`;
 export const FLEET_RECOVERIES_API_PATH = `${API_URL}/list_retour_flotte_by_rz`;
+export const GROUP_NEW_FLEET_RECOVERIES_API_PATH = `${API_URL}/retour_flotte_groupee`;
 
 // Cash recovery
 export const NEW_CASH_RECOVERIES_API_PATH = `${API_URL}/recouvrement`;
 export const CASH_RECOVERIES_API_PATH = `${API_URL}/list_recouvrement_by_rz`;
+export const GROUP_NEW_CASH_RECOVERIES_API_PATH = `${API_URL}/recouvrement_groupee`;
 
 // Transfers
 export const NEW_TRANSFERS_API_PATH = `${API_URL}/flottage_rz`;
@@ -91,6 +93,7 @@ export const NEW_SUPPLY_API_PATH = `${API_URL}/flottage_express`;
 export const CANCEL_SUPPLY_API_PATH = `${API_URL}/annuler_flottage`;
 export const NEW_ANONYMOUS_SUPPLY_API_PATH = `${API_URL}/flottage_anonyme`;
 export const SEARCH_SUPPLIES_API_PATH = `${API_URL}/search_list_all_flottage`;
+export const GROUP_SUPPLIES_API_PATH = `${API_URL}/list_all_flottage_groupee`;
 
 // Refuels
 export const CANCEL_REFUEL_API_PATH = `${API_URL}/annuler_destockage`;

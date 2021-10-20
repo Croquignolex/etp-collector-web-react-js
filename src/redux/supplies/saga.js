@@ -1,3 +1,4 @@
+import Lodash from "lodash";
 import {all, call, fork, put, takeLatest} from 'redux-saga/effects'
 
 import {DONE} from "../../constants/typeConstants";
@@ -14,7 +15,11 @@ import {
     storeSetSupplyActionData,
     EMIT_NEXT_SUPPLIES_FETCH,
     EMIT_ADD_ANONYMOUS_SUPPLY,
+    EMIT_GROUP_SUPPLIES_FETCH,
+    storeSetGroupSuppliesData,
     EMIT_SEARCH_SUPPLIES_FETCH,
+    EMIT_GROUP_SUPPLY_ADD_RETURN,
+    EMIT_GROUP_SUPPLY_ADD_RECOVERY,
     storeStopInfiniteScrollSupplyData
 } from "./actions";
 import {
@@ -34,6 +39,16 @@ import {
     storeAddAnonymousSupplyRequestFailed,
     storeAddAnonymousSupplyRequestSucceed
 } from "../requests/supplies/actions";
+import {
+    storeRecoverRequestInit,
+    storeRecoverRequestFailed,
+    storeRecoverRequestSucceed
+} from "../requests/recoveries/actions";
+import {
+    storeReturnRequestInit,
+    storeReturnRequestFailed,
+    storeReturnRequestSucceed
+} from "../requests/returns/actions";
 
 // Fetch supplies from API
 export function* emitSuppliesFetch() {
@@ -46,6 +61,28 @@ export function* emitSuppliesFetch() {
             const supplies = extractSuppliesData(apiResponse.data.flottages);
             // Fire event to redux
             yield put(storeSetSuppliesData({supplies, hasMoreData: apiResponse.data.hasMoreData, page: 2}));
+            // Fire event for request
+            yield put(storeSuppliesRequestSucceed({message: apiResponse.message}));
+        } catch (message) {
+            // Fire event for request
+            yield put(storeSuppliesRequestFailed({message}));
+        }
+    });
+}
+
+// Fetch group fleets from API
+export function* emitGroupSuppliesFetch() {
+    yield takeLatest(EMIT_GROUP_SUPPLIES_FETCH, function*() {
+        try {
+            // Fire event for request
+            yield put(storeSuppliesRequestInit());
+            yield put(storeSetSuppliesData({supplies: [], hasMoreData: false, page: 0}));
+            const apiResponse = yield call(apiGetRequest, api.GROUP_SUPPLIES_API_PATH);
+            // Extract data
+            const supplies = extractSuppliesData(apiResponse.data.flottages);
+            const groupedFleet = Object.values(Lodash.groupBy(supplies, fleet => [fleet.status, fleet.agent.id, fleet.operator.id]));
+            // Fire event to redux
+            yield put(storeSetGroupSuppliesData({supplies: groupedFleet}));
             // Fire event for request
             yield put(storeSuppliesRequestSucceed({message: apiResponse.message}));
         } catch (message) {
@@ -190,6 +227,52 @@ export function* emitCancelSupply() {
     });
 }
 
+// Fleet add group supply return from API
+export function* emitGroupSupplyAddReturn() {
+    yield takeLatest(EMIT_GROUP_SUPPLY_ADD_RETURN, function*({ids, amount, agentSim, managerSim}) {
+        try {
+            // Fire event for request
+            yield put(storeReturnRequestInit());
+            const data = {ids_flottage: ids, montant: amount, puce_agent: agentSim, puce_flottage: managerSim};
+            const apiResponse = yield call(apiPostRequest, api.GROUP_NEW_FLEET_RECOVERIES_API_PATH, data);
+            const apiResponse2 = yield call(apiGetRequest, api.GROUP_SUPPLIES_API_PATH);
+            // Extract data
+            const supplies = extractSuppliesData(apiResponse2.data.flottages);
+            const groupedFleet = Object.values(Lodash.groupBy(supplies, fleet => [fleet.status, fleet.agent.id, fleet.operator.id]));
+            // Fire event to redux
+            yield put(storeSetGroupSuppliesData({supplies: groupedFleet}));
+            // Fire event for request
+            yield put(storeReturnRequestSucceed({message: apiResponse.message}));
+        } catch (message) {
+            // Fire event for request
+            yield put(storeReturnRequestFailed({message}));
+        }
+    });
+}
+
+// Fleet add group supply recovery from API
+export function* emitGroupSupplyAddRecovery() {
+    yield takeLatest(EMIT_GROUP_SUPPLY_ADD_RECOVERY, function*({ids, amount}) {
+        try {
+            // Fire event for request
+            yield put(storeRecoverRequestInit());
+            const data = {montant: amount, ids_flottage: ids}
+            const apiResponse = yield call(apiPostRequest, api.GROUP_NEW_CASH_RECOVERIES_API_PATH, data);
+            const apiResponse2 = yield call(apiGetRequest, api.GROUP_SUPPLIES_API_PATH);
+            // Extract data
+            const supplies = extractSuppliesData(apiResponse2.data.flottages);
+            const groupedFleet = Object.values(Lodash.groupBy(supplies, fleet => [fleet.status, fleet.agent.id, fleet.operator.id]));
+            // Fire event to redux
+            yield put(storeSetGroupSuppliesData({supplies: groupedFleet}));
+            // Fire event for request
+            yield put(storeRecoverRequestSucceed({message: apiResponse.message}));
+        } catch (message) {
+            // Fire event for request
+            yield put(storeRecoverRequestFailed({message}));
+        }
+    });
+}
+
 // Extract supply data
 function extractSupplyData(apiSimOutgoing, apiSimIncoming, apiUser, apiAgent, apiSupplier, apiSupply, apiOperator) {
     let supply = {
@@ -270,6 +353,9 @@ export default function* sagaSupplies() {
         fork(emitSuppliesFetch),
         fork(emitNextSuppliesFetch),
         fork(emitAddAnonymousSupply),
+        fork(emitGroupSuppliesFetch),
         fork(emitSearchSuppliesFetch),
+        fork(emitGroupSupplyAddReturn),
+        fork(emitGroupSupplyAddRecovery),
     ]);
 }
