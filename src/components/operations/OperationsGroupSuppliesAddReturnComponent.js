@@ -108,7 +108,7 @@ function OperationsGroupSuppliesAddReturnComponent({supply, request, sims, user,
             });
             dispatch(emitGroupSupplyAddReturn({
                 ids,
-                amount,
+                amount: _amount.data,
                 agentSim: _outgoingSim.data,
                 managerSim: _incomingSim.data
             }));
