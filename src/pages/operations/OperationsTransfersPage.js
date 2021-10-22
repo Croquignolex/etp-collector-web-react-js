@@ -151,12 +151,14 @@ function OperationsTransfersPage({transfers, transfersRequests, user, hasMoreDat
 
     const handleGroup = () => {
         dispatch(emitGroupTransfersFetch());
-        setGroupToggle(true)
+        setGroupToggle(true);
+        setNeedle('');
     }
 
     const handleUngroup = () => {
         dispatch(emitTransfersFetch());
         setGroupToggle(false);
+        setNeedle('');
     }
 
     // Trigger when group transfer confirm confirmed on modal
@@ -202,46 +204,43 @@ function OperationsTransfersPage({transfers, transfersRequests, user, hasMoreDat
                                             {requestFailed(transfersRequests.cancel) && <ErrorAlertComponent message={transfersRequests.cancel.message} />}
                                             {(groupToggle) ?
                                                 ((requestLoading(transfersRequests.list) || requestLoading(transfersRequests.apply)) ? <LoaderComponent /> :
-                                                        <>
-                                                            <button type="button"
-                                                                    className="btn btn-secondary mb-2 ml-2"
-                                                                    onClick={handleUngroup}
-                                                            >
-                                                                <i className="fa fa-table" /> Dégrouper
-                                                            </button>
-                                                            <OperationsGroupTransfersCardsComponent transfers={transfers}
-                                                                                                    handleGroupConfirmModalShow={handleGroupConfirmModalShow}
-                                                                                                    handleGroupDetailsModalShow={handleGroupDetailsModalShow}
-                                                            />
-                                                        </>
+                                                    <>
+                                                        <button type="button"
+                                                                className="btn btn-secondary mb-2 ml-2"
+                                                                onClick={handleUngroup}
+                                                        >
+                                                            <i className="fa fa-table" /> Dégrouper
+                                                        </button>
+                                                        <OperationsGroupTransfersCardsComponent transfers={groupSearchEngine(transfers, needle)}
+                                                                                                handleGroupConfirmModalShow={handleGroupConfirmModalShow}
+                                                                                                handleGroupDetailsModalShow={handleGroupDetailsModalShow}
+                                                        />
+                                                    </>
                                                 ) :
                                                 (
-                                                    <>
-
-                                                        {!requestLoading(transfersRequests.list) && (
-                                                            <>
-                                                                <button type="button"
-                                                                        className="btn btn-theme mb-2 ml-2"
-                                                                        onClick={handleTransferModalShow}
-                                                                >
-                                                                    <i className="fa fa-exchange" /> Transferer la flotte
-                                                                </button>
-                                                                <button type="button"
-                                                                        className="btn btn-danger mb-2 ml-2"
-                                                                        onClick={handleGroup}
-                                                                >
-                                                                    <i className="fa fa-table"/> Grouper
-                                                                </button>
-                                                            </>
-                                                        )}
-                                                        {/* Search result & Infinite scroll */}
-                                                        {(needle !== '' && needle !== undefined)
-                                                            ? <OperationsTransfersCardsComponent user={user}
-                                                                                                 transfers={searchEngine(transfers, needle)}
-                                                                                                 handleCancelModalShow={handleCancelModalShow}
-                                                                                                 handleConfirmModalShow={handleConfirmModalShow}
-                                                            />
-                                                            : (requestLoading(transfersRequests.list) ? <LoaderComponent /> :
+                                                    (requestLoading(transfersRequests.list) ? <LoaderComponent /> :
+                                                        <>
+                                                            <button type="button"
+                                                                    className="btn btn-theme mb-2 ml-2"
+                                                                    onClick={handleTransferModalShow}
+                                                            >
+                                                                <i className="fa fa-exchange" /> Transferer la flotte
+                                                            </button>
+                                                            <button type="button"
+                                                                    className="btn btn-danger mb-2 ml-2"
+                                                                    onClick={handleGroup}
+                                                            >
+                                                                <i className="fa fa-table"/> Grouper
+                                                            </button>
+                                                            {/* Search result & Infinite scroll */}
+                                                            {(needle !== '' && needle !== undefined)
+                                                                ? (
+                                                                    <OperationsTransfersCardsComponent user={user}
+                                                                                                     transfers={searchEngine(transfers, needle)}
+                                                                                                     handleCancelModalShow={handleCancelModalShow}
+                                                                                                     handleConfirmModalShow={handleConfirmModalShow}
+                                                                    />
+                                                                ) : (
                                                                     <InfiniteScroll hasMore={hasMoreData}
                                                                                     loader={<LoaderComponent />}
                                                                                     dataLength={transfers.length}
@@ -254,9 +253,10 @@ function OperationsTransfersPage({transfers, transfersRequests, user, hasMoreDat
                                                                                                            handleConfirmModalShow={handleConfirmModalShow}
                                                                         />
                                                                     </InfiniteScroll>
-                                                            )
-                                                        }
-                                                    </>
+                                                                )
+                                                            }
+                                                        </>
+                                                    )
                                                 )
                                             }
                                         </div>
@@ -303,6 +303,24 @@ function searchEngine(data, _needle) {
                 needleSearch(item.sim_incoming.number, _needle) ||
                 needleSearch(item.sim_outgoing.number, _needle) ||
                 needleSearch(dateToString(item.creation), _needle)
+            )
+        });
+    }
+    // Return data
+    return data;
+}
+
+// Search engine
+function groupSearchEngine(data, _needle) {
+    // Avoid empty filtering
+    if(_needle !== '' && _needle !== undefined) {
+        // Filter
+        data = data.filter((item) => {
+            return (
+                needleSearch(item.length, _needle) ||
+                needleSearch(item[0].user.name, _needle) ||
+                needleSearch(item[0].operator.name, _needle) ||
+                needleSearch(item.reduce((acc, val) => acc + parseInt(val.amount, 10), 0), _needle)
             )
         });
     }
