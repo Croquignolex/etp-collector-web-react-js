@@ -45,6 +45,7 @@ function extractReportsData(apiReports) {
             out: movement.out,
             type: movement.type,
             label: movement.name,
+            reason: movement.reason,
             balance: movement.balance,
             creation: dateToString(movement.created_at),
         });
