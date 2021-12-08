@@ -202,7 +202,7 @@ function buildReportsMenu() {
         sub: [
             {name: page.MOVEMENTS_REPORTS, path: path.MOVEMENTS_PAGE_PATH},
             {name: page.TRANSACTIONS_REPORTS, path: path.TRANSACTIONS_PAGE_PATH},
-            {name: page.DAILY_REPORTS, path: path.REPORTS_PAGE_PATH},
+            // {name: page.DAILY_REPORTS, path: path.REPORTS_PAGE_PATH},
         ]
     }
 }
