@@ -12,6 +12,7 @@ import {emitAllAgentsFetch} from "../../redux/agents/actions";
 import {requiredChecker} from "../../functions/checkerFunctions";
 import {DEFAULT_FORM_DATA} from "../../constants/defaultConstants";
 import {playWarningSound} from "../../functions/playSoundFunctions";
+import {AGENT_TYPE, RESOURCE_TYPE} from "../../constants/typeConstants";
 import {storeAllSimsRequestReset} from "../../redux/requests/sims/actions";
 import {storeAllAgentsRequestReset} from "../../redux/requests/agents/actions";
 import {dataToArrayForSelect, mappedSims} from "../../functions/arrayFunctions";
@@ -79,10 +80,19 @@ function OperationsFleetsAddSupplyComponent({request, sims, agents, user, allAge
 
     // Build select options
     const incomingSelectOptions = useMemo(() => {
-        return dataToArrayForSelect(mappedSims(sims.filter(
-            item => (item.agent.id === agent.data) && (item.operator.id === selectedOp)
-        )))
-    }, [sims, agent.data, selectedOp]);
+        const selectedAgent = agents.find((item) => item.id === agent.data);
+        if(selectedAgent) {
+            if(selectedAgent.reference === AGENT_TYPE) {
+                return dataToArrayForSelect(mappedSims(sims.filter(
+                    item => (item.agent.id === agent.data) && (item.operator.id === selectedOp)
+                )))
+            } else {
+                return dataToArrayForSelect(mappedSims(sims.filter(
+                    item => (item.type.name === RESOURCE_TYPE) && (item.operator.id === selectedOp)
+                )))
+            }
+        } else return [];
+    }, [sims, agent.data, agents, selectedOp]);
 
     // Build select options
     const outgoingSelectOptions = useMemo(() => {
