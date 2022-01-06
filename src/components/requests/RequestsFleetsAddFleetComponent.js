@@ -11,6 +11,7 @@ import {requiredChecker} from "../../functions/checkerFunctions";
 import {emitAllExternalSimsFetch} from "../../redux/sims/actions";
 import {DEFAULT_FORM_DATA} from "../../constants/defaultConstants";
 import {playWarningSound} from "../../functions/playSoundFunctions";
+import {AGENT_TYPE, RESOURCE_TYPE} from "../../constants/typeConstants";
 import {storeAddFleetRequestReset} from "../../redux/requests/fleets/actions";
 import {storeAllAgentsRequestReset} from "../../redux/requests/agents/actions";
 import {dataToArrayForSelect, mappedSims} from "../../functions/arrayFunctions";
@@ -67,8 +68,15 @@ function RequestsFleetsAddFleetComponent({request, sims, agents, allAgentsReques
 
     // Build select options
     const incomingSelectOptions = useMemo(() => {
-        return dataToArrayForSelect(mappedSims(sims.filter(item => item.agent.id === agent.data)))
-    }, [sims, agent.data]);
+        const selectedAgent = agents.find((item) => item.id === agent.data);
+        if(selectedAgent) {
+            if(selectedAgent.reference === AGENT_TYPE) {
+                return dataToArrayForSelect(mappedSims(sims.filter(item => item.agent.id === agent.data)))
+            } else {
+                return dataToArrayForSelect(mappedSims(sims.filter(item => item.type.name === RESOURCE_TYPE)))
+            }
+        } else return [];
+    }, [sims, agent.data, agents]);
 
     // Reset error alert
     const shouldResetErrorData = () => {
