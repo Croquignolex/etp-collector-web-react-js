@@ -1,27 +1,25 @@
 import PropTypes from "prop-types";
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
-import SelectComponent from "../form/SelectComponent";
+import InputComponent from "../form/InputComponent";
 import ButtonComponent from "../form/ButtonComponent";
 import ErrorAlertComponent from "../ErrorAlertComponent";
-import {emitAllZonesFetch} from "../../redux/zones/actions";
-import {emitUpdateAgentZone} from "../../redux/agents/actions";
+import TextareaComponent from "../form/TextareaComponent";
 import {requiredChecker} from "../../functions/checkerFunctions";
+import {emitUpdateAgency} from "../../redux/agencies/actions";
 import {DEFAULT_FORM_DATA} from "../../constants/defaultConstants";
 import {playWarningSound} from "../../functions/playSoundFunctions";
-import {storeAllZonesRequestReset} from "../../redux/requests/zones/actions";
-import {dataToArrayForSelect, mappedZones} from "../../functions/arrayFunctions";
-import {storeAgentEditZoneRequestReset} from "../../redux/requests/agents/actions";
+import {storeEditAgencyRequestReset} from "../../redux/requests/agencies/actions";
 import {applySuccess, requestFailed, requestLoading, requestSucceeded} from "../../functions/generalFunctions";
 
 // Component
-function AgentZoneEditComponent({request, agent, zones, allZonesRequests, dispatch, handleClose}) {
+function AgencyInfoEditComponent({request, agency, dispatch, handleClose}) {
     // Local state
-    const [zone, setZone] = useState({...DEFAULT_FORM_DATA, data: agent.zone.id});
+    const [name, setName] = useState({...DEFAULT_FORM_DATA, data: agency.name});
+    const [description, setDescription] = useState({...DEFAULT_FORM_DATA, data: agency.description});
 
     // Local effects
     useEffect(() => {
-        dispatch(emitAllZonesFetch());
         // Cleaner error alert while component did unmount without store dependency
         return () => {
             shouldResetErrorData();
@@ -41,32 +39,36 @@ function AgentZoneEditComponent({request, agent, zones, allZonesRequests, dispat
 
     // Reset error alert
     const shouldResetErrorData = () => {
-        dispatch(storeAllZonesRequestReset());
-        dispatch(storeAgentEditZoneRequestReset());
+        dispatch(storeEditAgencyRequestReset());
     };
 
-    // Build select options
-    const zonesSelectOptions = useMemo(() => {
-        return dataToArrayForSelect(mappedZones(zones))
-    }, [zones]);
-
-    const handleZoneSelect = (data) => {
+    const handleNameInput = (data) => {
         shouldResetErrorData();
-        setZone({...zone,  isValid: true, data})
+        setName({...name, isValid: true, data})
+    }
+
+    const handleDescriptionInput = (data) => {
+        shouldResetErrorData();
+        setDescription({...description, isValid: true, data})
     }
 
     // Trigger user information form submit
     const handleSubmit = (e) => {
         e.preventDefault();
         shouldResetErrorData();
-        const _zone = requiredChecker(zone);
+        const _name = requiredChecker(name);
         // Set value
-        setZone(_zone);
-        const validationOK = _zone.isValid;
+        setName(_name);
+        const validationOK = _name.isValid;
         // Check
         if(validationOK) {
-            dispatch(emitUpdateAgentZone({id: agent.id, zone: _zone.data}))
-        } else playWarningSound();
+            dispatch(emitUpdateAgency({
+                id: agency.id,
+                name: _name.data,
+                description: description.data
+            }));
+        }
+        else playWarningSound();
     };
 
     // Render
@@ -75,14 +77,19 @@ function AgentZoneEditComponent({request, agent, zones, allZonesRequests, dispat
             {requestFailed(request) && <ErrorAlertComponent message={request.message} />}
             <form onSubmit={handleSubmit}>
                 <div className='row'>
-                    <div className='col-sm-6'>
-                        <SelectComponent input={zone}
-                                         label='Zone'
-                                         id='inputZone'
-                                         title='Choisir une zone'
-                                         options={zonesSelectOptions}
-                                         handleInput={handleZoneSelect}
-                                         requestProcessing={requestLoading(allZonesRequests)}
+                    <div className='col-sm-12'>
+                        <InputComponent label='Nom'
+                                        type='text'
+                                        input={name}
+                                        id='inputName'
+                                        handleInput={handleNameInput}
+                        />
+                    </div>
+                    <div className='col-sm-12'>
+                        <TextareaComponent label='Description'
+                                           input={description}
+                                           id='inputDescription'
+                                           handleInput={handleDescriptionInput}
                         />
                     </div>
                 </div>
@@ -95,13 +102,11 @@ function AgentZoneEditComponent({request, agent, zones, allZonesRequests, dispat
 }
 
 // Prop types to ensure destroyed props data type
-AgentZoneEditComponent.propTypes = {
-    zones: PropTypes.array.isRequired,
-    agent: PropTypes.object.isRequired,
+AgencyInfoEditComponent.propTypes = {
+    agency: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
     request: PropTypes.object.isRequired,
     handleClose: PropTypes.func.isRequired,
-    allZonesRequests: PropTypes.object.isRequired,
 };
 
-export default React.memo(AgentZoneEditComponent);
+export default React.memo(AgencyInfoEditComponent);

@@ -17,6 +17,7 @@ import settings from './settings/saga';
 import managers from './managers/saga';
 import payments from './payments/saga';
 import supplies from './supplies/saga';
+import agencies from './agencies/saga';
 import operators from './operators/saga';
 import transfers from './transfers/saga';
 import movements from './movements/saga';
@@ -41,6 +42,7 @@ export default function* sagas() {
         outlays(),
         vendors(),
         affords(),
+        agencies(),
         payments(),
         revenues(),
         supplies(),

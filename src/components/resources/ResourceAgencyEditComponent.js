@@ -4,24 +4,24 @@ import React, {useEffect, useMemo, useState} from 'react';
 import SelectComponent from "../form/SelectComponent";
 import ButtonComponent from "../form/ButtonComponent";
 import ErrorAlertComponent from "../ErrorAlertComponent";
-import {emitAllZonesFetch} from "../../redux/zones/actions";
-import {emitUpdateAgentZone} from "../../redux/agents/actions";
+import {emitUpdateAgentAgency} from "../../redux/agents/actions";
 import {requiredChecker} from "../../functions/checkerFunctions";
+import {emitAllAgenciesFetch} from "../../redux/agencies/actions";
 import {DEFAULT_FORM_DATA} from "../../constants/defaultConstants";
 import {playWarningSound} from "../../functions/playSoundFunctions";
+import {dataToArrayForSelect} from "../../functions/arrayFunctions";
 import {storeAllZonesRequestReset} from "../../redux/requests/zones/actions";
-import {dataToArrayForSelect, mappedZones} from "../../functions/arrayFunctions";
 import {storeAgentEditZoneRequestReset} from "../../redux/requests/agents/actions";
 import {applySuccess, requestFailed, requestLoading, requestSucceeded} from "../../functions/generalFunctions";
 
 // Component
-function AgentZoneEditComponent({request, agent, zones, allZonesRequests, dispatch, handleClose}) {
+function ResourceAgencyEditComponent({request, agent, agencies, allAgenciesRequests, dispatch, handleClose}) {
     // Local state
-    const [zone, setZone] = useState({...DEFAULT_FORM_DATA, data: agent.zone.id});
+    const [agency, setAgency] = useState({...DEFAULT_FORM_DATA, data: agent.agency.id});
 
     // Local effects
     useEffect(() => {
-        dispatch(emitAllZonesFetch());
+        dispatch(emitAllAgenciesFetch());
         // Cleaner error alert while component did unmount without store dependency
         return () => {
             shouldResetErrorData();
@@ -46,26 +46,26 @@ function AgentZoneEditComponent({request, agent, zones, allZonesRequests, dispat
     };
 
     // Build select options
-    const zonesSelectOptions = useMemo(() => {
-        return dataToArrayForSelect(mappedZones(zones))
-    }, [zones]);
+    const agenciesSelectOptions = useMemo(() => {
+        return dataToArrayForSelect(agencies)
+    }, [agencies]);
 
-    const handleZoneSelect = (data) => {
+    const handleAgencySelect = (data) => {
         shouldResetErrorData();
-        setZone({...zone,  isValid: true, data})
+        setAgency({...agency, isValid: true, data})
     }
 
     // Trigger user information form submit
     const handleSubmit = (e) => {
         e.preventDefault();
         shouldResetErrorData();
-        const _zone = requiredChecker(zone);
+        const _agency = requiredChecker(agency);
         // Set value
-        setZone(_zone);
-        const validationOK = _zone.isValid;
+        setAgency(_agency);
+        const validationOK = _agency.isValid;
         // Check
         if(validationOK) {
-            dispatch(emitUpdateAgentZone({id: agent.id, zone: _zone.data}))
+            dispatch(emitUpdateAgentAgency({id: agent.id, agency: _agency.data}))
         } else playWarningSound();
     };
 
@@ -76,13 +76,13 @@ function AgentZoneEditComponent({request, agent, zones, allZonesRequests, dispat
             <form onSubmit={handleSubmit}>
                 <div className='row'>
                     <div className='col-sm-6'>
-                        <SelectComponent input={zone}
-                                         label='Zone'
+                        <SelectComponent input={agency}
+                                         label='Agence'
                                          id='inputZone'
-                                         title='Choisir une zone'
-                                         options={zonesSelectOptions}
-                                         handleInput={handleZoneSelect}
-                                         requestProcessing={requestLoading(allZonesRequests)}
+                                         title='Choisir une agence'
+                                         options={agenciesSelectOptions}
+                                         handleInput={handleAgencySelect}
+                                         requestProcessing={requestLoading(allAgenciesRequests)}
                         />
                     </div>
                 </div>
@@ -95,13 +95,13 @@ function AgentZoneEditComponent({request, agent, zones, allZonesRequests, dispat
 }
 
 // Prop types to ensure destroyed props data type
-AgentZoneEditComponent.propTypes = {
-    zones: PropTypes.array.isRequired,
+ResourceAgencyEditComponent.propTypes = {
     agent: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
     request: PropTypes.object.isRequired,
+    agencies: PropTypes.array.isRequired,
     handleClose: PropTypes.func.isRequired,
-    allZonesRequests: PropTypes.object.isRequired,
+    allAgenciesRequests: PropTypes.object.isRequired,
 };
 
-export default React.memo(AgentZoneEditComponent);
+export default React.memo(ResourceAgencyEditComponent);

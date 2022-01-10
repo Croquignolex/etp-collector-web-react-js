@@ -5,8 +5,10 @@ export const DASHBOARD_PAGE = 'Tableau de bord';
 export const NOTIFICATIONS_PAGE = 'Notifications';
 
 // Commons
+export const AGENTS = 'Agents';
+export const RESOURCES = 'Resources';
 export const SIMS_PAGE = 'Mes comptes';
-export const AGENTS = 'Agents/Resources';
+export const AGENCIES_PAGE = 'Agences';
 
 // Operations
 export const OPERATIONS = 'Opérations';
