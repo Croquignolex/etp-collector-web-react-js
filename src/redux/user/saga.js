@@ -3,15 +3,11 @@ import { all, takeEvery, takeLatest, put, fork, call } from 'redux-saga/effects'
 import * as api from "../../constants/apiConstants";
 import {AUTH_URL} from "../../constants/generalConstants";
 import {USER_ROLE} from "../../constants/defaultConstants";
-import {getProfileImageFromServer} from "../../functions/generalFunctions";
 import {apiGetRequest, apiPostRequest} from "../../functions/axiosFunctions";
+import {getProfileImageFromServer} from "../../functions/generalFunctions";
 import {storeResetSettingsData, storeSetSettingsData} from "../settings/actions";
 import {LOCAL_STORAGE_USER_DATA, LOCAL_STORAGE_SETTINGS} from "../../constants/localStorageConstants";
-import {
-    setLocaleStorageItem,
-    getLocaleStorageItem,
-    removeAllLocaleStorageItems
-} from "../../functions/localStorageFunctions";
+import {setLocaleStorageItem, getLocaleStorageItem, removeAllLocaleStorageItems} from "../../functions/localStorageFunctions";
 import {
     EMIT_USER_LOGOUT,
     storeResetUserData,
@@ -55,7 +51,7 @@ export function* emitCheckUserAuthentication() {
             if(userData != null && settingsData !== null && userData.auth) {
                 // Deconstruction
                 const {cards, charts, bars, sound, session} = settingsData;
-                const {name, post, email, phone, avatar, address, creation} = userData;
+                const {name, post, email, phone, avatar, address, creation, home} = userData;
                 // Fire event to redux for settings data
                 yield put(storeSetSettingsData({
                     id: settingsData.id,
@@ -66,7 +62,7 @@ export function* emitCheckUserAuthentication() {
                 yield put(storeSetUserFullData({
                     id: userData.id,
                     description: userData.description,
-                    address, post, name, phone, email, avatar, creation,
+                    address, home, post, name, phone, email, avatar, creation,
                 }));
             } else {
                 yield put(storeResetUserData());
@@ -97,7 +93,7 @@ export function* emitAttemptUserAuthentication() {
             // Deconstruction
             if(roleData === data.role) {
                 const {cards, charts, bars, sound, session} = settingsData;
-                const {name, post, email, phone, avatar, address, creation} = userData;
+                const {name, post, email, phone, home, avatar, address, creation} = userData;
                 // Set user data into local storage
                 yield call(setLocaleStorageItem, LOCAL_STORAGE_SETTINGS, settingsData);
                 yield call(setLocaleStorageItem, LOCAL_STORAGE_USER_DATA, {...userData, token});
@@ -111,6 +107,7 @@ export function* emitAttemptUserAuthentication() {
                 }))
                 // Fire event to redux for user data
                 yield put(storeSetUserFullData({
+                    home,
                     id: userData.id,
                     description: userData.description,
                     address, post, name, phone, email, avatar, creation,
@@ -173,10 +170,9 @@ export function* emitFetchUserBalance() {
             yield put(storeUserBalanceFetchRequestInit());
             const apiResponse = yield call(apiGetRequest, api.FETCH_BALANCE_API_PATH);
             // Extract data
-            const debt = apiResponse.data.dette;
             const balance = apiResponse.data.balance;
             // Fire event to redux
-            yield put(storeSetUserBalanceData({debt, balance}));
+            yield put(storeSetUserBalanceData({balance}));
             // Fire event for request
             yield put(storeUserBalanceFetchRequestSucceed({message: apiResponse.message}));
         } catch (message) {
@@ -237,6 +233,7 @@ function extractUserAndSettingsData(apiResponse) {
             id: user.id.toString(),
             creation: user.created_at,
             description: user.description,
+            home: user.email_verified_at !== null,
             avatar: getProfileImageFromServer(user.avatar)
         },
         settingsData: {
