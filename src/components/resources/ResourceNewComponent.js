@@ -19,11 +19,11 @@ import {fileChecker, imageChecker, phoneChecker, requiredChecker} from "../../fu
 import {applySuccess, requestFailed, requestLoading, requestSucceeded} from "../../functions/generalFunctions";
 
 // Component
-function ResourceNewComponent({zones, request, allZonesRequests, dispatch, handleClose}) {
+function ResourceNewComponent({request, dispatch, handleClose}) {
     // Local state
     const [doc, setDoc] = useState(constants.DEFAULT_FORM_DATA);
     const [name, setName] = useState(constants.DEFAULT_FORM_DATA);
-    const [zone, setZone] = useState(constants.DEFAULT_FORM_DATA);
+    // const [zone, setZone] = useState(constants.DEFAULT_FORM_DATA);
     const [phone, setPhone] = useState(constants.DEFAULT_FORM_DATA);
     const [email, setEmail] = useState(constants.DEFAULT_FORM_DATA);
     const [address, setAddress] = useState(constants.DEFAULT_FORM_DATA);
@@ -86,20 +86,20 @@ function ResourceNewComponent({zones, request, allZonesRequests, dispatch, handl
         setBackIDCard({...backIDCard, isValid: true, data})
     }
 
-    const handleZoneSelect = (data) => {
+    /*const handleZoneSelect = (data) => {
         shouldResetErrorData();
         setZone({...zone, isValid: true, data})
-    }
+    }*/
 
     const handleFileInput = (data) => {
         shouldResetErrorData();
         setDoc({...doc, isValid: true, data})
     }
 
-    // Build select options
+    /*// Build select options
     const zoneSelectOptions = useMemo(() => {
         return dataToArrayForSelect(mappedZones(zones))
-    }, [zones]);
+    }, [zones]);*/
 
     // Reset error alert
     const shouldResetErrorData = () => {
@@ -114,25 +114,25 @@ function ResourceNewComponent({zones, request, allZonesRequests, dispatch, handl
         const _document = fileChecker(doc);
         const _phone = phoneChecker(phone);
         const _name = requiredChecker(name);
-        const _zone = requiredChecker(zone);
+        // const _zone = requiredChecker(zone);
         const _backIDCard = imageChecker(backIDCard);
         const _frontIDCard = imageChecker(frontIDCard);
         // Set value
         setName(_name);
-        setZone(_zone);
+        // setZone(_zone);
         setPhone(_phone);
         setDoc(_document);
         setBackIDCard(_backIDCard);
         setFrontIDCard(_frontIDCard);
         const validationOK = (
+            _document.isValid &&
             _name.isValid && _phone.isValid &&
-            _document.isValid && _zone.isValid &&
             _backIDCard.isValid && _frontIDCard.isValid
         );
         // Check
         if(validationOK)
             dispatch(emitNewResource({
-                zone: _zone.data,
+                // zone: _zone.data,
                 name: _name.data,
                 email: email.data,
                 phone: _phone.data,
@@ -149,7 +149,7 @@ function ResourceNewComponent({zones, request, allZonesRequests, dispatch, handl
     return (
         <>
             {requestFailed(request) && <ErrorAlertComponent message={request.message} />}
-            {requestFailed(allZonesRequests) && <ErrorAlertComponent message={allZonesRequests.message} />}
+            {/*{requestFailed(allZonesRequests) && <ErrorAlertComponent message={allZonesRequests.message} />}*/}
             <div className="row">
                 <div className="col">
                     <form onSubmit={handleSubmit}>
@@ -180,7 +180,7 @@ function ResourceNewComponent({zones, request, allZonesRequests, dispatch, handl
                                                 handleInput={handleEmailInput}
                                 />
                             </div>
-                            <div className='col-sm-6'>
+                            {/*<div className='col-sm-6'>
                                 <SelectComponent label='Zone'
                                                  input={zone}
                                                  id='inputZone'
@@ -189,7 +189,7 @@ function ResourceNewComponent({zones, request, allZonesRequests, dispatch, handl
                                                  handleInput={handleZoneSelect}
                                                  requestProcessing={requestLoading(allZonesRequests)}
                                 />
-                            </div>
+                            </div>*/}
                         </div>
                         <div className='row'>
                             <div className='col-sm-6'>
@@ -242,11 +242,11 @@ function ResourceNewComponent({zones, request, allZonesRequests, dispatch, handl
 
 // Prop types to ensure destroyed props data type
 ResourceNewComponent.propTypes = {
-    zones: PropTypes.array.isRequired,
+    // zones: PropTypes.array.isRequired,
     dispatch: PropTypes.func.isRequired,
     request: PropTypes.object.isRequired,
     handleClose: PropTypes.func.isRequired,
-    allZonesRequests: PropTypes.object.isRequired,
+    // allZonesRequests: PropTypes.object.isRequired,
 };
 
 export default React.memo(ResourceNewComponent);
