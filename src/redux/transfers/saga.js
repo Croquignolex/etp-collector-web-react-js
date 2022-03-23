@@ -61,7 +61,7 @@ export function* emitTransfersFetch() {
 
 // Fetch group transfers from API
 export function* emitGroupTransfersFetch() {
-    yield takeLatest(EMIT_GROUP_TRANSFERS_FETCH, function*() {
+    yield takeLatest(EMIT_GROUP_TRANSFERS_FETCH, function*({id}) {
         try {
             // Fire event for request
             yield put(storeTransfersRequestInit());
@@ -69,7 +69,9 @@ export function* emitGroupTransfersFetch() {
             const apiResponse = yield call(apiGetRequest, api.GROUP_TRANSFERS_API_PATH);
             // Extract data
             const transfers = extractTransfersData(apiResponse.data.flottages);
-            const groupedTransfer = Object.values(Lodash.groupBy(transfers, transfer => [transfer.user.id, transfer.operator.id]));
+            // Filter transfers to isolate only current user transfer
+            const newTransfers = transfers.filter((item) => item.collector.id === id);
+            const groupedTransfer = Object.values(Lodash.groupBy(newTransfers, transfer => [transfer.user.id, transfer.operator.id]));
             // Fire event to redux
             yield put(storeSetGroupTransfersData({transfers: groupedTransfer}));
             // Fire event for request

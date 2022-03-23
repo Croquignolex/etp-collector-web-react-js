@@ -68,7 +68,8 @@ function OperationsTransfersCardsComponent({transfers, group, user, handleCancel
                                                             </button>
                                                         )}
                                                     </div>
-                                                )}
+                                                )
+                                            }
                                             {
                                                 (item.status === PROCESSING) &&
                                                 (item.user?.id === user) &&

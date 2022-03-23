@@ -150,7 +150,8 @@ function OperationsTransfersPage({transfers, transfersRequests, user, hasMoreDat
     }
 
     const handleGroup = () => {
-        dispatch(emitGroupTransfersFetch());
+        console.log({user})
+        dispatch(emitGroupTransfersFetch({id: user.id}));
         setGroupToggle(true);
         setNeedle('');
     }

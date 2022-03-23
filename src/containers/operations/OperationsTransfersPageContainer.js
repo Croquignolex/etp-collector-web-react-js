@@ -8,7 +8,7 @@ setPageTitle(OPERATIONS_TRANSFERS_PAGE);
 
 // Map state function to component props
 const mapStateToProps = (state) => ({
-    user: state.user.id,
+    user: state.user,
     page: state.transfers.page,
     transfers: state.transfers.list,
     hasMoreData: state.transfers.hasMoreData,

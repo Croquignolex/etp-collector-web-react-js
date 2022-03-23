@@ -102,7 +102,8 @@ export const emitCancelTransfer = ({id}) => ({
 });
 
 // Emit group transfers fetch
-export const emitGroupTransfersFetch = () => ({
+export const emitGroupTransfersFetch = ({id}) => ({
+    id,
     type: EMIT_GROUP_TRANSFERS_FETCH
 });
 
