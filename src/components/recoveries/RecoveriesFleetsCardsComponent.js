@@ -49,11 +49,11 @@ function RecoveriesFleetsCardsComponent({returns, handleCancelModalShow}) {
                                             </span>
                                         </li>
                                         <li className="list-group-item">
-                                            <b>Compte agent</b>
+                                            <b>Compte émetteur</b>
                                             <span className="float-right">{item.sim_outgoing.number}</span>
                                         </li>
                                         <li className="list-group-item">
-                                            <b>Compte de flottage</b>
+                                            <b>Compte recepteur</b>
                                             <span className="float-right">{item.sim_incoming.number}</span>
                                         </li>
                                         <li className="list-group-item">
