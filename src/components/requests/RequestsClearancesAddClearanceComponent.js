@@ -17,17 +17,23 @@ import {dataToArrayForSelect, mappedSims} from "../../functions/arrayFunctions";
 import {storeAllExternalSimsRequestReset} from "../../redux/requests/sims/actions";
 import {storeAddClearanceRequestReset} from "../../redux/requests/clearances/actions";
 import {applySuccess, requestFailed, requestLoading, requestSucceeded} from "../../functions/generalFunctions";
+import {emitAllAgenciesFetch} from "../../redux/agencies/actions";
+import {storeAllAgenciesRequestReset} from "../../redux/requests/agencies/actions";
 
 // Component
-function RequestsClearancesAddClearanceComponent({request, sims, agents, allAgentsRequests, allSimsRequests, dispatch, handleClose}) {
+function RequestsClearancesAddClearanceComponent({request, sims, agents, agencies,allAgentsRequests,
+                                                     allSimsRequests, allAgenciesRequests, dispatch, handleClose}) {
     // Local state
     const [amount, setAmount] = useState(DEFAULT_FORM_DATA);
+    const [agency, setAgency] = useState(DEFAULT_FORM_DATA);
     const [incomingSim, setIncomingSim] = useState(DEFAULT_FORM_DATA);
+    const [showAgencies, setShowAgencies] = useState(false);
     const [agent, setAgent] = useState({...DEFAULT_FORM_DATA, data: 0});
 
     // Local effects
     useEffect(() => {
         dispatch(emitAllAgentsFetch());
+        dispatch(emitAllAgenciesFetch());
         dispatch(emitAllExternalSimsFetch());
         // Cleaner error alert while component did unmount without store dependency
         return () => {
@@ -58,7 +64,14 @@ function RequestsClearancesAddClearanceComponent({request, sims, agents, allAgen
 
     const handleAgentSelect = (data) => {
         shouldResetErrorData();
-        setAgent({...agent,  isValid: true, data})
+        const selectedAgent = agents.find((item) => item.id === data);
+        setShowAgencies(selectedAgent.reference === RESOURCE_TYPE);
+        setAgent({...agent, isValid: true, data})
+    }
+
+    const handleAgencySelect = (data) => {
+        shouldResetErrorData();
+        setAgency({...agency,  isValid: true, data})
     }
 
     // Build select options
@@ -67,20 +80,33 @@ function RequestsClearancesAddClearanceComponent({request, sims, agents, allAgen
     }, [agents]);
 
     // Build select options
+    const agencySelectOptions = useMemo(() => {
+        return dataToArrayForSelect(agencies);
+    }, [agencies]);
+
+    // Build select options
     const incomingSelectOptions = useMemo(() => {
         const selectedAgent = agents.find((item) => item.id === agent.data);
         if(selectedAgent) {
             if(selectedAgent.reference === AGENT_TYPE) {
-                return dataToArrayForSelect(mappedSims(sims.filter(item => item.agent.id === agent.data)))
+                return dataToArrayForSelect(mappedSims(sims.filter(
+                    item => (item.agent.id === agent.data)
+                )))
             } else {
-                return dataToArrayForSelect(mappedSims(sims.filter(item => item.type.name === RESOURCE_TYPE)))
+                return dataToArrayForSelect(mappedSims(sims.filter(
+                    item => (
+                        (item.type.name === RESOURCE_TYPE) &&
+                        (item.agency.id === agency.data)
+                    )
+                )))
             }
         } else return [];
-    }, [sims, agent.data, agents]);
+    }, [sims, agent.data, agency.data, agents]);
 
     // Reset error alert
     const shouldResetErrorData = () => {
         dispatch(storeAllAgentsRequestReset());
+        dispatch(storeAllAgenciesRequestReset());
         dispatch(storeAddClearanceRequestReset());
         dispatch(storeAllExternalSimsRequestReset());
     };
@@ -114,6 +140,7 @@ function RequestsClearancesAddClearanceComponent({request, sims, agents, allAgen
             {requestFailed(request) && <ErrorAlertComponent message={request.message} />}
             {requestFailed(allSimsRequests) && <ErrorAlertComponent message={allSimsRequests.message} />}
             {requestFailed(allAgentsRequests) && <ErrorAlertComponent message={allAgentsRequests.message} />}
+            {requestFailed(allAgenciesRequests) && <ErrorAlertComponent message={allAgenciesRequests.message} />}
             <form onSubmit={handleSubmit}>
                 <div className='row'>
                     <div className='col-sm-6'>
@@ -126,6 +153,20 @@ function RequestsClearancesAddClearanceComponent({request, sims, agents, allAgen
                                          requestProcessing={requestLoading(allAgentsRequests)}
                         />
                     </div>
+                    {showAgencies && (
+                        <div className='col-sm-6'>
+                            <SelectComponent id='inputAgencyAgent'
+                                             input={agency}
+                                             label="Agence"
+                                             title='Choisir une agence'
+                                             options={agencySelectOptions}
+                                             handleInput={handleAgencySelect}
+                                             requestProcessing={requestLoading(allAgenciesRequests)}
+                            />
+                        </div>
+                    )}
+                </div>
+                <div className='row'>
                     <div className='col-sm-6'>
                         <SelectComponent input={incomingSim}
                                          id='inputSimAgent'
@@ -136,8 +177,6 @@ function RequestsClearancesAddClearanceComponent({request, sims, agents, allAgen
                                          requestProcessing={requestLoading(allSimsRequests)}
                         />
                     </div>
-                </div>
-                <div className='row'>
                     <div className='col-sm-6'>
                         <AmountComponent input={amount}
                                          id='inputFleet'

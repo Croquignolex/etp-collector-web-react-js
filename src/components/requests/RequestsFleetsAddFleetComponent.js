@@ -65,7 +65,6 @@ function RequestsFleetsAddFleetComponent({request, sims, agents, agencies, allAg
     const handleAgentSelect = (data) => {
         shouldResetErrorData();
         const selectedAgent = agents.find((item) => item.id === data);
-        console.log({selectedAgent, agents, data})
         setShowAgencies(selectedAgent.reference === RESOURCE_TYPE);
         setAgent({...agent, isValid: true, data})
     }
