@@ -17,11 +17,14 @@ import {storeAllAgentsRequestReset} from "../../redux/requests/agents/actions";
 import {dataToArrayForSelect, mappedSims} from "../../functions/arrayFunctions";
 import {AGENT_TYPE, FLEET_TYPE, RESOURCE_TYPE} from "../../constants/typeConstants";
 import {applySuccess, requestFailed, requestLoading, requestSucceeded} from "../../functions/generalFunctions";
+import {emitAllAgenciesFetch} from "../../redux/agencies/actions";
 
 // Component
-function OperationsFleetsReturnComponent({supply, request, sims, user, allSimsRequests, dispatch, handleClose}) {
+function OperationsFleetsReturnComponent({supply, request, sims, user, agencies, allSimsRequests,
+                                             allAgenciesRequests, dispatch, handleClose}) {
     // Local state
     const [selectedOp, setSelectedOp] = useState('');
+    const [agency, setAgency] = useState(DEFAULT_FORM_DATA);
     const [outgoingSim, setOutgoingSim] = useState(DEFAULT_FORM_DATA);
     const [incomingSim, setIncomingSim] = useState(DEFAULT_FORM_DATA);
     const [amount, setAmount] = useState({...DEFAULT_FORM_DATA, data: supply.remaining});
@@ -29,6 +32,7 @@ function OperationsFleetsReturnComponent({supply, request, sims, user, allSimsRe
     // Local effects
     useEffect(() => {
         dispatch(emitAllSimsFetch());
+        dispatch(emitAllAgenciesFetch());
         // Cleaner error alert while component did unmount without store dependency
         return () => {
             shouldResetErrorData();
@@ -63,6 +67,11 @@ function OperationsFleetsReturnComponent({supply, request, sims, user, allSimsRe
         setAmount({...amount, isValid: true, data});
     }
 
+    const handleAgencySelect = (data) => {
+        shouldResetErrorData();
+        setAgency({...agency,  isValid: true, data})
+    }
+
     // Build select options
     const incomingSelectOptions = useMemo(() => {
         return dataToArrayForSelect(mappedSims(sims.filter(
@@ -76,13 +85,23 @@ function OperationsFleetsReturnComponent({supply, request, sims, user, allSimsRe
     }, [sims, user, selectedOp]);
 
     // Build select options
+    const agencySelectOptions = useMemo(() => {
+        return dataToArrayForSelect(agencies);
+    }, [agencies]);
+
+    // Build select options
     const outgoingSelectOptions = useMemo(() => {
         if(supply.agent?.reference === AGENT_TYPE) {
             return dataToArrayForSelect(mappedSims(sims.filter(item => supply.agent.id === item.agent.id)))
         } else {
-            return dataToArrayForSelect(mappedSims(sims.filter(item => item.type.name === RESOURCE_TYPE)))
+            return dataToArrayForSelect(mappedSims(sims.filter(
+                item => (
+                    (item.type.name === RESOURCE_TYPE) &&
+                    (item.agency.id === agency.data)
+                )
+            )))
         }
-    }, [sims, supply]);
+    }, [sims, agency.data, supply]);
 
     // Reset error alert
     const shouldResetErrorData = () => {
@@ -120,21 +139,27 @@ function OperationsFleetsReturnComponent({supply, request, sims, user, allSimsRe
         <>
             {requestFailed(request) && <ErrorAlertComponent message={request.message} />}
             {requestFailed(allSimsRequests) && <ErrorAlertComponent message={allSimsRequests.message} />}
+            {requestFailed(allAgenciesRequests) && <ErrorAlertComponent message={allAgenciesRequests.message} />}
             <form onSubmit={handleSubmit}>
                 <div className='row'>
                     <div className='col-sm-6'>
-                        <DisabledInput label='Agent'
+                        <DisabledInput label='Agent/Ressource'
                                        id='inputAgent'
                                        val={supply.agent.name}
                         />
                     </div>
-                    <div className='col-sm-6'>
-                        <AmountComponent input={amount}
-                                         id='inputFleet'
-                                         label='Flotte à retourner'
-                                         handleInput={handleAmountInput}
-                        />
-                    </div>
+                    {(supply.agent.reference === RESOURCE_TYPE) && (
+                        <div className='col-sm-6'>
+                            <SelectComponent id='inputAgencyAgent'
+                                             input={agency}
+                                             label="Agence"
+                                             title='Choisir une agence'
+                                             options={agencySelectOptions}
+                                             handleInput={handleAgencySelect}
+                                             requestProcessing={requestLoading(allAgenciesRequests)}
+                            />
+                        </div>
+                    )}
                 </div>
                 <div className='row'>
                     <div className='col-sm-6'>
@@ -155,6 +180,15 @@ function OperationsFleetsReturnComponent({supply, request, sims, user, allSimsRe
                                          options={incomingSelectOptions}
                                          handleInput={handleIncomingSelect}
                                          requestProcessing={requestLoading(allSimsRequests)}
+                        />
+                    </div>
+                </div>
+                <div className='row'>
+                    <div className='col-sm-6'>
+                        <AmountComponent input={amount}
+                                         id='inputFleet'
+                                         label='Flotte à retourner'
+                                         handleInput={handleAmountInput}
                         />
                     </div>
                 </div>

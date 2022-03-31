@@ -18,6 +18,7 @@ import {storeAllSimsRequestReset} from "../../redux/requests/sims/actions";
 import {storeAllAgentsRequestReset} from "../../redux/requests/agents/actions";
 import {dataToArrayForSelect, mappedSims} from "../../functions/arrayFunctions";
 import {storeAddSupplyRequestReset} from "../../redux/requests/supplies/actions";
+import {storeAllAgenciesRequestReset} from "../../redux/requests/agencies/actions";
 import {applySuccess, requestFailed, requestLoading, requestSucceeded} from "../../functions/generalFunctions";
 
 // Component
@@ -72,8 +73,15 @@ function OperationsFleetsAddSupplyComponent({request, sims, agents, agencies, us
         setDirectPay(!data)
     }
 
+    const handleAgencySelect = (data) => {
+        shouldResetErrorData();
+        setAgency({...agency,  isValid: true, data})
+    }
+
     const handleAgentSelect = (data) => {
         shouldResetErrorData();
+        const selectedAgent = agents.find((item) => item.id === data);
+        setShowAgencies(selectedAgent.reference === RESOURCE_TYPE);
         setAgent({...agent,  isValid: true, data})
     }
 
@@ -92,11 +100,15 @@ function OperationsFleetsAddSupplyComponent({request, sims, agents, agencies, us
                 )))
             } else {
                 return dataToArrayForSelect(mappedSims(sims.filter(
-                    item => (item.type.name === RESOURCE_TYPE) && (item.operator.id === selectedOp)
+                    item => (
+                        (item.type.name === RESOURCE_TYPE) &&
+                        (item.agency.id === agency.data) &&
+                        (item.operator.id === selectedOp)
+                    )
                 )))
             }
         } else return [];
-    }, [sims, agent.data, agents, selectedOp]);
+    }, [sims, agent.data, agency.data, agents, selectedOp]);
 
     // Build select options
     const outgoingSelectOptions = useMemo(() => {
@@ -110,11 +122,17 @@ function OperationsFleetsAddSupplyComponent({request, sims, agents, agencies, us
         return dataToArrayForSelect(agents)
     }, [agents]);
 
+    // Build select options
+    const agencySelectOptions = useMemo(() => {
+        return dataToArrayForSelect(agencies);
+    }, [agencies]);
+
     // Reset error alert
     const shouldResetErrorData = () => {
         dispatch(storeAllSimsRequestReset());
         dispatch(storeAddSupplyRequestReset());
         dispatch(storeAllAgentsRequestReset());
+        dispatch(storeAllAgenciesRequestReset());
     };
 
     // Trigger add supply form submit
@@ -152,6 +170,7 @@ function OperationsFleetsAddSupplyComponent({request, sims, agents, agencies, us
         <>
             {requestFailed(request) && <ErrorAlertComponent message={request.message} />}
             {requestFailed(allSimsRequests) && <ErrorAlertComponent message={allSimsRequests.message} />}
+            {requestFailed(allAgenciesRequests) && <ErrorAlertComponent message={allAgenciesRequests.message} />}
             <form onSubmit={handleSubmit}>
                 <div className='row'>
                     <div className='col-sm-6'>
@@ -164,13 +183,18 @@ function OperationsFleetsAddSupplyComponent({request, sims, agents, agencies, us
                                          requestProcessing={requestLoading(allAgentsRequests)}
                         />
                     </div>
-                    <div className='col-sm-6'>
-                        <AmountComponent input={amount}
-                                         id='inputAmount'
-                                         label='Montant à flotter'
-                                         handleInput={handleAmountInput}
-                        />
-                    </div>
+                    {showAgencies && (
+                        <div className='col-sm-6'>
+                            <SelectComponent id='inputAgencyAgent'
+                                             input={agency}
+                                             label="Agence"
+                                             title='Choisir une agence'
+                                             options={agencySelectOptions}
+                                             handleInput={handleAgencySelect}
+                                             requestProcessing={requestLoading(allAgenciesRequests)}
+                            />
+                        </div>
+                    )}
                 </div>
                 <div className='row'>
                     <div className='col-sm-6'>
@@ -195,6 +219,13 @@ function OperationsFleetsAddSupplyComponent({request, sims, agents, agencies, us
                     </div>
                 </div>
                 <div className='row'>
+                    <div className='col-sm-6'>
+                        <AmountComponent input={amount}
+                                         id='inputAmount'
+                                         label='Montant à flotter'
+                                         handleInput={handleAmountInput}
+                        />
+                    </div>
                     <div className='col-sm-6'>
                         <label htmlFor="inputAutoPay">Paiement immédiat?</label>
                         <CheckBoxComponent input={directPay}
