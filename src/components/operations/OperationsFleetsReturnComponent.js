@@ -9,15 +9,16 @@ import ErrorAlertComponent from "../ErrorAlertComponent";
 import {emitNewReturn} from "../../redux/returns/actions";
 import {emitAllSimsFetch} from "../../redux/sims/actions";
 import {requiredChecker} from "../../functions/checkerFunctions";
+import {emitAllAgenciesFetch} from "../../redux/agencies/actions";
 import {DEFAULT_FORM_DATA} from "../../constants/defaultConstants";
 import {playWarningSound} from "../../functions/playSoundFunctions";
 import {storeAllSimsRequestReset} from "../../redux/requests/sims/actions";
 import {storeReturnRequestReset} from "../../redux/requests/returns/actions";
 import {storeAllAgentsRequestReset} from "../../redux/requests/agents/actions";
 import {dataToArrayForSelect, mappedSims} from "../../functions/arrayFunctions";
+import {storeAllAgenciesRequestReset} from "../../redux/requests/agencies/actions";
 import {AGENT_TYPE, FLEET_TYPE, RESOURCE_TYPE} from "../../constants/typeConstants";
 import {applySuccess, requestFailed, requestLoading, requestSucceeded} from "../../functions/generalFunctions";
-import {emitAllAgenciesFetch} from "../../redux/agencies/actions";
 
 // Component
 function OperationsFleetsReturnComponent({supply, request, sims, user, agencies, allSimsRequests,
@@ -108,6 +109,7 @@ function OperationsFleetsReturnComponent({supply, request, sims, user, agencies,
         dispatch(storeReturnRequestReset());
         dispatch(storeAllSimsRequestReset());
         dispatch(storeAllAgentsRequestReset());
+        dispatch(storeAllAgenciesRequestReset());
     };
 
     // Trigger add supply form submit
