@@ -4,7 +4,20 @@ import * as actions from "./actions";
 const initialState = {
     page: 1,
     list: [],
-    hasMoreData: false
+    hasMoreData: false,
+
+    current: {
+        id: '', name: '', reference: '', number: '', balance: '', description: '', creation: '',
+
+        type: {id: '', name: ''},
+        agent: {id: '', name: ''},
+        agency: {id: '', name: ''},
+        company: {id: '', name: ''},
+        operator: {id: '', name: ''},
+        collector: {id: '', name: ''},
+
+        transactions: []
+    }
 };
 
 // Reduce

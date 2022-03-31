@@ -10,6 +10,7 @@ import CheckBoxComponent from "../form/CheckBoxComponent";
 import {emitAddSupply} from "../../redux/supplies/actions";
 import {emitAllAgentsFetch} from "../../redux/agents/actions";
 import {requiredChecker} from "../../functions/checkerFunctions";
+import {emitAllAgenciesFetch} from "../../redux/agencies/actions";
 import {DEFAULT_FORM_DATA} from "../../constants/defaultConstants";
 import {playWarningSound} from "../../functions/playSoundFunctions";
 import {AGENT_TYPE, RESOURCE_TYPE} from "../../constants/typeConstants";
@@ -20,20 +21,23 @@ import {storeAddSupplyRequestReset} from "../../redux/requests/supplies/actions"
 import {applySuccess, requestFailed, requestLoading, requestSucceeded} from "../../functions/generalFunctions";
 
 // Component
-function OperationsFleetsAddSupplyComponent({request, sims, agents, user, allAgentsRequests,
-                                                allSimsRequests, dispatch, handleClose}) {
+function OperationsFleetsAddSupplyComponent({request, sims, agents, agencies, user, allAgentsRequests,
+                                                allSimsRequests, allAgenciesRequests, dispatch, handleClose}) {
     // Local state
     const [amount, setAmount] = useState(DEFAULT_FORM_DATA);
+    const [agency, setAgency] = useState(DEFAULT_FORM_DATA);
     const [selectedOp, setSelectedOp] = useState('');
     const [directPay, setDirectPay] = useState(true);
     const [outgoingSim, setOutgoingSim] = useState(DEFAULT_FORM_DATA);
     const [incomingSim, setIncomingSim] = useState(DEFAULT_FORM_DATA);
+    const [showAgencies, setShowAgencies] = useState(false);
     const [agent, setAgent] = useState({...DEFAULT_FORM_DATA, data: 0});
 
     // Local effects
     useEffect(() => {
         dispatch(emitAllSimsFetch());
         dispatch(emitAllAgentsFetch());
+        dispatch(emitAllAgenciesFetch());
         // Cleaner error alert while component did unmount without store dependency
         return () => {
             shouldResetErrorData();

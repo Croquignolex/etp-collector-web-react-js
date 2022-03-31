@@ -180,12 +180,13 @@ export function* emitAllCollectorSimsFetch() {
 }
 
 // Extract sim data
-function extractSimData(apiSim, apiType, apiUser, apiAgent, apiCompany, apiOperator, apiCollector) {
+function extractSimData(apiSim, apiType, apiUser, apiAgent, apiCompany, apiOperator, apiCollector, apiAgency) {
     let sim = {
         id: '', name: '', reference: '', number: '', balance: '', description: '', creation: '',
 
         type: {id: '', name: ''},
         agent: {id: '', name: ''},
+        agency: {id: '', name: ''},
         company: {id: '', name: ''},
         operator: {id: '', name: ''},
         collector: {id: '', name: ''}
@@ -220,6 +221,12 @@ function extractSimData(apiSim, apiType, apiUser, apiAgent, apiCompany, apiOpera
             id: apiType.id.toString()
         };
     }
+    if(apiAgency) {
+        sim.agency = {
+            name: apiAgency.name,
+            id: apiAgency.id.toString()
+        };
+    }
     if(apiSim) {
         sim.name = apiSim.nom;
         sim.actionLoader = false;
@@ -244,7 +251,8 @@ function extractSimsData(apiSims) {
             data.agent,
             data.corporate,
             data.flote,
-            data.recouvreur
+            data.recouvreur,
+            data.agency
         ))
     });
     return sims;

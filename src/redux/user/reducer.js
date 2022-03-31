@@ -3,6 +3,7 @@ import * as actions from "./actions";
 // Partial global store for user data management
 const initialState = {
     id: '',
+    debt: 0,
     name: '',
     post: '',
     phone: '',
@@ -30,7 +31,11 @@ function reduce(state = initialState, action) {
             return nextState || state;
         // Resolve event to set user store balance
         case actions.STORE_SET_USER_BALANCE_DATA:
-            nextState = {...state, balance: action.balance};
+            nextState = {
+                ...state,
+                debt: action.debt,
+                balance: action.balance
+            };
             return nextState || state;
         // Resolve event to set user store simple data
         case actions.STORE_SET_USER_INFORMATION_DATA:
