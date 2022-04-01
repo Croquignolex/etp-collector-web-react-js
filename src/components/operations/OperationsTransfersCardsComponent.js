@@ -55,7 +55,7 @@ function OperationsTransfersCardsComponent({transfers, group, user, handleCancel
                                         <>
                                             {
                                                 (item.status === PROCESSING) &&
-                                                (item.collector?.id === user) &&
+                                                (item.collector?.id === user?.id) &&
                                                 (item.type.includes('->' + COLLECTOR_TYPE)
                                                 ) && (
                                                     <div className="mt-3 text-right">
@@ -72,7 +72,7 @@ function OperationsTransfersCardsComponent({transfers, group, user, handleCancel
                                             }
                                             {
                                                 (item.status === PROCESSING) &&
-                                                (item.user?.id === user) &&
+                                                (item.user?.id === user?.id) &&
                                                 (item.type.includes(COLLECTOR_TYPE + '->')
                                                 ) && (
                                                     <div className="mt-3 text-right">
