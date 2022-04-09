@@ -14,7 +14,6 @@ import {DEFAULT_FORM_DATA} from "../../constants/defaultConstants";
 import {playWarningSound} from "../../functions/playSoundFunctions";
 import {storeAllSimsRequestReset} from "../../redux/requests/sims/actions";
 import {storeReturnRequestReset} from "../../redux/requests/returns/actions";
-import {storeAllAgentsRequestReset} from "../../redux/requests/agents/actions";
 import {dataToArrayForSelect, mappedSims} from "../../functions/arrayFunctions";
 import {storeAllAgenciesRequestReset} from "../../redux/requests/agencies/actions";
 import {AGENT_TYPE, FLEET_TYPE, RESOURCE_TYPE} from "../../constants/typeConstants";
@@ -108,7 +107,6 @@ function OperationsFleetsReturnComponent({supply, request, sims, user, agencies,
     const shouldResetErrorData = () => {
         dispatch(storeReturnRequestReset());
         dispatch(storeAllSimsRequestReset());
-        dispatch(storeAllAgentsRequestReset());
         dispatch(storeAllAgenciesRequestReset());
     };
 
